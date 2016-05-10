@@ -65,4 +65,17 @@ describe Expression do
     end
   end
 
+  describe '#expand' do
+    it 'returns an array of expanded steps' do
+      allow(step_1).to receive(:expand_into).with([]).
+        and_return('expanded_steps_1')
+      allow(step_2).to receive(:expand_into).with('expanded_steps_1').
+        and_return('expanded_steps_2')
+      expect(exp.expand).to eq 'expanded_steps_2'
+    end
+
+    it 'returns an empty array if steps are empty' do
+      expect(described_class.new([]).expand).to eq []
+    end
+  end
 end
