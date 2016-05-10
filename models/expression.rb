@@ -27,18 +27,20 @@ class Expression
 end
 
 class NumExp
-  attr_reader :val
+  attr_reader :value
 
-  def initialize(val)
-    @val = val
+  def initialize(value)
+    @value = value
+  end
+
+  def mtp_num_exp(num_exp)
+    new_value = value * num_exp.value
+    self.class.new(new_value)
   end
 end
 
 class NumStep
-  attr_reader :ops, :dir
-
-  extend Forwardable
-  def_delegators :@val, :val
+  attr_reader :ops, :val, :dir
 
   def initialize(ops,val,dir=:rgt)
     @ops = ops
@@ -46,32 +48,31 @@ class NumStep
     @dir = dir
   end
 
-  # def ==(step)
-  #   ops == step.ops && val = step.val && dir = step.dir
-  # end
+  def ==(step)
+    ops == step.ops && val = step.val && dir == step.dir
+  end
 
   def expand_into(steps)  #this assumes all directions are right
     return steps << self if ops == :add || ops == :sbt
     if ops == :mtp
       steps.each do |step|
-        step = step.multiply_num_step(self)
+        step = step.mtp_num_step(self)
       end
     end
   end
 
-  def multiply_num_step(step,exp_class=NumExp)
-    new_value = val * step.val
-    num_exp = exp_class.new(new_value)
-    self.class.new(ops,num_exp)
+  def mtp_num_step(step)
+    new_num_exp = step.val.mtp_num_exp(self.val)
+    self.class.new(ops,new_num_exp)
   end
 
 end
 
 class StringExp
-  attr_reader :val
+  attr_reader :value
 
-  def initialize(val)
-    @val = val
+  def initialize(value)
+    @value = value
   end
 end
 
