@@ -42,5 +42,22 @@ class NumStep
     @val = val
     @dir = dir
   end
+end
 
+class StringExp
+  attr_reader :val
+
+  def initialize(val)
+    @val = val
+  end
+end
+
+class StringStep
+  attr_reader :ops, :val, :dir
+
+  def initialize(ops,val,dir=:rgt)
+    @ops = ops
+    @val = val
+    @dir = dir
+  end
 end

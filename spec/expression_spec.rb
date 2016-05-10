@@ -107,5 +107,33 @@ describe NumStep do
       expect(num_step.dir).to eq :rgt
     end
   end
+end
 
+describe StringExp do
+  let(:str_exp){described_class.new('x')}
+
+  describe '#initializes/new' do
+    it 'initializes with a string value that can be read as an attribute' do
+      expect(str_exp.val).to eq 'x'
+    end
+  end
+end
+
+describe StringStep do
+  let(:str_exp){double(:str_exp)}
+  let(:str_step){described_class.new(:add,str_exp)}
+
+  describe '#initialize/new' do
+    it 'with an operation that can be read as an attribute' do
+      expect(str_step.ops).to eq :add
+    end
+
+    it 'with a value that can be read as an attribute' do
+      expect(str_step.val).to eq str_exp
+    end
+
+    it 'with a direction (with default) that can be read as an attribute' do
+      expect(str_step.dir).to eq :rgt
+    end
+  end
 end
