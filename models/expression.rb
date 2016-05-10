@@ -35,13 +35,36 @@ class NumExp
 end
 
 class NumStep
-  attr_reader :ops, :val, :dir
+  attr_reader :ops, :dir
+
+  extend Forwardable
+  def_delegators :@val, :val
 
   def initialize(ops,val,dir=:rgt)
     @ops = ops
     @val = val
     @dir = dir
   end
+
+  # def ==(step)
+  #   ops == step.ops && val = step.val && dir = step.dir
+  # end
+
+  def expand_into(steps)  #this assumes all directions are right
+    return steps << self if ops == :add || ops == :sbt
+    if ops == :mtp
+      steps.each do |step|
+        step = step.multiply_num_step(self)
+      end
+    end
+  end
+
+  def multiply_num_step(step,exp_class=NumExp)
+    new_value = val * step.val
+    num_exp = exp_class.new(new_value)
+    self.class.new(ops,num_exp)
+  end
+
 end
 
 class StringExp

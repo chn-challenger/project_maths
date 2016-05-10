@@ -91,22 +91,67 @@ describe NumExp do
 end
 
 describe NumStep do
-  let(:num_exp){double(:num_exp)}
-  let(:num_step){described_class.new(:add,num_exp)}
-
   describe '#initialize/new' do
+    let(:num_exp){double(:num_exp,val:'some number')}
+    let(:num_step){described_class.new(:add,num_exp)}
+
     it 'with an operation that can be read as an attribute' do
       expect(num_step.ops).to eq :add
     end
 
     it 'with a value that can be read as an attribute' do
-      expect(num_step.val).to eq num_exp
+      expect(num_step.val).to eq 'some number'
     end
 
     it 'with a direction (with default) that can be read as an attribute' do
       expect(num_step.dir).to eq :rgt
     end
   end
+
+  describe '#expand_into' do
+    context 'addition' do
+      let(:num_exp){double(:num_exp)}
+      let(:num_add_step){described_class.new(:add,num_exp)}
+
+      it 'expands into a steps array by appending itself to the end' do
+        step_1 = double(:step_1)
+        step_2 = double(:step_2)
+        steps = [step_1,step_2]
+        expect(num_add_step.expand_into(steps)).to eq [step_1,step_2,
+          num_add_step]
+      end
+    end
+
+    context 'multiplication' do
+    #   let(:num_exp){double(:num_exp)}
+    #   let(:num_mtp_step){described_class.new(:mtp,num_exp)}
+    #
+    #   it 'expands into '
+    #
+    #
+    end
+  end
+
+  describe '#multiply_num_step' do
+    let(:num_exp){double(:num_exp)}
+    let(:num_mtp_step){described_class.new(:mtp,num_exp)}
+
+    it 'multiplies with another num step to give a num step' do
+      allow(num_exp).to receive(:val).and_return(10)
+      num_exp_2 = double(:num_exp_2,val:5)
+      num_step = described_class.new(:sbt,num_exp_2)
+      expected_num_exp = double(:num_exp,val:50)
+      expected_step = described_class.new(:sbt,expected_num_exp)
+      # expect(num_step.multiply_num_step(num_mtp_step)).to eq expected_step
+      result = num_step.multiply_num_step(num_mtp_step)
+      expect(result.ops).to eq :sbt
+      expect(result.val).to eq 50
+      expect(result.dir).to eq :rgt
+    end
+
+
+  end
+
 end
 
 describe StringExp do
