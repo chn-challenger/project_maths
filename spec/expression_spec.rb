@@ -47,4 +47,18 @@ describe Expression do
     end
   end
 
+  describe '#responds to forwarded methods from Enumerable' do
+    it 'responds to #size' do
+      expect(exp).to respond_to(:size)
+    end
+
+    it 'responds to #each' do
+      expect(exp).to respond_to(:each)
+    end
+
+    it 'responds to #[]' do
+      expect(exp).to respond_to(:[])
+    end
+  end
+
 end

@@ -2,6 +2,10 @@ class Expression
 
   attr_reader :steps
 
+  include Enumerable
+  extend Forwardable
+  def_delegators :@steps, :size, :each, :[]
+
   def initialize(steps)
     @steps = steps
   end
