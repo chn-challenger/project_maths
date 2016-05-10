@@ -1,26 +1,26 @@
 require 'forwardable'
 class Expression
-  attr_reader :steps
+  attr_reader :value
 
   include Enumerable
   extend Forwardable
-  def_delegators :@steps, :size, :each, :[]
+  def_delegators :@value, :size, :each, :[]
 
-  def initialize(steps=[])
-    @steps = steps
+  def initialize(value=[])
+    @value = value
   end
 
   def ==(expression)
-    steps == expression.steps
+    value == expression.value
   end
 
   def copy
-    self.class.new(steps.inject([]){|result,element| result << element.copy})
+    self.class.new(value.inject([]){|result,element| result << element.copy})
   end
 
   def expand_to_ms(ms_klass)
     ms_exp = ms_klass.new
-    steps.each do |step|
+    value.each do |step|
       step.expand_into_ms(ms_exp)
     end
     ms_exp
@@ -41,7 +41,7 @@ class Step
   end
 
   def expand_into_ms(ms_exp)
-    case ops  #this assumes all directions are right
+    case ops
     when :add then val.expand_add_into_ms(ms_exp,self.class)
     when :sbt then val.expand_sbt_into_ms(ms_exp,self.class)
     when :mtp then val.expand_mtp_into_ms(ms_exp,self.class)
@@ -64,23 +64,14 @@ class NumExp
   end
 
   def expand_add_into_ms(ms_exp,step_klass)
-    ms_exp.steps << step_klass.new(:add,self)
+    ms_exp.value << step_klass.new(:add,self)
   end
 
   def expand_mtp_into_ms(ms_exp,step_klass)
     mtp_step = step_klass.new(:mtp,self)
-    ms_exp.steps.each do |step|
-
-      # step.val_to_mf  #convert the value of the step to mf class
-      step.append(mtp_step) #this ask step to append mtp_step at the end of it
-      #'s value expression 's steps array, provided it is actually a ms
-      #since self has no idea what kind of thing step is, it is delegating
-      #the tasking of append to step, step will in turn delegate the task to
-      #its value - since depending on its value class, the append work
-      #differently
+    ms_exp.value.each do |step|
+      step.append(mtp_step)
     end
-    #the method has no return value, it also modifies the ms_exp just
-    #like expand_add_into_ms
   end
 
   def convert_to_m_form
@@ -105,10 +96,10 @@ class MtpFormExp
 end
 
 class MtpFormSumExp
-  attr_reader :steps
+  attr_reader :value
 
-  def initialize(steps)
-    @steps = steps
+  def initialize(value)
+    @value = value
   end
 end
 

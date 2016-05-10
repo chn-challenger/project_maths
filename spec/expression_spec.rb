@@ -8,7 +8,7 @@ describe Expression do
 
   describe '#new/initialize' do
     it 'initialize with an array of steps which can be read as attribute' do
-      expect(exp.steps).to eq [step_1,step_2]
+      expect(exp.value).to eq [step_1,step_2]
     end
   end
 
@@ -42,7 +42,7 @@ describe Expression do
       end
 
       it 'steps in the copied expression are copies' do
-        expect(exp_copy.steps).to eq ['copy_of_step_1','copy_of_step_2']
+        expect(exp_copy.value).to eq ['copy_of_step_1','copy_of_step_2']
       end
     end
   end
@@ -138,14 +138,14 @@ describe NumExp do
       step_klass = double(:step_klass)
       allow(step_klass).to receive(:new).with(:add,num_exp).and_return('new step')
       steps = []
-      allow(ms_exp).to receive(:steps).and_return(steps)
+      allow(ms_exp).to receive(:value).and_return(steps)
       num_exp.expand_add_into_ms(ms_exp,step_klass)
-      expect(ms_exp.steps).to eq ['new step']
+      expect(ms_exp.value).to eq ['new step']
     end
   end
 
   describe '#expand_mtp_into_ms' do
-    
+
   end
 
 end

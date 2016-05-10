@@ -89,6 +89,25 @@ Step
 
 
 
+    def expand_mtp_into_ms(ms_exp,step_klass)
+      mtp_step = step_klass.new(:mtp,self)
+      ms_exp.steps.each do |step|
+
+        # step.val_to_mf  #convert the value of the step to mf class
+        step.append(mtp_step) #this ask step to append mtp_step at the end of it
+        #'s value expression 's steps array, provided it is actually a ms
+        #since self has no idea what kind of thing step is, it is delegating
+        #the tasking of append to step, step will in turn delegate the task to
+        #its value - since depending on its value class, the append work
+        #differently
+      end
+      #the method has no return value, it also modifies the ms_exp just
+      #like expand_add_into_ms
+    end
+
+
+
+
 ################################################
 
 
