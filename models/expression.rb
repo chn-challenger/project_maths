@@ -1,3 +1,4 @@
+require 'forwardable'
 class Expression
   attr_reader :steps
 
@@ -56,12 +57,10 @@ class Step
 end
 
 class NumExp
-  attr_reader :value, :mf_klass, :step_klass
+  attr_reader :value
 
   def initialize(value)
     @value = value
-    @step_klass = Step
-    @mf_klass = MtpFormExp
   end
 
   def expand_add_into_ms(ms_exp,step_klass)
@@ -87,6 +86,14 @@ class NumExp
   def convert_to_m_form
     mf_klass.new([step_klass.new(nil,self)])
   end
+
+  def mf_klass
+    MtpFormExp
+  end
+
+  def step_klass
+    Step
+  end
 end
 
 class MtpFormExp
@@ -97,6 +104,20 @@ class MtpFormExp
   end
 end
 
+class MtpFormSumExp
+  attr_reader :steps
+
+  def initialize(steps)
+    @steps = steps
+  end
+end
+
+# number_1 = NumExp.new(10)
+# number_2 = NumExp.new(5)
+# step_1 = Step.new(:some_ops,number_1)
+# step_2 = Step.new(:mtp,number_2)
+# step_1.append(step_2)
+# p step_1
 
 
 #
