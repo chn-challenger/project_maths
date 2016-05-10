@@ -46,23 +46,50 @@ class Step
     when :mtp then val.expand_mtp_into_ms(ms_exp,self.class)
     end
   end
+
+  def append(step)
+    m_form = val.convert_to_m_form
+    m_form.value << step
+    @val = m_form
+  end
+
 end
 
 class NumExp
-  attr_reader :value
+  attr_reader :value, :mf_klass, :step_klass
 
   def initialize(value)
     @value = value
+    @step_klass = Step
+    @mf_klass = MtpFormExp
   end
 
   def expand_add_into_ms(ms_exp,step_klass)
     ms_exp.steps << step_klass.new(:add,self)
   end
+
+  def expand_mtp_into_ms(ms_exp,step_klass)
+    mtp_step = step_klass.new(:mtp,self)
+    ms_exp.steps.each do |step|
+
+      # step.val_to_mf  #convert the value of the step to mf class
+      step.append(mtp_step) #this ask step to append mtp_step at the end of it
+      #'s value expression 's steps array, provided it is actually a ms
+      #since self has no idea what kind of thing step is, it is delegating
+      #the tasking of append to step, step will in turn delegate the task to
+      #its value - since depending on its value class, the append work
+      #differently
+    end
+    #the method has no return value, it also modifies the ms_exp just
+    #like expand_add_into_ms
+  end
+
+  def convert_to_m_form
+    mf_klass.new([step_klass.new(nil,self)])
+  end
 end
 
-
-
-class StringExp
+class MtpFormExp
   attr_reader :value
 
   def initialize(value)
@@ -70,21 +97,32 @@ class StringExp
   end
 end
 
-class StringStep
-  attr_reader :ops, :val, :dir
-
-  def initialize(ops,val,dir=:rgt)
-    @ops = ops
-    @val = val
-    @dir = dir
-  end
-
-  def mtp_num_step(step)
 
 
-  end
-
-end
+#
+# class StringExp
+#   attr_reader :value
+#
+#   def initialize(value)
+#     @value = value
+#   end
+# end
+#
+# class StringStep
+#   attr_reader :ops, :val, :dir
+#
+#   def initialize(ops,val,dir=:rgt)
+#     @ops = ops
+#     @val = val
+#     @di
+#   end
+#
+#   def mtp_num_step(step)
+#
+#
+#   end
+#
+# end
 
 
 ################################################

@@ -67,13 +67,6 @@ describe Expression do
 
   describe '#expand_to_ms' do
     it 'returns an equivalent m-form-sum expression' do
-      # ms_klass = double(:ms_klass)
-      # allow(ms_klass).to receive(:new).and_return('initial_ms_exp')
-      # allow(step_1).to receive(:expand_into_ms).with('initial_ms_exp').
-      #   and_return('ms_exp_after_step_1')
-      # allow(step_2).to receive(:expand_into_ms).with('ms_exp_after_step_1').
-      #   and_return('ms_exp_after_step_2')
-      # expect(exp.expand_to_ms(ms_klass)).to eq 'ms_exp_after_step_2'
       ms_klass = double(:ms_klass)
       allow(ms_klass).to receive(:new).and_return('ms_exp')
       allow(step_1).to receive(:expand_into_ms).with('ms_exp')
@@ -149,8 +142,10 @@ describe NumExp do
       num_exp.expand_add_into_ms(ms_exp,step_klass)
       expect(ms_exp.steps).to eq ['new step']
     end
+  end
 
-
+  describe '#expand_mtp_into_ms' do
+    
   end
 
 end
