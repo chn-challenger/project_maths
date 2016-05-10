@@ -18,14 +18,19 @@ class Expression
     self.class.new(value.inject([]){|result,element| result << element.copy})
   end
 
-  def expand_to_ms(ms_klass)
+  def expand_to_ms
     ms_exp = ms_klass.new
     value.each do |step|
       step.expand_into_ms(ms_exp)
     end
     ms_exp
   end
+
+  def ms_klass
+    MtpFormSumExp
+  end
 end
+
 
 class Step
   attr_reader :ops, :val, :dir
@@ -42,6 +47,9 @@ class Step
 
   def expand_into_ms(ms_exp)
     case ops
+    # when nil then val.expand_add_into_ms(ms_exp,self.class)
+    #MAYBE this should be moved into each expand_in_ms method for each val
+
     when :add then val.expand_add_into_ms(ms_exp,self.class)
     when :sbt then val.expand_sbt_into_ms(ms_exp,self.class)
     when :mtp then val.expand_mtp_into_ms(ms_exp,self.class)
@@ -90,7 +98,7 @@ end
 class MtpFormExp
   attr_reader :value
 
-  def initialize(value)
+  def initialize(value=[])
     @value = value
   end
 end
@@ -98,10 +106,14 @@ end
 class MtpFormSumExp
   attr_reader :value
 
-  def initialize(value)
+  def initialize(value=[])
     @value = value
   end
 end
+
+
+# a = Expression.new()
+# p a.ms_klass
 
 # number_1 = NumExp.new(10)
 # number_2 = NumExp.new(5)

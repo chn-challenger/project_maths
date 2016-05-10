@@ -68,10 +68,11 @@ describe Expression do
   describe '#expand_to_ms' do
     it 'returns an equivalent m-form-sum expression' do
       ms_klass = double(:ms_klass)
+      expect(exp).to receive(:ms_klass).and_return(ms_klass)
       allow(ms_klass).to receive(:new).and_return('ms_exp')
       allow(step_1).to receive(:expand_into_ms).with('ms_exp')
       allow(step_2).to receive(:expand_into_ms).with('ms_exp')
-      expect(exp.expand_to_ms(ms_klass)).to eq 'ms_exp'
+      expect(exp.expand_to_ms).to eq 'ms_exp'
     end
   end
 end
