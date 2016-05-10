@@ -88,63 +88,64 @@ end
 #   end
 # end
 #
-# describe NumStep do
-#   describe '#initialize/new' do
-#     let(:num_exp){double(:num_exp)}
-#     let(:num_step){described_class.new(:add,num_exp)}
-#
-#     it 'with an operation that can be read as an attribute' do
-#       expect(num_step.ops).to eq :add
-#     end
-#
-#     it 'with a value that can be read as an attribute' do
-#       expect(num_step.val).to eq num_exp
-#     end
-#
-#     it 'with a direction (with default) that can be read as an attribute' do
-#       expect(num_step.dir).to eq :rgt
-#     end
-#   end
-#
-#   describe '#expand_into' do
-#     context 'addition' do
-#       let(:num_exp){double(:num_exp)}
-#       let(:num_add_step){described_class.new(:add,num_exp)}
-#
-#       it 'expands into a steps array by appending itself to the end' do
-#         step_1 = double(:step_1)
-#         step_2 = double(:step_2)
-#         steps = [step_1,step_2]
-#         expect(num_add_step.expand_into(steps)).to eq [step_1,step_2,
-#           num_add_step]
-#       end
-#     end
-#
-#     context 'multiplication' do
-#     #   let(:num_exp){double(:num_exp)}
-#     #   let(:num_mtp_step){described_class.new(:mtp,num_exp)}
-#     #
-#     #   it 'expands into '
-#     #
-#     #
-#     end
-#   end
-#
-#   describe '#multiply_num_step' do
-#     let(:num_exp){double(:num_exp)}
-#     let(:num_mtp_step){described_class.new(:mtp,num_exp)}
-#
-#     it 'multiplies with another num step to give a num step' do
-#       num_exp_2 = double(:num_exp_2)
-#       num_step_2 = described_class.new(:sbt,num_exp_2)
-#       num_exp_3 = double(:num_exp_3)
-#       allow(num_exp).to receive(:mtp_num_exp).with(num_exp_2).and_return(num_exp_3)
-#       expected_num_step = described_class.new(:sbt,num_exp_3)
-#       expect(num_step_2.mtp_num_step(num_mtp_step)).to eq expected_num_step
-#     end
-#   end
-#
-# end
+describe Step do
+  describe '#initialize/new' do
+    let(:exp){double(:exp)}
+    let(:step){described_class.new(:some_ops,exp)}
+
+    it 'with an operation that can be read as an attribute' do
+      expect(step.ops).to eq :some_ops
+    end
+
+    it 'with a value that can be read as an attribute' do
+      expect(step.val).to eq exp
+    end
+
+    it 'with a direction (with default) that can be read as an attribute' do
+      expect(step.dir).to eq :rgt
+    end
+  end
+
+  describe '#expand_into_ms' do
+      let(:exp){double(:exp)}
+      let(:add_step){described_class.new(:add,exp)}
+      let(:sbt_step){described_class.new(:sbt,exp)}
+      let(:mtp_step){described_class.new(:mtp,exp)}
+
+      it 'returns the an expanded m-form-sum exp when ops is add' do
+        ms_exp = double(:ms_exp)
+        allow(exp).to receive(:expand_add_into_ms).with(ms_exp).and_return('expanded_ms_exp')
+        expect(add_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
+      end
+
+      it 'returns the an expanded m-form-sum exp when ops is sbt' do
+        ms_exp = double(:ms_exp)
+        allow(exp).to receive(:expand_sbt_into_ms).with(ms_exp).and_return('expanded_ms_exp')
+        expect(sbt_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
+      end
+
+      it 'returns the an expanded m-form-sum exp when ops is mtp' do
+        ms_exp = double(:ms_exp)
+        allow(exp).to receive(:expand_mtp_into_ms).with(ms_exp).and_return('expanded_ms_exp')
+        expect(mtp_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
+      end
+  end
+  #
+  # describe '#multiply_num_step' do
+  #   let(:num_exp){double(:num_exp)}
+  #   let(:num_mtp_step){described_class.new(:mtp,num_exp)}
+  #
+  #   it 'multiplies with another num step to give a num step' do
+  #     num_exp_2 = double(:num_exp_2)
+  #     num_step_2 = described_class.new(:sbt,num_exp_2)
+  #     num_exp_3 = double(:num_exp_3)
+  #     allow(num_exp).to receive(:mtp_num_exp).with(num_exp_2).and_return(num_exp_3)
+  #     expected_num_step = described_class.new(:sbt,num_exp_3)
+  #     expect(num_step_2.mtp_num_step(num_mtp_step)).to eq expected_num_step
+  #   end
+  # end
+
+end
 #
 # describe StringExp do
 #   let(:str_exp){described_class.new('x')}

@@ -25,6 +25,69 @@ class Expression
     ms_exp
   end
 end
+
+class Step
+  attr_reader :ops, :val, :dir
+
+  def initialize(ops,val,dir=:rgt)
+    @ops = ops
+    @val = val
+    @dir = dir
+  end
+
+  def ==(step)
+    ops == step.ops && val = step.val && dir == step.dir
+  end
+
+  def expand_into_ms(ms_exp)
+    case ops  #this assumes all directions are right
+    when :add then val.expand_add_into_ms(ms_exp)
+    when :sbt then val.expand_sbt_into_ms(ms_exp)
+    when :mtp then val.expand_mtp_into_ms(ms_exp)
+    end
+  end
+end
+
+class NumExp
+  attr_reader :value
+
+  def initialize(value)
+    @value = value
+  end
+
+  def mtp_num_exp(num_exp)
+    new_value = value * num_exp.value
+    self.class.new(new_value)
+  end
+end
+
+
+
+class StringExp
+  attr_reader :value
+
+  def initialize(value)
+    @value = value
+  end
+end
+
+class StringStep
+  attr_reader :ops, :val, :dir
+
+  def initialize(ops,val,dir=:rgt)
+    @ops = ops
+    @val = val
+    @dir = dir
+  end
+
+  def mtp_num_step(step)
+
+
+  end
+
+end
+
+
 ################################################
 #
 # NumExp
@@ -93,69 +156,3 @@ end
 #
 #
 # end
-
-class NumExp
-  attr_reader :value
-
-  def initialize(value)
-    @value = value
-  end
-
-  def mtp_num_exp(num_exp)
-    new_value = value * num_exp.value
-    self.class.new(new_value)
-  end
-end
-
-class NumStep
-  attr_reader :ops, :val, :dir
-
-  def initialize(ops,val,dir=:rgt)
-    @ops = ops
-    @val = val
-    @dir = dir
-  end
-
-  def ==(step)
-    ops == step.ops && val = step.val && dir == step.dir
-  end
-
-  def expand_into(steps)  #this assumes all directions are right
-    return steps << self if ops == :add || ops == :sbt
-    if ops == :mtp
-      steps.each do |step|
-        step = step.mtp_num_step(self)
-      end
-    end
-  end
-
-  def mtp_num_step(step)
-    new_num_exp = step.val.mtp_num_exp(self.val)
-    self.class.new(ops,new_num_exp)
-  end
-
-end
-
-class StringExp
-  attr_reader :value
-
-  def initialize(value)
-    @value = value
-  end
-end
-
-class StringStep
-  attr_reader :ops, :val, :dir
-
-  def initialize(ops,val,dir=:rgt)
-    @ops = ops
-    @val = val
-    @dir = dir
-  end
-
-  def mtp_num_step(step)
-
-
-  end
-
-end
