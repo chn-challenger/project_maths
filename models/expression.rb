@@ -20,7 +20,7 @@ class Expression
   def expand_to_ms(ms_klass)
     ms_exp = ms_klass.new
     steps.each do |step|
-      ms_exp = step.expand_into_ms(ms_exp)
+      step.expand_into_ms(ms_exp)
     end
     ms_exp
   end
@@ -41,9 +41,9 @@ class Step
 
   def expand_into_ms(ms_exp)
     case ops  #this assumes all directions are right
-    when :add then val.expand_add_into_ms(ms_exp)
-    when :sbt then val.expand_sbt_into_ms(ms_exp)
-    when :mtp then val.expand_mtp_into_ms(ms_exp)
+    when :add then val.expand_add_into_ms(ms_exp,self.class)
+    when :sbt then val.expand_sbt_into_ms(ms_exp,self.class)
+    when :mtp then val.expand_mtp_into_ms(ms_exp,self.class)
     end
   end
 end
@@ -55,9 +55,8 @@ class NumExp
     @value = value
   end
 
-  def mtp_num_exp(num_exp)
-    new_value = value * num_exp.value
-    self.class.new(new_value)
+  def expand_add_into_ms(ms_exp,step_klass)
+    ms_exp.steps << step_klass.new(:add,self)
   end
 end
 
@@ -155,4 +154,20 @@ end
 # ################################################
 #
 #
+# end
+
+
+
+# module Operations
+#   def add
+#     :add
+#   end
+#
+#   def sbt
+#     :sbt
+#   end
+#
+#   def mtp
+#     :mtp
+#   end
 # end
