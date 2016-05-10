@@ -79,3 +79,33 @@ describe Expression do
     end
   end
 end
+
+describe NumExp do
+  let(:num_exp){described_class.new(1)}
+
+  describe '#initializes/new' do
+    it 'initializes with a numerical value that can be read as an attribute' do
+      expect(num_exp.val).to eq 1
+    end
+  end
+end
+
+describe NumStep do
+  let(:num_exp){double(:num_exp)}
+  let(:num_step){described_class.new(:add,num_exp)}
+
+  describe '#initialize/new' do
+    it 'with an operation that can be read as an attribute' do
+      expect(num_step.ops).to eq :add
+    end
+
+    it 'with a value that can be read as an attribute' do
+      expect(num_step.val).to eq num_exp
+    end
+
+    it 'with a direction (with default) that can be read as an attribute' do
+      expect(num_step.dir).to eq :rgt
+    end
+  end
+
+end
