@@ -59,6 +59,10 @@ describe Expression do
     it 'responds to #[]' do
       expect(exp).to respond_to(:[])
     end
+
+    it 'gives number of steps as size' do
+      expect(exp.size).to eq 2
+    end
   end
 
 end
