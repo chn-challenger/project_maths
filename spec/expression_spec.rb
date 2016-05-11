@@ -75,6 +75,12 @@ describe Expression do
       expect(exp.expand_to_ms).to eq 'ms_exp'
     end
   end
+
+  describe '#ms_klass' do
+    it 'returns class name of m-form-sum expression' do
+      expect(exp.ms_klass).to eq MtpFormSumExp
+    end
+  end
 end
 
 describe Step do
@@ -105,6 +111,23 @@ describe Step do
       allow(exp).to receive(:expand_into_ms).with(ms_exp,step)
         .and_return('expanded_ms_exp')
       expect(step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
+    end
+  end
+
+  describe '#append' do
+    let(:exp_1){double(:exp_1)}
+    let(:step_1){described_class.new(:ops_1,exp_1)}
+    let(:exp_2){double(:exp_2)}
+    let(:step_2){described_class.new(:ops_2,exp_2)}
+
+    it 'appends a step into the val of the current step' do
+      m_form = double(:m_form)
+      allow(exp_1).to receive(:convert_to_m_form).and_return(m_form)
+      value_array = []
+      allow(m_form).to receive(:value).and_return(value_array)
+      step_1.append(step_2)
+      expect(m_form.value).to eq [step_2]
+      expect(step_1.val).to eq m_form
     end
   end
 end

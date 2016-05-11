@@ -31,7 +31,6 @@ class Expression
   end
 end
 
-
 class Step
   attr_reader :ops, :val, :dir
 
@@ -54,7 +53,6 @@ class Step
     m_form.value << step
     @val = m_form
   end
-
 end
 
 class NumExp
