@@ -97,28 +97,14 @@ describe Step do
 
   describe '#expand_into_ms' do
     let(:exp){double(:exp)}
-    let(:add_step){described_class.new(:add,exp)}
-    let(:sbt_step){described_class.new(:sbt,exp)}
-    let(:mtp_step){described_class.new(:mtp,exp)}
+    let(:step){described_class.new(:some_ops,exp)}
     let(:ms_exp){double(:ms_exp)}
     let(:klass){double(:klass)}
 
-    it 'returns the an expanded m-form-sum exp when ops is add' do
-      allow(exp).to receive(:expand_add_into_ms).with(ms_exp,described_class)
+    it 'relays the message to expand into ms to the val object' do
+      allow(exp).to receive(:expand_into_ms).with(ms_exp,step)
         .and_return('expanded_ms_exp')
-      expect(add_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
-    end
-
-    it 'returns the an expanded m-form-sum exp when ops is sbt' do
-      allow(exp).to receive(:expand_sbt_into_ms).with(ms_exp,described_class)
-        .and_return('expanded_ms_exp')
-      expect(sbt_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
-    end
-
-    it 'returns the an expanded m-form-sum exp when ops is mtp' do
-      allow(exp).to receive(:expand_mtp_into_ms).with(ms_exp,described_class)
-        .and_return('expanded_ms_exp')
-      expect(mtp_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
+      expect(step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
     end
   end
 end
@@ -134,7 +120,7 @@ describe NumExp do
   end
 
   describe '#expand_add_into_ms' do
-    it 'expands an add step into a m-form-sum exp' do
+    xit 'expands an add step into a m-form-sum exp' do
       ms_exp = double(:ms_exp)
       step_klass = double(:step_klass)
       allow(step_klass).to receive(:new).with(:add,num_exp).and_return('new step')
@@ -181,3 +167,25 @@ end
 #     end
 #   end
 # end
+
+    # it 'returns the an expanded m-form-sum exp when ops is add' do
+    #   allow(exp).to receive(:expand_add_into_ms).with(ms_exp,described_class)
+    #     .and_return('expanded_ms_exp')
+    #   expect(add_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
+    # end
+    #
+    # it 'returns the an expanded m-form-sum exp when ops is sbt' do
+    #   allow(exp).to receive(:expand_sbt_into_ms).with(ms_exp,described_class)
+    #     .and_return('expanded_ms_exp')
+    #   expect(sbt_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
+    # end
+    #
+    # it 'returns the an expanded m-form-sum exp when ops is mtp' do
+    #   allow(exp).to receive(:expand_mtp_into_ms).with(ms_exp,described_class)
+    #     .and_return('expanded_ms_exp')
+    #   expect(mtp_step.expand_into_ms(ms_exp)).to eq 'expanded_ms_exp'
+    # end
+
+    # let(:add_step){described_class.new(:add,exp)}
+    # let(:sbt_step){described_class.new(:sbt,exp)}
+    # let(:mtp_step){described_class.new(:mtp,exp)}

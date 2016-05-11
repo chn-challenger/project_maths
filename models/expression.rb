@@ -46,14 +46,7 @@ class Step
   end
 
   def expand_into_ms(ms_exp)
-    case ops
-    # when nil then val.expand_add_into_ms(ms_exp,self.class)
-    #MAYBE this should be moved into each expand_in_ms method for each val
-
-    when :add then val.expand_add_into_ms(ms_exp,self.class)
-    when :sbt then val.expand_sbt_into_ms(ms_exp,self.class)
-    when :mtp then val.expand_mtp_into_ms(ms_exp,self.class)
-    end
+    val.expand_into_ms(ms_exp,self)
   end
 
   def append(step)
@@ -71,14 +64,12 @@ class NumExp
     @value = value
   end
 
-  def expand_add_into_ms(ms_exp,step_klass)
-    ms_exp.value << step_klass.new(:add,self)
-  end
-
-  def expand_mtp_into_ms(ms_exp,step_klass)
-    mtp_step = step_klass.new(:mtp,self)
-    ms_exp.value.each do |step|
-      step.append(mtp_step)
+  def expand_into_ms(ms_exp,step)
+    case step.ops
+    when nil then ms_exp.value << step
+    when :add then ms_exp.value << step
+    when :sbt then ms_exp.value << step
+    when :mtp then ms_exp.value.each{|mf_step| mf_step.append(step)}
     end
   end
 
@@ -101,6 +92,10 @@ class MtpFormExp
   def initialize(value=[])
     @value = value
   end
+
+  def ==(expression)
+    value == expression.value
+  end
 end
 
 class MtpFormSumExp
@@ -108,6 +103,10 @@ class MtpFormSumExp
 
   def initialize(value=[])
     @value = value
+  end
+
+  def ==(expression)
+    value == expression.value
   end
 end
 
@@ -232,4 +231,16 @@ end
 #   def mtp
 #     :mtp
 #   end
+# end
+
+
+# case ops
+#
+#
+# # when nil then val.expand_add_into_ms(ms_exp,self.class)
+# #MAYBE this should be moved into each expand_in_ms method for each val
+#
+# when :add then val.expand_add_into_ms(ms_exp,self.class)
+# when :sbt then val.expand_sbt_into_ms(ms_exp,self.class)
+# when :mtp then val.expand_mtp_into_ms(ms_exp,self.class)
 # end
