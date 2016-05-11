@@ -48,32 +48,74 @@ end
 
 # p adjacent?([2,2],[1,2])
 
-def move_a_step(current_path,other_choices,map)
+def move_a_step(current_path,other_choices,map,target)
   possible_moves = scan(current_path.last,current_path,map)
+  puts 'possible moves'
+  p possible_moves
   if possible_moves != []
     next_move = possible_moves.delete_at(0)
+    if possible_moves != []
+      other_choices[current_path.last] = possible_moves
+    end
     current_path << next_move
-    other_choices[current_path.last] = possible_moves
   else
-    # next_move = other_choices.last
-    # find distance 1 position in current patfh compared with last choice
-    # delete all moves after that
+    last_junction = other_choices.keys.last.dup
+    junction_index = current_path.index(last_junction)
+    current_path.delete_if do |ele|
+      current_path.index(ele) > junction_index
+    end
+    next_move = other_choices[current_path.last].delete_at(0)
+    if other_choices[current_path.last] == []
+      other_choices.delete(current_path.last)
+    end
+    current_path << next_move
   end
-  other_choices
-  current_path
+
+  if current_path.last != target
+    move_a_step(current_path,other_choices,map,target)
+  end
+
 end
 
 map = [
   [false, false,  true,   false,  true,   false,  true],
-  [false, false,  true,   true,   true,   false,  true],
+  [false, false,  true,   false,  true,   false,  true],
   [true,  true,   true,   true,   true,   true,   true],
   [true,  false,  true,   false,  true,   false,  true],
   [true,  false,  true,   false,  true,   false,  true]
 ]
 
-current_path = [[3,4],[2,4]]
+current_path = [[2,3]]
 other_choices = {}
-p move_a_step(current_path,other_choices,map)
+# other_choices = {[2,4]=>[[2,5]]}
+move_a_step(current_path,other_choices,map)
+p current_path
+p other_choices
+
+puts 'next move'
+move_a_step(current_path,other_choices,map)
+p current_path
+p other_choices
+
+puts 'next move'
+move_a_step(current_path,other_choices,map)
+p current_path
+p other_choices
+
+puts 'next move'
+move_a_step(current_path,other_choices,map)
+p current_path
+p other_choices
+
+
+# p other_choices.keys.last
+# hash = {ab:1,cd:2}
+# p hash.keys
+# a = [1,2,3,4,5]
+# a = a[0...2]
+# # p b
+# p a
+
 
 
 def search(map,starting_position,target)
