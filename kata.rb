@@ -61,13 +61,41 @@ def solve(minemap, miner, exit)
     path_to_instruction(current_path)
 end
 
-minemap = [
+small_mine_map = [
   [false, false,  true,   false,  true,   false,  true],
   [false, false,  true,   false,  true,   false,  true],
   [true,  true,   true,   true,   true,   true,   true],
   [true,  false,  true,   false,  true,   false,  true],
   [true,  false,  true,   false,  true,   false,  true]
 ]
-miner = {'x'=>0, 'y'=>6}
-exit = {'x'=>4, 'y'=>0}
-p solve(minemap, miner, exit)
+miner_1 = {'x'=>0, 'y'=>6}
+exit_1 = {'x'=>4, 'y'=>0}
+p solve(small_mine_map, miner_1, exit_1)
+#=> ["down", "down", "left", "left", "left", "left", "left", "left", "down", "down"]
+
+large_mine_map = [
+  [false, false,  true,   false,  true,   false,  true,   false,  true,    true],
+  [false, false,  true,   false,  true,   false,  true,   false,  true,   false],
+  [true,  true,   true,   true,   true,   true,   true,   false,  true,   false],
+  [true,  false,  true,   false,  true,   false,  true,   false,  true,    true],
+  [true,  false,  true,   false,  true,   false,  true,    true,  true,   false],
+  [true,  false,  true,   false,  false,  false,  true,   false,  true,   false],
+  [true,  false,  true,   false,  true,   false,  true,   false,  true,    true],
+  [true,  false,  true,   false,  true,    true,  true,   false,  true,   false],
+  [true,  false,  true,   false,  true,   false,  true,   false,  true,   false],
+  [true,  false,  true,   false,  true,   false,  true,   false,  true,   false],
+  [true,  false,  true,   false,  true,   false,  false,   true,  true,   false]
+]
+miner_2 = {'x'=>0, 'y'=>9}
+exit_2 = {'x'=>10, 'y'=>0}
+p solve(large_mine_map, miner_2, exit_2)
+# => ["left", "down", "down", "down", "down", "left", "left", "up", "up", "left",
+#     "left", "left", "left", "left", "left", "down", "down", "down", "down",
+#     "down", "down", "down", "down"]
+
+# New challenge -
+# 1.  make a map generator  def generate_map(n,m) #creating a tree with no loops will
+#     be the main challenge!
+# 2.  make a walk_bot, which when given a starting position, path, destination, will
+#     attempt to walk the path given, returns true if it gets to the destination
+#     unscathed, return false in all other cases.
