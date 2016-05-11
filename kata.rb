@@ -71,7 +71,9 @@ def move_a_step(current_path,other_choices,map,target)
     current_path << next_move
   end
 
-  if current_path.last != target
+  if current_path.last == target
+    return current_path
+  else
     move_a_step(current_path,other_choices,map,target)
   end
 
@@ -87,25 +89,26 @@ map = [
 
 current_path = [[2,3]]
 other_choices = {}
+target = [4,6]
 # other_choices = {[2,4]=>[[2,5]]}
-move_a_step(current_path,other_choices,map)
-p current_path
-p other_choices
-
-puts 'next move'
-move_a_step(current_path,other_choices,map)
-p current_path
-p other_choices
-
-puts 'next move'
-move_a_step(current_path,other_choices,map)
-p current_path
-p other_choices
-
-puts 'next move'
-move_a_step(current_path,other_choices,map)
-p current_path
-p other_choices
+p move_a_step(current_path,other_choices,map)
+# p current_path
+# p other_choices
+#
+# puts 'next move'
+# move_a_step(current_path,other_choices,map)
+# p current_path
+# p other_choices
+#
+# puts 'next move'
+# move_a_step(current_path,other_choices,map)
+# p current_path
+# p other_choices
+#
+# puts 'next move'
+# move_a_step(current_path,other_choices,map)
+# p current_path
+# p other_choices
 
 
 # p other_choices.keys.last
