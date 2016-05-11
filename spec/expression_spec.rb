@@ -142,22 +142,49 @@ describe NumExp do
     end
   end
 
-  describe '#expand_add_into_ms' do
-    xit 'expands an add step into a m-form-sum exp' do
+  describe '#expand_into_ms' do
+    it 'expands an nil step into an m-form-sum exp' do
       ms_exp = double(:ms_exp)
-      step_klass = double(:step_klass)
-      allow(step_klass).to receive(:new).with(:add,num_exp).and_return('new step')
-      steps = []
-      allow(ms_exp).to receive(:value).and_return(steps)
-      num_exp.expand_add_into_ms(ms_exp,step_klass)
-      expect(ms_exp.value).to eq ['new step']
+      step = double(:step)
+      allow(step).to receive(:ops).and_return(nil)
+      value_steps = []
+      allow(ms_exp).to receive(:value).and_return(value_steps)
+      num_exp.expand_into_ms(ms_exp,step)
+      expect(ms_exp.value).to eq [step]
+    end
+
+    it 'expands an add step into an m-form-sum exp' do
+      ms_exp = double(:ms_exp)
+      step = double(:step)
+      allow(step).to receive(:ops).and_return(:add)
+      value_steps = []
+      allow(ms_exp).to receive(:value).and_return(value_steps)
+      num_exp.expand_into_ms(ms_exp,step)
+      expect(ms_exp.value).to eq [step]
+    end
+
+    it 'expands an sbt step into an m-form-sum exp' do
+      ms_exp = double(:ms_exp)
+      step = double(:step)
+      allow(step).to receive(:ops).and_return(:sbt)
+      value_steps = []
+      allow(ms_exp).to receive(:value).and_return(value_steps)
+      num_exp.expand_into_ms(ms_exp,step)
+      expect(ms_exp.value).to eq [step]
+    end
+
+    it 'expands an mtp step into an m-form-sum exp' do
+      ms_exp = double(:ms_exp)
+      step = double(:step)
+      allow(step).to receive(:ops).and_return(:mtp)
+      mf_step = double(:mf_step)
+      value_steps = [mf_step]
+      allow(ms_exp).to receive(:value).and_return(value_steps)
+      allow(mf_step).to receive(:append)
+      num_exp.expand_into_ms(ms_exp,step)
+      expect(ms_exp.value).to eq [mf_step]
     end
   end
-
-  describe '#expand_mtp_into_ms' do
-
-  end
-
 end
 
 
