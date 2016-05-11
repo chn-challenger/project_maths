@@ -1,4 +1,4 @@
-require './generators/age_problem'
+require './models/age_problem'
 
 # describe AgeProblem do
 #   describe '#initialize/new' do

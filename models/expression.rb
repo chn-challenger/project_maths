@@ -1,7 +1,7 @@
-require './generators/step'
-require './generators/evaluate'
-require './generators/fraction'
-require './generators/array_extension'
+require './models/step'
+require './models/evaluate'
+require './models/fraction'
+require './models/array_extension'
 
 include Evaluate
 

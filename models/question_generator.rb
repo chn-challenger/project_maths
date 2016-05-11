@@ -1,4 +1,4 @@
-require './generators/linear_equation'
+require './models/linear_equation'
 
 module ContentGenerator
 

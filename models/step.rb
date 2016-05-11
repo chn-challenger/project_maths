@@ -1,5 +1,5 @@
-require './generators/expression'
-require './generators/fraction'
+require './models/expression'
+require './models/fraction'
 
 class Step
 

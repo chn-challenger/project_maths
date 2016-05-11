@@ -1,6 +1,6 @@
-require './generators/evaluate'
-require './generators/equation'
-require './generators/linear_equation'
+require './models/evaluate'
+require './models/equation'
+require './models/linear_equation'
 
 
 class AgeProblem

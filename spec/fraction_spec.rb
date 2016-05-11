@@ -1,4 +1,4 @@
-require './generators/fraction'
+require './models/fraction'
 
 describe Fraction do
   describe '#initialize/new' do

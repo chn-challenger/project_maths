@@ -1,4 +1,4 @@
-require './generators/equation'
+require './models/equation'
 
 describe Equation do
   describe '#initialize/new' do

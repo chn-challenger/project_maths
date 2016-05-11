@@ -1,5 +1,4 @@
-require './generators/array_extension'
-# require './generators/equation_step'
+require './models/array_extension'
 
 describe Array do
   describe '#collect_move' do

@@ -1,5 +1,5 @@
-require './generators/evaluate'
-require './generators/equation'
+require './models/evaluate'
+require './models/equation'
 
 include Evaluate
 

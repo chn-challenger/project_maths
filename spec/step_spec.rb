@@ -1,4 +1,4 @@
-require './generators/step'
+require './models/step'
 
 describe Step do
   describe '#initialize/new' do

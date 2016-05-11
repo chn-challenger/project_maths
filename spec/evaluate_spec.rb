@@ -1,4 +1,4 @@
-require './generators/evaluate'
+require './models/evaluate'
 
 describe Evaluate do
 

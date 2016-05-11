@@ -1,4 +1,4 @@
-require './generators/linear_equation'
+require './models/linear_equation'
 
 describe LinearEquation do
   describe '#generate/question_latex' do
@@ -78,7 +78,7 @@ describe LinearEquation do
   end
 
 
-  
+
 
 
 end

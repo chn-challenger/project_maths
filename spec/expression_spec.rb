@@ -1,4 +1,4 @@
-require './generators/expression'
+require './models/expression'
 
 describe Expression do
   describe '#initialize/new' do

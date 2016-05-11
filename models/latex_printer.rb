@@ -1,8 +1,8 @@
-require './generators/fraction'
-require './generators/serial'
-require './generators/linear_equation'
-require './generators/equation'
-require './generators/question_generator'
+require './models/fraction'
+require './models/serial'
+require './models/linear_equation'
+require './models/equation'
+require './models/question_generator'
 include SerialNumber
 include ContentGenerator
 

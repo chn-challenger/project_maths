@@ -103,7 +103,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/age_problem.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/age_problem.rb": [
         1,
         1,
         1,
@@ -187,7 +187,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/evaluate.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/evaluate.rb": [
         1,
         null,
         null,
@@ -220,7 +220,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/equation.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/equation.rb": [
         1,
         null,
         1,
@@ -286,7 +286,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/expression.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/expression.rb": [
         1,
         1,
         1,
@@ -895,7 +895,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/step.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/step.rb": [
         1,
         1,
         null,
@@ -1188,7 +1188,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/fraction.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/fraction.rb": [
         1,
         null,
         1,
@@ -1418,7 +1418,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/array_extension.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/array_extension.rb": [
         1,
         null,
         1,
@@ -1454,7 +1454,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/linear_equation.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/linear_equation.rb": [
         1,
         1,
         null,
@@ -1596,7 +1596,6 @@
       ],
       "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/spec/array_extension_spec.rb": [
         1,
-        null,
         null,
         1,
         1,
@@ -4189,7 +4188,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/latex_printer.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/latex_printer.rb": [
         1,
         1,
         1,
@@ -4355,7 +4354,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/serial.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/serial.rb": [
         1,
         null,
         1,
@@ -4367,7 +4366,7 @@
         null,
         null
       ],
-      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/generators/question_generator.rb": [
+      "/Users/joezhou/Documents/GoogleDrive/Projects/project_maths/models/question_generator.rb": [
         1,
         null,
         1,
@@ -5745,6 +5744,6 @@
         null
       ]
     },
-    "timestamp": 1463002171
+    "timestamp": 1463002783
   }
 }

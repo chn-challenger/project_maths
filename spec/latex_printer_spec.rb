@@ -1,4 +1,4 @@
-require './generators/latex_printer'
+require './models/latex_printer'
 
 describe LatexPrinter do
   describe '#self.worksheet' do
