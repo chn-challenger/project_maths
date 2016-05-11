@@ -44,11 +44,14 @@ class Step
     ops == step.ops && val = step.val && dir == step.dir
   end
 
-  def expand_into_ms(ms_exp)
+  def expand_into_ms(ms_exp) #can ALWAYS be invoked, since every possible val object
+    # has to implement expand_into_ms
     val.expand_into_ms(ms_exp,self)
   end
 
-  def append(step)
+  def append(step)  #cannot be invoked on some instances of Step, it depends on the val obj stored in Step
+    # the val object needs to implement convert_to_m_form and some valid val objects do not
+    # implement convert_to_m_form
     m_form = val.convert_to_m_form
     m_form.value << step
     @val = m_form
