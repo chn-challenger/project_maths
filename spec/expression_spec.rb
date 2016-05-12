@@ -1784,6 +1784,13 @@ describe Expression do
       expected_exp = expression_factory.build([4,[:sbt,'x'],[:add,5],[:sbt,'y']])
       expect(exp.expand).to eq expected_exp
     end
+
+    it 'expands (e + e) e into m + m' do
+      exp = expression_factory.build([4,[:add,'x'],[:mtp,5]])
+      expected_exp = expression_factory.build([[4,[:mtp,5]],[:add,['x',[:mtp,5]]]])
+      expect(exp.expand).to eq expected_exp
+    end
+
   end
 
 

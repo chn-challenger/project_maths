@@ -610,6 +610,7 @@ class Expression
     steps.each do |step|
       _expand_nil_or_add_into(expanded_steps,step) if _nil_or_add?(step.ops)
       _expand_sbt_into(expanded_steps,step) if step.ops == :sbt
+      _expand_mtp_into(expanded_steps,step) if step.ops == :mtp
     end
     self.steps = expanded_steps
     return self
@@ -640,6 +641,18 @@ class Expression
     switch_hash = {nil =>:sbt,:add =>:sbt,:sbt=>:add}
     steps.each{|step| step.ops = switch_hash[step.ops]}
     return self
+  end
+
+  def _expand_mtp_into(expanded_steps,step)
+    for i in 0...expanded_steps.length
+      if expanded_steps[i].val.is_a?(expression_class)
+
+      else
+        value_exp = expression_factory.build([expanded_steps[i].val])
+        expanded_steps[i].val = value_exp
+        expanded_steps[i].val.steps << step
+      end
+    end
   end
 
 end
