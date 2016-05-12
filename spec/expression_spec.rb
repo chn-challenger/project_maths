@@ -1,5 +1,6 @@
 require './models/expression'
 
+
 describe Expression do
   describe '#initialize/new' do
     let(:expression){described_class.new()}
@@ -1735,7 +1736,32 @@ describe Expression do
     end
   end
 
+  describe '#expand' do
+    it 'is a mutator method which returns the object itself' do
+      exp = expression_factory.build([5,[:add,'x']])
+      expected_exp = expression_factory.build([5,[:add,'x']])
+      expect(exp.expand.object_id).to eq exp.object_id
+    end
 
+    it 'expands an addition step' do
+      exp = expression_factory.build([5,[:add,'x']])
+      expected_exp = expression_factory.build([5,[:add,'x']])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands 2 addition steps' do
+      exp = expression_factory.build([5,[:add,'x'],[:add,'y']])
+      expected_exp = expression_factory.build([5,[:add,'x'],[:add,'y']])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands addition step whos value is an expression of additions steps' do
+      exp = expression_factory.build([5,[:add,[7,[:add,'x']]],[:add,'y']])
+      expected_exp = expression_factory.build([5,[nil,7],[:add,'x'],[:add,'y']])
+      expect(exp.expand).to eq expected_exp
+    end
+
+  end
 
 
 end

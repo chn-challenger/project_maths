@@ -2,6 +2,7 @@ require './models/step'
 require './models/evaluate'
 require './models/fraction'
 require './models/array_extension'
+require './models/factory'
 
 include Evaluate
 
@@ -29,7 +30,7 @@ class Expression
   def is_m_form_sum?
     _is_sum? && _steps_are_at_most_m_form?
   end
-  
+
   def _is_gen_m_form_sum?
     _is_gen_sum? && _steps_are_at_most_m_form?
   end
@@ -603,5 +604,24 @@ class Expression
     end
     self
   end
+
+  def expand
+    expanded_steps = []
+    steps.each do |step|
+      _expand_nil_or_add_into(expanded_steps,step) if
+        step.ops == nil || step.ops == :add
+    end
+    self.steps = expanded_steps
+    return self
+  end
+
+  def _expand_nil_or_add_into(expanded_steps,step)
+    if step.val.is_a?(expression_class)
+      step.val.expand.steps.each{|step| expanded_steps << step}
+    else
+     expanded_steps << step
+    end
+  end
+
 
 end

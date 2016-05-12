@@ -1,4 +1,4 @@
-require './models/expression_factory'
+require './models/factory'
 
 describe ExpressionFactory do
   describe '#build' do
