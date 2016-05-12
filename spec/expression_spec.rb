@@ -1738,56 +1738,56 @@ describe Expression do
 
   describe '#expand' do
     it 'is a mutator method which returns the object itself' do
-      exp = expression_factory.build([5,[:add,'x']])
-      expected_exp = expression_factory.build([5,[:add,'x']])
+      exp = expression_factory.build([[nil,5],[:add,'x']])
+      expected_exp = expression_factory.build([[nil,5],[:add,'x']])
       expect(exp.expand.object_id).to eq exp.object_id
     end
 
     it 'expands an addition step' do
-      exp = expression_factory.build([5,[:add,'x']])
-      expected_exp = expression_factory.build([5,[:add,'x']])
+      exp = expression_factory.build([[nil,5],[:add,'x']])
+      expected_exp = expression_factory.build([[nil,5],[:add,'x']])
       expect(exp.expand).to eq expected_exp
     end
 
     it 'expands 2 addition steps' do
-      exp = expression_factory.build([5,[:add,'x'],[:add,'y']])
-      expected_exp = expression_factory.build([5,[:add,'x'],[:add,'y']])
+      exp = expression_factory.build([[nil,5],[:add,'x'],[:add,'y']])
+      expected_exp = expression_factory.build([[nil,5],[:add,'x'],[:add,'y']])
       expect(exp.expand).to eq expected_exp
     end
 
     it 'expands addition step whos value is an expression of additions steps' do
-      exp = expression_factory.build([5,[:add,[7,[:add,'x']]],[:add,'y']])
-      expected_exp = expression_factory.build([5,[nil,7],[:add,'x'],[:add,'y']])
+      exp = expression_factory.build([[nil,5],[:add,[[nil,7],[:add,'x']]],[:add,'y']])
+      expected_exp = expression_factory.build([[nil,5],[nil,7],[:add,'x'],[:add,'y']])
       expect(exp.expand).to eq expected_exp
     end
 
     it 'expands subtraction steps' do
-      exp = expression_factory.build([4,[:sbt,'x']])
-      expected_exp = expression_factory.build([4,[:sbt,'x']])
+      exp = expression_factory.build([[nil,4],[:sbt,'x']])
+      expected_exp = expression_factory.build([[nil,4],[:sbt,'x']])
       expect(exp.expand).to eq expected_exp
     end
 
     it 'expands e - (e + e) into e - e - e' do
-      exp = expression_factory.build([4,[:sbt,['x',[:add,7]]]])
-      expected_exp = expression_factory.build([4,[:sbt,'x'],[:sbt,7]])
+      exp = expression_factory.build([[nil,4],[:sbt,[[nil,'x'],[:add,7]]]])
+      expected_exp = expression_factory.build([[nil,4],[:sbt,'x'],[:sbt,7]])
       expect(exp.expand).to eq expected_exp
     end
 
     it 'expands e - (e - e + e) into e - e + e - e' do
-      exp = expression_factory.build([4,[:sbt,['x',[:sbt,7],[:add,'y']]]])
-      expected_exp = expression_factory.build([4,[:sbt,'x'],[:add,7],[:sbt,'y']])
+      exp = expression_factory.build([[nil,4],[:sbt,[[nil,'x'],[:sbt,7],[:add,'y']]]])
+      expected_exp = expression_factory.build([[nil,4],[:sbt,'x'],[:add,7],[:sbt,'y']])
       expect(exp.expand).to eq expected_exp
     end
 
     it 'expands e - (e - (e - e)) into e - e + e - e' do
-      exp = expression_factory.build([4,[:sbt,['x',[:sbt,[5,[:sbt,'y']]]]]])
-      expected_exp = expression_factory.build([4,[:sbt,'x'],[:add,5],[:sbt,'y']])
+      exp = expression_factory.build([[nil,4],[:sbt,[[nil,'x'],[:sbt,[[nil,5],[:sbt,'y']]]]]])
+      expected_exp = expression_factory.build([[nil,4],[:sbt,'x'],[:add,5],[:sbt,'y']])
       expect(exp.expand).to eq expected_exp
     end
 
     it 'expands (e + e) e into m + m' do
-      exp = expression_factory.build([4,[:add,'x'],[:mtp,5]])
-      expected_exp = expression_factory.build([[4,[:mtp,5]],[:add,['x',[:mtp,5]]]])
+      exp = expression_factory.build([[nil,4],[:add,'x'],[:mtp,5]])
+      expected_exp = expression_factory.build([[nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,5]] ]])
       expect(exp.expand).to eq expected_exp
     end
 

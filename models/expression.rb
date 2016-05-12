@@ -648,8 +648,9 @@ class Expression
       if expanded_steps[i].val.is_a?(expression_class)
 
       else
-        value_exp = expression_factory.build([expanded_steps[i].val])
-        expanded_steps[i].val = value_exp
+        operation = expanded_steps[i].ops
+        expanded_steps[i].ops = nil
+        expanded_steps[i] = step_factory.build([operation,[expanded_steps[i]]])
         expanded_steps[i].val.steps << step
       end
     end
