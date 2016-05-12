@@ -1761,6 +1761,29 @@ describe Expression do
       expect(exp.expand).to eq expected_exp
     end
 
+    it 'expands subtraction steps' do
+      exp = expression_factory.build([4,[:sbt,'x']])
+      expected_exp = expression_factory.build([4,[:sbt,'x']])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands e - (e + e) into e - e - e' do
+      exp = expression_factory.build([4,[:sbt,['x',[:add,7]]]])
+      expected_exp = expression_factory.build([4,[:sbt,'x'],[:sbt,7]])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands e - (e - e + e) into e - e + e - e' do
+      exp = expression_factory.build([4,[:sbt,['x',[:sbt,7],[:add,'y']]]])
+      expected_exp = expression_factory.build([4,[:sbt,'x'],[:add,7],[:sbt,'y']])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands e - (e - (e - e)) into e - e + e - e' do
+      exp = expression_factory.build([4,[:sbt,['x',[:sbt,[5,[:sbt,'y']]]]]])
+      expected_exp = expression_factory.build([4,[:sbt,'x'],[:add,5],[:sbt,'y']])
+      expect(exp.expand).to eq expected_exp
+    end
   end
 
 

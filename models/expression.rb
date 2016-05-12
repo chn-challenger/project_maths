@@ -608,8 +608,8 @@ class Expression
   def expand
     expanded_steps = []
     steps.each do |step|
-      _expand_nil_or_add_into(expanded_steps,step) if
-        step.ops == nil || step.ops == :add
+      _expand_nil_or_add_into(expanded_steps,step) if _nil_or_add?(step.ops)
+      _expand_sbt_into(expanded_steps,step) if step.ops == :sbt
     end
     self.steps = expanded_steps
     return self
@@ -623,5 +623,23 @@ class Expression
     end
   end
 
+  def _nil_or_add?(ops)
+    ops == nil || ops == :add
+  end
+
+  def _expand_sbt_into(expanded_steps,step)
+    if step.val.is_a?(expression_class)
+      step.val.expand._add_sbt_sign_switch
+      step.val.steps.each{|step| expanded_steps << step}
+    else
+     expanded_steps << step
+    end
+  end
+
+  def _add_sbt_sign_switch
+    switch_hash = {nil =>:sbt,:add =>:sbt,:sbt=>:add}
+    steps.each{|step| step.ops = switch_hash[step.ops]}
+    return self
+  end
 
 end
