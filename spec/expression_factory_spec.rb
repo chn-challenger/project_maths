@@ -33,6 +33,21 @@ describe ExpressionFactory do
       expected_exp = Expression.new([Step.new(nil,Expression.new([Step.new(nil,2),Step.new(:add,7)]))])
       expect(ExpressionFactory.build(step_config_array)).to eq expected_exp
     end
+
+    it 'creates an expresion when given an array of steps' do
+      step_1, step_2 = Step.new(:add,5), Step.new(:add,'x')
+      step_config_array = [step_1,step_2]
+      expected_exp = Expression.new([Step.new(:add,5), Step.new(:add,'x')])
+      expect(ExpressionFactory.build(step_config_array)).to eq expected_exp
+    end
+
+    it 'creates exp when given a mixed array of configs and steps' do
+      step_1, step_2 = Step.new(:add,5), Step.new(:add,'x')
+      step_config_array = [2,step_1,step_2,[:mtp,[2]]]
+      expected_exp = Expression.new([Step.new(nil,2),Step.new(:add,5),Step.new(:add,'x'),
+          Step.new(:mtp,Expression.new([Step.new(nil,2)]))])
+      expect(ExpressionFactory.build(step_config_array)).to eq expected_exp
+    end
   end
 end
 
@@ -56,6 +71,11 @@ describe StepFactory do
         Step.new(:mtp,'x')]),:lft)
       expect(StepFactory.build(step_config)).to eq expected_step
     end
-  end
 
+    it 'builds a step with an expression value' do
+      step_config = [:add,Expression.new([])]
+      expected_step = Step.new(:add,Expression.new([]),:rgt)
+      expect(StepFactory.build(step_config)).to eq expected_step
+    end
+  end
 end
