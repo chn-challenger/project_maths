@@ -35,3 +35,27 @@ describe ExpressionFactory do
     end
   end
 end
+
+describe StepFactory do
+  describe '#build' do
+    it 'builds a basic step with default direction' do
+      step_config = [:add,5]
+      expected_step = Step.new(:add,5,:rgt)
+      expect(StepFactory.build(step_config)).to eq expected_step
+    end
+
+    it 'builds a basic step with given direction' do
+      step_config = [:add,5,:lft]
+      expected_step = Step.new(:add,5,:lft)
+      expect(StepFactory.build(step_config)).to eq expected_step
+    end
+
+    it 'builds a step with expression building config' do
+      step_config = [:add,[2,[:mtp,'x']],:lft]
+      expected_step = Step.new(:add,Expression.new([Step.new(nil,2),
+        Step.new(:mtp,'x')]),:lft)
+      expect(StepFactory.build(step_config)).to eq expected_step
+    end
+  end
+
+end
