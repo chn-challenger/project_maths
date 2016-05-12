@@ -29,7 +29,7 @@ class Expression
   def is_m_form_sum?
     _is_sum? && _steps_are_at_most_m_form?
   end
-
+  
   def _is_gen_m_form_sum?
     _is_gen_sum? && _steps_are_at_most_m_form?
   end
