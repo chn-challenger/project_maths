@@ -645,6 +645,16 @@ class Expression
     return self
   end
 
+
+
+  def _expand_mtp_into(expanded_steps,step)
+    step = _mtp_prepare(step)
+
+
+  end
+
+
+
   # def _expand_mtp_into(expanded_steps,step) #step here is elementary
   #   for i in 0...expanded_steps.length
   #     if step.val.is_a?(expression_class)  #step has is a single m

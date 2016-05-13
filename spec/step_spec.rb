@@ -1344,7 +1344,28 @@ describe Step do
         expect(step_2).to eq step_2_copy
       end
     end
+  end
 
+  describe '#mtp_prepare_value_as_ms' do
+    it 'prepares an elementary step for multiplication by change it to ms' do
+      step = step_factory.build([:mtp,7])
+      expected_step = step_factory.build([:mtp,[[nil,7]]])
+      expect(step.mtp_prepare_value_as_ms).to eq expected_step
+    end
+
+    it 'prepares an elementary step for mtp by mutating it' do
+      step = step_factory.build([:mtp,7])
+      expected_step = step_factory.build([:mtp,[[nil,7]]])
+      step.mtp_prepare_value_as_ms
+      expect(step).to eq expected_step
+    end
+
+    it 'parepares an expression step by expanding the exp' do
+      step = step_factory.build([:mtp,[[nil,6],[:add,'x']]])
+      expected_step = step_factory.build([:mtp,[[nil,6],[:add,'x']]])
+      step.mtp_prepare_value_as_ms
+      expect(step).to eq expected_step
+    end
   end
 
 end

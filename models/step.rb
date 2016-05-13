@@ -289,8 +289,6 @@ class Step
     return self.copy if ops == :sbt && dir == :lft
   end
 
-
-
   def em_mtp_em(step)
     sign = _sign(step)
     self_copy, step_copy = self.copy, step.copy
@@ -340,6 +338,17 @@ class Step
   def _m_mtp_m(step)
     step.val.steps.first.ops = :mtp
     value_config = self.val.steps + step.val.steps
+  end
+
+  def mtp_prepare_value_as_ms
+    copy = self.copy
+    if val.is_a?(expression_class)
+      val.expand
+    else
+      copy.ops = nil
+      self.val = expression_factory.build([copy])
+    end
+    self
   end
 
 end
