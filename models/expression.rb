@@ -645,14 +645,42 @@ class Expression
     return self
   end
 
-
-
   def _expand_mtp_into(expanded_steps,step)
-    step = _mtp_prepare(step)
-
-
+    step.mtp_prepare_value_as_ms
+    copy = expression_factory.build(expanded_steps).copy.steps
+    expanded_steps.slice!(0..-1)
+    step.val.steps.each do |mtp_step|
+                #   #copy will need to be copied again to stop it from mutating
+                # puts 'copy is currently:'
+                # p copy
+                # puts 'mtp_step is currently:'
+                # p mtp_step
+                # puts 'expanded_steps is currently:'
+                # p expanded_steps
+      _expand_one_mtp_step_into(expanded_steps,copy,mtp_step) #make expanded_steps bigger
+    end
+    expanded_steps.first.ops = nil
   end
 
+  def _expand_one_mtp_step_into(expanded_steps,init_ms_steps,mtp_step)
+    copy = expression_factory.build(init_ms_steps).copy.steps
+              #
+              # puts 'check copy of copy!'
+              # p copy
+              #
+              # puts 'passed in mtp_step'
+              # p mtp_step
+              #
+              # puts 'passed in expanded_steps'
+              # p expanded_steps
+
+    copy.each do |step|
+      expanded_steps << step.em_mtp_em(mtp_step)
+    end
+              # puts 'expanded steps after iteration'
+              # p expanded_steps
+
+  end
 
 
   # def _expand_mtp_into(expanded_steps,step) #step here is elementary
