@@ -1909,6 +1909,10 @@ describe Expression do
       expect(exp.new_latex).to eq '\left(5-y\right)x'
     end
 
+    it 'produce latex for (e - e)(e + e)' do
+      exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:add,'x']]]])
+      expect(exp.new_latex).to eq '\left(5-y\right)\left(3+x\right)'
+    end
 
 
   end

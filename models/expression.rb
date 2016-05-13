@@ -696,9 +696,10 @@ class Expression
 
       if step.ops == :mtp
         if step.val.is_a?(expression_class)
-          # step_latex = step.val.new_latex
-          # step_latex = _latex_brackets(step_latex) if step.val._add_step_need_bracket?
-          # latex += '-' + step_latex
+          latex = _latex_brackets(latex) if latexed_exp._step_mtp_need_bracket?
+          step_latex = step.val.new_latex
+          step_latex = _latex_brackets(step_latex) if step.val._mtp_step_need_bracket?
+          latex += step_latex
         else
           latex = _latex_brackets(latex) if latexed_exp._step_mtp_need_bracket?
           latex += step.val.to_s
@@ -725,7 +726,13 @@ class Expression
   end
 
   def _step_mtp_need_bracket?
-    p self
+    steps.each do |step|
+      return true if step.ops == :add || step.ops == :sbt
+    end
+    return false
+  end
+
+  def _mtp_step_need_bracket?
     steps.each do |step|
       return true if step.ops == :add || step.ops == :sbt
     end
