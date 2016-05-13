@@ -1299,6 +1299,29 @@ describe Step do
       end
     end
 
+    context 'subcase of m x e' do
+      let(:step_1){step_factory.build([:sbt,[[nil,'x'],[:mtp,'y']]])}
+      let(:step_2){step_factory.build([:sbt,5])}
+      let(:expected_step){step_factory.build([:add,[[:mtp,'x'],[:mtp,'y'],[nil,5]]])}
+      let(:result_step){step_1.em_mtp_em(step_2)}
+
+      it 'm x e into m step' do
+        expect(result_step).to eq expected_step
+      end
+
+      it 'm x e into a new object m step' do
+        expect(step_1.object_id).not_to eq result_step.object_id
+        expect(step_2.object_id).not_to eq result_step.object_id
+      end
+
+      it 'm x e without changing the two initial steps' do
+        step_1_copy = step_1.copy
+        step_2_copy = step_2.copy
+        expect(step_1).to eq step_1_copy
+        expect(step_2).to eq step_2_copy
+      end
+    end
+
   end
 
 end

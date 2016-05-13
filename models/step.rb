@@ -292,6 +292,7 @@ class Step
   def em_mtp_em(step)
     return _e_mtp_e(step) if _e_and_e?(step)
     return _e_mtp_m(step) if _e_and_m?(step)
+    return _m_mtp_e(step) if _m_and_e?(step)
   end
 
   def _sign(step)
@@ -325,8 +326,16 @@ class Step
     step_factory.build([sign,value_config])
   end
 
-  def _m_mtp_e(step)
+  def _m_and_e?(step)
+    val.is_a?(expression_class) && !step.val.is_a?(expression_class)
+  end
 
+  def _m_mtp_e(step)
+    sign = _sign(step)
+    self_copy, step_copy = self.copy, step.copy
+    step_copy.ops, self_copy.val.steps.first.ops = nil, :mtp
+    value_config = self_copy.val.steps + [step_copy]
+    step_factory.build([sign,value_config])
   end
 
   def _m_mtp_m(step)
