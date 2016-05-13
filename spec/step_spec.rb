@@ -1253,31 +1253,52 @@ describe Step do
 
 
   describe '#em_mtp_em' do
-    it 'e_step mtp e_step into m_step' do
-      step_1 = step_factory.build([:add,5])
-      step_2 = step_factory.build([:sbt,'x'])
-      expected_exp = expression_factory.build([[nil,5],[:mtp,'x']])
-      expected_step = step_factory.build([:sbt,expected_exp])
-      expect(step_1.em_mtp_em(step_2)).to eq expected_step
+    context 'subcase of e x e' do
+      let(:step_1){step_factory.build([nil,5])}
+      let(:step_2){step_factory.build([:sbt,'x'])}
+      let(:expected_step){step_factory.build([:sbt,[[nil,5],[:mtp,'x']]])}
+      let(:result_step){step_1.em_mtp_em(step_2)}
+
+      it 'e x e into m step' do
+        expect(result_step).to eq expected_step
+      end
+
+      it 'e x e into a new object m step' do
+        expect(step_1.object_id).not_to eq result_step.object_id
+        expect(step_2.object_id).not_to eq result_step.object_id
+      end
+
+      it 'e x e without changing the two initial steps' do
+        step_1_copy = step_1.copy
+        step_2_copy = step_2.copy
+        expect(step_1).to eq step_1_copy
+        expect(step_2).to eq step_2_copy
+      end
     end
 
-    it 'e_step mtp e_step into a new object m_step ' do
-      step_1 = step_factory.build([:add,5])
-      step_2 = step_factory.build([:sbt,'x'])
-      result = step_1.em_mtp_em(step_2)
-      expect(step_1.object_id).not_to eq result.object_id
-      expect(step_2.object_id).not_to eq result.object_id
+    context 'subcase of e x m' do
+      let(:step_1){step_factory.build([nil,5])}
+      let(:step_2){step_factory.build([:sbt,[[nil,'x'],[:mtp,'y']]])}
+      let(:expected_step){step_factory.build([:sbt,[[nil,5],[:mtp,'x'],[:mtp,'y']]])}
+      let(:result_step){step_1.em_mtp_em(step_2)}
+
+      it 'e x m into m step' do
+        expect(result_step).to eq expected_step
+      end
+
+      it 'e x m into a new object m step' do
+        expect(step_1.object_id).not_to eq result_step.object_id
+        expect(step_2.object_id).not_to eq result_step.object_id
+      end
+
+      it 'e x m without changing the two initial steps' do
+        step_1_copy = step_1.copy
+        step_2_copy = step_2.copy
+        expect(step_1).to eq step_1_copy
+        expect(step_2).to eq step_2_copy
+      end
     end
 
-    it 'e_step mtp e_step without changing the two initial steps' do
-      step_1 = step_factory.build([:add,5])
-      step_2 = step_factory.build([:sbt,'x'])
-      step_1_copy = step_factory.build([:add,5])
-      step_2_copy = step_factory.build([:sbt,'x'])
-      result = step_1.em_mtp_em(step_2)
-      expect(step_1).to eq step_1_copy
-      expect(step_2).to eq step_2_copy
-    end
   end
 
 end
