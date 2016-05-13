@@ -605,6 +605,9 @@ class Expression
     self
   end
 
+
+
+
   def expand
     expanded_steps = []
     steps.each do |step|
@@ -613,6 +616,7 @@ class Expression
       _expand_mtp_into(expanded_steps,step) if step.ops == :mtp
     end
     self.steps = expanded_steps
+    self.steps.first.ops = nil  #this is to be taken out once nullify first step is written
     return self
   end
 
@@ -656,6 +660,39 @@ class Expression
   def _expand_one_mtp_step_into(expanded_steps,init_ms_steps,mtp_step)
     copy = expression_factory.build(init_ms_steps).copy.steps
     copy.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
+  end
+
+  def new_latex
+    latex = ''
+    steps.each do |step|
+      if step.ops == nil
+        if step.val.is_a?(expression_class)
+
+        else
+          latex += step.val.to_s
+        end
+      end
+
+      if step.ops == :add
+        if step.val.is_a?(expression_class)
+
+        else
+          latex += '+' + step.val.to_s
+        end
+
+      end
+
+      if step.ops == :sbt
+        if step.val.is_a?(expression_class)
+
+        else
+          latex += '-' + step.val.to_s
+        end
+
+      end
+
+    end
+    return latex
   end
 
 

@@ -1858,7 +1858,38 @@ describe Expression do
           [:sbt,[2,4,'y',8,'w']],   [:add,[3,'x',4,'y',8,'w']],
           [:add,[5,8,'w']],         [:add,[6,'z',8,'w']]
         ])
+      result = exp.expand
       expect(exp.expand).to eq expected_exp
     end
   end
+
+  describe '#new_latex' do
+    it 'produce latex for a single nil numerical e step' do
+      exp = expression_factory.build([[nil,2]])
+      expect(exp.new_latex).to eq '2'
+    end
+
+    it 'produce latex for a single nil string value e step' do
+      exp = expression_factory.build([[nil,'x']])
+      expect(exp.new_latex).to eq 'x'
+    end
+
+    it 'produce latex e + e' do
+      exp = expression_factory.build([[nil,'x'],[:add,3]])
+      expect(exp.new_latex).to eq 'x+3'
+    end
+
+    it 'produce latex e - e' do
+      exp = expression_factory.build([[nil,'x'],[:sbt,3]])
+      expect(exp.new_latex).to eq 'x-3'
+    end
+
+    it 'produce latex e - e + e' do
+      exp = expression_factory.build([[nil,'x'],[:sbt,3],[:add,'y']])
+      expect(exp.new_latex).to eq 'x-3+y'
+    end
+
+  end
+
+
 end
