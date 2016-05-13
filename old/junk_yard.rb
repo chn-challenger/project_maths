@@ -85,3 +85,13 @@
       # def self._first_step_fixed_ops
       #   nil
       # end
+      # expected_exp = expression_factory.build([
+      #   [nil,[[nil,2],[:mtp,4],[:mtp,'y'],[:mtp,7]]],
+      #   [:sbt,[[nil,3],[:mtp,'x'],[:mtp,4],[:mtp,'y'],[:mtp,7]]],
+      #   [:sbt,[[nil,5],[:mtp,7]]],
+      #   [:sbt,[[nil,6],[:mtp,'z'],[:mtp,7]]],
+      #   [:sbt,[[nil,2],[:mtp,4],[:mtp,'y'],[:mtp,8],[:mtp,'w']]],
+      #   [:add,[[nil,3],[:mtp,'x'],[:mtp,4],[:mtp,'y'],[:mtp,8],[:mtp,'w']]],
+      #   [:add,[[nil,5],[:mtp,8],[:mtp,'w']]],
+      #   [:add,[[nil,6],[:mtp,'z'],[:mtp,8],[:mtp,'w']]]
+      # ])

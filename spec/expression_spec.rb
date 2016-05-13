@@ -1852,19 +1852,13 @@ describe Expression do
       step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]])
       step_4 = step_factory.build([:mtp,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])
       exp = expression_factory.build([step_1,step_2,step_3,step_4])
-      expected_exp = expression_factory.build([
-        [nil,[[nil,2],[:mtp,4],[:mtp,'y'],[:mtp,7]]],
-        [:sbt,[[nil,3],[:mtp,'x'],[:mtp,4],[:mtp,'y'],[:mtp,7]]],
-        [:sbt,[[nil,5],[:mtp,7]]],
-        [:sbt,[[nil,6],[:mtp,'z'],[:mtp,7]]],
-        [:sbt,[[nil,2],[:mtp,4],[:mtp,'y'],[:mtp,8],[:mtp,'w']]],
-        [:add,[[nil,3],[:mtp,'x'],[:mtp,4],[:mtp,'y'],[:mtp,8],[:mtp,'w']]],
-        [:add,[[nil,5],[:mtp,8],[:mtp,'w']]],
-        [:add,[[nil,6],[:mtp,'z'],[:mtp,8],[:mtp,'w']]]
-      ])
+      expected_exp = msum_factory.build([
+          [nil,[2,4,'y',7]],        [:sbt,[3,'x',4,'y',7]],
+          [:sbt,[5,7]],             [:sbt,[6,'z',7]],
+          [:sbt,[2,4,'y',8,'w']],   [:add,[3,'x',4,'y',8,'w']],
+          [:add,[5,8,'w']],         [:add,[6,'z',8,'w']]
+        ])
       expect(exp.expand).to eq expected_exp
     end
   end
-
-
 end
