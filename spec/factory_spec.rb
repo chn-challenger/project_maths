@@ -82,7 +82,37 @@ describe StepFactory do
     it 'builds a step with an expression value' do
       step_config = [:add,Expression.new([])]
       expected_step = Step.new(:add,Expression.new([]),:rgt)
-      expect(StepFactory.build(step_config)).to eq expected_step
+      expect(step_factory.build(step_config)).to eq expected_step
+    end
+  end
+end
+
+describe MtpFormFactory do
+  describe '#build' do
+    it 'builds a 1 step m-form expression' do
+      config = [4]
+      expected_exp = expression_class.new([step_class.new(nil,4)])
+      expect(mform_factory.build(config)).to eq expected_exp
+    end
+
+    it 'builds a 3 step m-form expression' do
+      config = [4,'x','y']
+      expected_exp = expression_class.new([step_class.new(nil,4),
+        step_class.new(:mtp,'x'),step_class.new(:mtp,'y')])
+      expect(mform_factory.build(config)).to eq expected_exp
+    end
+
+    it 'builds a 5 step m-form expression' do
+      config = [4,5,6,7,8]
+      expected_exp = expression_factory.build([[nil,4],[:mtp,5],[:mtp,6],
+        [:mtp,7],[:mtp,8]])
+      expect(mform_factory.build(config)).to eq expected_exp
+    end
+
+    it 'builds a 3 step compound m-form expression' do
+      config = [4,[[nil,'x'],[:add,'y']],6]
+      expected_exp = expression_factory.build([[nil,4],[:mtp,[[nil,'x'],[:add,'y']]],[:mtp,6]])
+      expect(mform_factory.build(config)).to eq expected_exp
     end
   end
 end

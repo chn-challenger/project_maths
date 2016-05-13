@@ -1846,29 +1846,24 @@ describe Expression do
       expect(exp.expand).to eq expected_exp
     end
 
-    xit 'expands ((e - m)m - (e + m))(e - m)' do
+    it 'expands ((e - m)m - (e + m))(e - m)' do
       step_1 = step_factory.build([nil,[[nil,2],[:sbt,[[nil,3],[:mtp,'x']]]]])
       step_2 = step_factory.build([:mtp,[[nil,4],[:mtp,'y']]])
       step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]])
       step_4 = step_factory.build([:mtp,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])
       exp = expression_factory.build([step_1,step_2,step_3,step_4])
       expected_exp = expression_factory.build([
-
+        [nil,[[nil,2],[:mtp,4],[:mtp,'y'],[:mtp,7]]],
+        [:sbt,[[nil,3],[:mtp,'x'],[:mtp,4],[:mtp,'y'],[:mtp,7]]],
+        [:sbt,[[nil,5],[:mtp,7]]],
+        [:sbt,[[nil,6],[:mtp,'z'],[:mtp,7]]],
+        [:sbt,[[nil,2],[:mtp,4],[:mtp,'y'],[:mtp,8],[:mtp,'w']]],
+        [:add,[[nil,3],[:mtp,'x'],[:mtp,4],[:mtp,'y'],[:mtp,8],[:mtp,'w']]],
+        [:add,[[nil,5],[:mtp,8],[:mtp,'w']]],
+        [:add,[[nil,6],[:mtp,'z'],[:mtp,8],[:mtp,'w']]]
       ])
-
-      # exp_1 = expression_factory.build([
-      #   [nil,[[nil,2],[:sbt,[[nil,3],[:mtp,'x']]]]],
-      #   [:mtp,[[nil,4],[:mtp,'y']]],
-      #   [:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]]
-      # ])
-      # exp_2 = expression_factory.build([
-      #   [nil,7],[:sbt,[[nil,8],[:mtp,'w']]]
-      # ])
-      # exp = expression_factory.build([[nil,exp_1],[:mtp,exp_2]])
+      expect(exp.expand).to eq expected_exp
     end
-
-
-
   end
 
 

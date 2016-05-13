@@ -14,4 +14,12 @@ module ClassName
   def expression_factory
     ExpressionFactory
   end
+
+  def mform_factory
+    MtpFormFactory
+  end
+
+  def msum_factory
+    MtpFormSumFactory
+  end
 end
