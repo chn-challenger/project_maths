@@ -1252,4 +1252,32 @@ describe Step do
   end
 
 
+  describe '#em_mtp_em' do
+    it 'e_step mtp e_step into m_step' do
+      step_1 = step_factory.build([:add,5])
+      step_2 = step_factory.build([:sbt,'x'])
+      expected_exp = expression_factory.build([[nil,5],[:mtp,'x']])
+      expected_step = step_factory.build([:sbt,expected_exp])
+      expect(step_1.em_mtp_em(step_2)).to eq expected_step
+    end
+
+    it 'e_step mtp e_step into a new object m_step ' do
+      step_1 = step_factory.build([:add,5])
+      step_2 = step_factory.build([:sbt,'x'])
+      result = step_1.em_mtp_em(step_2)
+      expect(step_1.object_id).not_to eq result.object_id
+      expect(step_2.object_id).not_to eq result.object_id
+    end
+
+    it 'e_step mtp e_step without changing the two initial steps' do
+      step_1 = step_factory.build([:add,5])
+      step_2 = step_factory.build([:sbt,'x'])
+      step_1_copy = step_factory.build([:add,5])
+      step_2_copy = step_factory.build([:sbt,'x'])
+      result = step_1.em_mtp_em(step_2)
+      expect(step_1).to eq step_1_copy
+      expect(step_2).to eq step_2_copy
+    end
+  end
+
 end

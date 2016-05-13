@@ -645,17 +645,36 @@ class Expression
     return self
   end
 
-  def _expand_mtp_into(expanded_steps,step) #step here is elementary
-    for i in 0...expanded_steps.length
-      if expanded_steps[i].val.is_a?(expression_class)
-        expanded_steps[i].val.steps << step
-      else
-        operation = expanded_steps[i].ops
-        expanded_steps[i].ops = nil
-        expanded_steps[i] = step_factory.build([operation,[expanded_steps[i]]])
-        expanded_steps[i].val.steps << step
-      end
-    end
-  end
+  # def _expand_mtp_into(expanded_steps,step) #step here is elementary
+  #   for i in 0...expanded_steps.length
+  #     if step.val.is_a?(expression_class)  #step has is a single m
+  #       step.val.expand
+  #       p step.val.steps.length
+  #       step.val.steps.first.ops = :mtp
+  #
+  #       if expanded_steps[i].val.is_a?(expression_class)
+  #         step.val.steps.inject(expanded_steps[i].val.steps){|r,e|r << e}
+  #       else
+  #         operation = expanded_steps[i].ops
+  #         expanded_steps[i].ops = nil
+  #         expanded_steps[i] = step_factory.build([operation,[expanded_steps[i]]])
+  #         # expanded_steps[i].val.steps << step
+  #         step.val.steps.inject(expanded_steps[i].val.steps){|r,e|r << e}
+  #       end
+  #
+  #     else #the step is single elementary
+  #       if expanded_steps[i].val.is_a?(expression_class)
+  #         expanded_steps[i].val.steps << step
+  #       else
+  #         operation = expanded_steps[i].ops
+  #         expanded_steps[i].ops = nil
+  #         expanded_steps[i] = step_factory.build([operation,[expanded_steps[i]]])
+  #         expanded_steps[i].val.steps << step
+  #       end
+  #     end
+  #   end
+  # end
+
+
 
 end

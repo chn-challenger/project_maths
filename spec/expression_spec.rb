@@ -1791,6 +1791,12 @@ describe Expression do
       expect(exp.expand).to eq expected_exp
     end
 
+    it 'expands e e into m' do
+      exp = expression_factory.build([[nil,5],[:mtp,'z']])
+      expected_exp = expression_factory.build([[nil,[[nil,5],[:mtp,'z']]]])
+      expect(exp.expand).to eq expected_exp
+    end
+
     it 'expands (e + e) e into m + m' do
       exp = expression_factory.build([[nil,4],[:add,'x'],[:mtp,5]])
       expected_exp = expression_factory.build([[nil,[[nil,4],[:mtp,5]]],
@@ -1805,13 +1811,15 @@ describe Expression do
       expect(exp.expand).to eq expected_exp
     end
 
-    it 'expands (e + m) m into m + m' do
-      exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,'y']]],
-        [:mtp,[[nil,5],[:mtp,'z']]]])
-      expected_exp = expression_factory.build([
-        [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,'y'],[:mtp,5]]]])
-      # expect(exp.expand).to eq expected_exp
-    end
+    # it 'expands (e + m) m into m + m' do
+    #   exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,'y']]],
+    #     [:mtp,[[nil,5],[:mtp,'z']]]])
+    #   expected_exp = expression_factory.build([
+    #     [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,'y'],[:mtp,5]]]])
+    #   expect(exp.expand).to eq expected_exp
+    # end
+
+
     #
     # it 'expands (e + e)(e + e) into m + m + m + m' do
     #   exp = expression_factory.build([[nil,4],[:add,'x'],[:mtp,[[nil,5],[:add,'y']]]])

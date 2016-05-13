@@ -1,5 +1,7 @@
 require './models/expression'
 require './models/fraction'
+require './models/factory'
+
 
 class Step
 
@@ -285,6 +287,41 @@ class Step
     return self.class.new(:add,val) if ops == :sbt && dir == :rgt
     return self.copy if ops == :div && dir == :lft
     return self.copy if ops == :sbt && dir == :lft
+  end
+
+  def em_mtp_em(step)
+    return _e_mtp_e(step) if _e_and_e?(step)
+  end
+
+  def _sign(step)
+    if ops == step.ops || (ops == nil && step.ops == :add) || (ops == :add && step.ops == nil)
+      :add
+    else
+      :sbt
+    end
+  end
+
+  def _e_and_e?(step)
+    !val.is_a?(expression_class) && !step.val.is_a?(expression_class)
+  end
+
+  def _e_mtp_e(step)
+    sign = _sign(step)
+    self_copy, step_copy = self.copy, step.copy
+    self_copy.ops, step_copy.ops = nil, :mtp
+    step_factory.build([sign,[self_copy,step_copy]])
+  end
+
+  def _e_mtp_m(step)
+
+  end
+
+  def _m_mtp_e(step)
+
+  end
+
+  def _m_mtp_m(step)
+
   end
 
 
