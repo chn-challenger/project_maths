@@ -1,15 +1,6 @@
 require './models/expression'
 require './models/class_name'
 
-# def mform_factory
-#   MtpFormFactory
-# end
-#
-# def msum_factory
-#   MtpFormSumFactory
-# end
-
-
 include ClassName
 
 module ExpressionFactory
@@ -38,10 +29,19 @@ end
 
 module MtpFormFactory
   def self.build(config_array)
-    steps = config_array.inject([]) do |r,e|
-      r << step_factory.build([:mtp,e])
-    end
+    steps = config_array.inject([]){|r,e| r << step_factory.build([:mtp,e])}
     steps.first.ops = nil
+    expression_factory.build(steps)
+  end
+end
+
+module MtpFormSumFactory
+  def self.build(config_array)
+    steps = []
+    config_array.each do |array|
+      m_form_exp = mform_factory.build(array[1])
+      steps << step_factory.build([array[0],m_form_exp])
+    end
     expression_factory.build(steps)
   end
 end

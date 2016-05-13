@@ -116,3 +116,32 @@ describe MtpFormFactory do
     end
   end
 end
+
+describe MtpFormSumFactory do
+  describe '#build' do
+    it 'builds a 1 step m-form-sum expression' do
+      config = [[nil,[2,'x']]]
+      expected_exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]]])
+      expect(msum_factory.build(config)).to eq expected_exp
+    end
+
+    it 'builds a 2 step m-form-sum expression' do
+      config = [[nil,[2,'x']],[:sbt,[3,'y']]]
+      expected_exp = expression_factory.build([
+        [nil,[[nil,2],[:mtp,'x']]],
+        [:sbt,[[nil,3],[:mtp,'y']]]
+        ])
+      expect(msum_factory.build(config)).to eq expected_exp
+    end
+
+    it 'builds a 3 step m-form-sum expression' do
+      config = [[nil,[2,'x']],[:sbt,[3,'y']],[:add,[4,'z','w']]]
+      expected_exp = expression_factory.build([
+        [nil,[[nil,2],[:mtp,'x']]],
+        [:sbt,[[nil,3],[:mtp,'y']]],
+        [:add,[[nil,4],[:mtp,'z'],[:mtp,'w']]]
+        ])
+      expect(msum_factory.build(config)).to eq expected_exp
+    end
+  end
+end
