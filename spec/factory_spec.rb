@@ -2,6 +2,12 @@ require './models/factory'
 
 describe ExpressionFactory do
   describe '#build' do
+    it 'can create an empty expression' do
+      step_config_array = []
+      expected_exp = Expression.new([])
+      expect(ExpressionFactory.build(step_config_array)).to eq expected_exp
+    end
+
     it 'creates an expression of one step' do
       step_config_array = [[nil,5]]
       expected_exp = Expression.new([Step.new(nil,5)])

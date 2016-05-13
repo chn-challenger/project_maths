@@ -662,8 +662,9 @@ class Expression
     copy.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
   end
 
-  def new_latex
+  def new_latex  #all steps are right-sided, all exp are flattened, no division
     latex = ''
+    latexed_exp = expression_factory.build([])
     steps.each do |step|
       if step.ops == nil
         if step.val.is_a?(expression_class)
@@ -693,8 +694,23 @@ class Expression
         end
       end
 
+      if step.ops == :mtp
+        if step.val.is_a?(expression_class)
+          # step_latex = step.val.new_latex
+          # step_latex = _latex_brackets(step_latex) if step.val._add_step_need_bracket?
+          # latex += '-' + step_latex
+        else
+          latex = _latex_brackets(latex) if latexed_exp._step_mtp_need_bracket?
+          latex += step.val.to_s
+        end
+      end
+
+      latexed_exp.steps << step
+
     end
+
     return latex
+
   end
 
   def _latex_brackets(latex_string)
@@ -702,6 +718,14 @@ class Expression
   end
 
   def _add_step_need_bracket?
+    steps.each do |step|
+      return true if step.ops == :add || step.ops == :sbt
+    end
+    return false
+  end
+
+  def _step_mtp_need_bracket?
+    p self
     steps.each do |step|
       return true if step.ops == :add || step.ops == :sbt
     end
