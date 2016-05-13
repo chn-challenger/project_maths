@@ -289,19 +289,21 @@ class Step
     return self.copy if ops == :sbt && dir == :lft
   end
 
+
+
   def em_mtp_em(step)
-    return _e_mtp_e(step) if _e_and_e?(step)
-    return _e_mtp_m(step) if _e_and_m?(step)
-    return _m_mtp_e(step) if _m_and_e?(step)
-    return _m_mtp_m(step) if _m_and_m?(step)
+    sign = _sign(step)
+    self_copy, step_copy = self.copy, step.copy
+    value_config = self_copy._e_mtp_e(step_copy) if _e_and_e?(step)
+    value_config = self_copy._e_mtp_m(step_copy) if _e_and_m?(step)
+    value_config = self_copy._m_mtp_e(step_copy) if _m_and_e?(step)
+    value_config = self_copy._m_mtp_m(step_copy) if _m_and_m?(step)
+    step_factory.build([sign,value_config])
   end
 
   def _sign(step)
-    if ops == step.ops || (ops == nil && step.ops == :add) || (ops == :add && step.ops == nil)
-      :add
-    else
-      :sbt
-    end
+    ops == step.ops || (ops == nil && step.ops == :add) ||
+      (ops == :add && step.ops == nil) ? :add : :sbt
   end
 
   def _e_and_e?(step)
@@ -309,10 +311,8 @@ class Step
   end
 
   def _e_mtp_e(step)
-    sign = _sign(step)
-    self_copy, step_copy = self.copy, step.copy
-    self_copy.ops, step_copy.ops = nil, :mtp
-    step_factory.build([sign,[self_copy,step_copy]])
+    self.ops, step.ops = nil, :mtp
+    [self,step]
   end
 
   def _e_and_m?(step)
@@ -320,11 +320,8 @@ class Step
   end
 
   def _e_mtp_m(step)
-    sign = _sign(step)
-    self_copy, step_copy = self.copy, step.copy
-    self_copy.ops, step_copy.val.steps.first.ops = nil, :mtp
-    value_config = [self_copy] + step_copy.val.steps
-    step_factory.build([sign,value_config])
+    self.ops, step.val.steps.first.ops = nil, :mtp
+    value_config = [self] + step.val.steps
   end
 
   def _m_and_e?(step)
@@ -332,11 +329,8 @@ class Step
   end
 
   def _m_mtp_e(step)
-    sign = _sign(step)
-    self_copy, step_copy = self.copy, step.copy
-    step_copy.ops, self_copy.val.steps.first.ops = nil, :mtp
-    value_config = self_copy.val.steps + [step_copy]
-    step_factory.build([sign,value_config])
+    step.ops, self.val.steps.first.ops = nil, :mtp
+    value_config = self.val.steps + [step]
   end
 
   def _m_and_m?(step)
@@ -344,12 +338,8 @@ class Step
   end
 
   def _m_mtp_m(step)
-    sign = _sign(step)
-    self_copy, step_copy = self.copy, step.copy
-    step_copy.val.steps.first.ops = :mtp
-    value_config = self_copy.val.steps + step_copy.val.steps
-    step_factory.build([sign,value_config])
+    step.val.steps.first.ops = :mtp
+    value_config = self.val.steps + step.val.steps
   end
-
 
 end
