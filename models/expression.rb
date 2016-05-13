@@ -675,25 +675,37 @@ class Expression
 
       if step.ops == :add
         if step.val.is_a?(expression_class)
-
+          step_latex = step.val.new_latex
+          step_latex = _latex_brackets(step_latex) if step.val._add_step_need_bracket?
+          latex += '+' + step_latex
         else
           latex += '+' + step.val.to_s
         end
-
       end
 
       if step.ops == :sbt
         if step.val.is_a?(expression_class)
-
+          step_latex = step.val.new_latex
+          step_latex = _latex_brackets(step_latex) if step.val._add_step_need_bracket?
+          latex += '-' + step_latex
         else
           latex += '-' + step.val.to_s
         end
-
       end
 
     end
     return latex
   end
 
+  def _latex_brackets(latex_string)
+    "\\left(" + latex_string + "\\right)"
+  end
+
+  def _add_step_need_bracket?
+    steps.each do |step|
+      return true if step.ops == :add || step.ops == :sbt
+    end
+    return false
+  end
 
 end

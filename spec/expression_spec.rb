@@ -1874,20 +1874,32 @@ describe Expression do
       expect(exp.new_latex).to eq 'x'
     end
 
-    it 'produce latex e + e' do
+    it 'produce latex for e + e' do
       exp = expression_factory.build([[nil,'x'],[:add,3]])
       expect(exp.new_latex).to eq 'x+3'
     end
 
-    it 'produce latex e - e' do
+    it 'produce latex for e - e' do
       exp = expression_factory.build([[nil,'x'],[:sbt,3]])
       expect(exp.new_latex).to eq 'x-3'
     end
 
-    it 'produce latex e - e + e' do
+    it 'produce latex for e - e + e' do
       exp = expression_factory.build([[nil,'x'],[:sbt,3],[:add,'y']])
       expect(exp.new_latex).to eq 'x-3+y'
     end
+
+    it 'produce latex for e + (e - e)' do
+      exp = expression_factory.build([[nil,'x'],[:add,[[nil,5],[:sbt,'y']]]])
+      expect(exp.new_latex).to eq 'x+\left(5-y\right)'
+    end
+
+    it 'produce latex for e - (e - e)' do
+      exp = expression_factory.build([[nil,'x'],[:sbt,[[nil,5],[:sbt,'y']]]])
+      expect(exp.new_latex).to eq 'x-\left(5-y\right)'
+    end
+
+  
 
   end
 
