@@ -667,7 +667,7 @@ class Expression
     steps.each do |step|
       if step.ops == nil
         if step.val.is_a?(expression_class)
-
+          latex += step.val.new_latex
         else
           latex += step.val.to_s
         end
