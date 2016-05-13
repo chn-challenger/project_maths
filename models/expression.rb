@@ -618,7 +618,9 @@ class Expression
 
   def _expand_nil_or_add_into(expanded_steps,step)
     if step.val.is_a?(expression_class)
-      step.val.expand.steps.each{|step| expanded_steps << step}
+      step.val.expand
+      step.val.steps.first.ops = :add
+      step.val.steps.each{|step| expanded_steps << step}
     else
      expanded_steps << step
     end
@@ -643,10 +645,10 @@ class Expression
     return self
   end
 
-  def _expand_mtp_into(expanded_steps,step)
+  def _expand_mtp_into(expanded_steps,step) #step here is elementary
     for i in 0...expanded_steps.length
       if expanded_steps[i].val.is_a?(expression_class)
-
+        expanded_steps[i].val.steps << step
       else
         operation = expanded_steps[i].ops
         expanded_steps[i].ops = nil

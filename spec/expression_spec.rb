@@ -1706,20 +1706,20 @@ describe Expression do
       expect(expression.flatten_first_step).to eq expected_expression
     end
 
-    xit 'flattens all expressions whos first step value is an expression' do
-      expression = Expression.new([
-        Step.new(nil,
-          Expression.new([
-            Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])),
-        Step.new(:add,
-          Expression.new([
-            Step.new(nil,Expression.new([Step.new(nil,6),Step.new(:sbt,'y')]))]))
-        ])
-      expected_expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x'),
-        Step.new(:add,Expression.new([Step.new(nil,6),Step.new(:sbt,'y')]))
-        ])
-      expect(expression.flatten).to eq expected_expression
-    end
+    # xit 'flattens all expressions whos first step value is an expression' do
+    #   expression = Expression.new([
+    #     Step.new(nil,
+    #       Expression.new([
+    #         Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])),
+    #     Step.new(:add,
+    #       Expression.new([
+    #         Step.new(nil,Expression.new([Step.new(nil,6),Step.new(:sbt,'y')]))]))
+    #     ])
+    #   expected_expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x'),
+    #     Step.new(:add,Expression.new([Step.new(nil,6),Step.new(:sbt,'y')]))
+    #     ])
+    #   expect(expression.flatten).to eq expected_expression
+    # end
   end
 
   describe '#standardise_linear_expression' do
@@ -1729,11 +1729,11 @@ describe Expression do
       expect(expression.standardise_linear_expression).to eq expected_expression
     end
 
-    xit 'flattens and moves x term to first term' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
-      expected_expression = Expression.new([Step.new(nil,'x'),Step.new(:sbt,5,:lft)])
-      expect(expression.standardise_linear_expression).to eq expected_expression
-    end
+    # xit 'flattens and moves x term to first term' do
+    #   expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
+    #   expected_expression = Expression.new([Step.new(nil,'x'),Step.new(:sbt,5,:lft)])
+    #   expect(expression.standardise_linear_expression).to eq expected_expression
+    # end
   end
 
   describe '#expand' do
@@ -1757,7 +1757,13 @@ describe Expression do
 
     it 'expands addition step whos value is an expression of additions steps' do
       exp = expression_factory.build([[nil,5],[:add,[[nil,7],[:add,'x']]],[:add,'y']])
-      expected_exp = expression_factory.build([[nil,5],[nil,7],[:add,'x'],[:add,'y']])
+      expected_exp = expression_factory.build([[nil,5],[:add,7],[:add,'x'],[:add,'y']])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands e + m with no change' do
+      exp = expression_factory.build([[nil,2],[:add,[[nil,'x'],[:mtp,'y']]]])
+      expected_exp = expression_factory.build([[nil,2],[:add,[[nil,'x'],[:mtp,'y']]]])
       expect(exp.expand).to eq expected_exp
     end
 
@@ -1787,9 +1793,33 @@ describe Expression do
 
     it 'expands (e + e) e into m + m' do
       exp = expression_factory.build([[nil,4],[:add,'x'],[:mtp,5]])
-      expected_exp = expression_factory.build([[nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,5]] ]])
+      expected_exp = expression_factory.build([[nil,[[nil,4],[:mtp,5]]],
+        [:add,[[nil,'x'],[:mtp,5]]]])
       expect(exp.expand).to eq expected_exp
     end
+
+    it 'expands (e + m) e into m + m' do
+      exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,'y']]],[:mtp,5]])
+      expected_exp = expression_factory.build([
+        [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,'y'],[:mtp,5]]]])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands (e + m) m into m + m' do
+      exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,'y']]],
+        [:mtp,[[nil,5],[:mtp,'z']]]])
+      expected_exp = expression_factory.build([
+        [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,'y'],[:mtp,5]]]])
+      # expect(exp.expand).to eq expected_exp
+    end
+    #
+    # it 'expands (e + e)(e + e) into m + m + m + m' do
+    #   exp = expression_factory.build([[nil,4],[:add,'x'],[:mtp,[[nil,5],[:add,'y']]]])
+    #   expected_exp = expression_factory.build([
+    #     [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,5]]],
+    #     [:add, [[nil,4],[:mtp,'y']]],[:add, [[nil,'x'],[:mtp,'y']]]])
+    #   expect(exp.expand).to eq expected_exp
+    # end
 
   end
 
