@@ -1914,7 +1914,22 @@ describe Expression do
       expect(exp.new_latex).to eq '\left(5-y\right)\left(3+x\right)'
     end
 
+    it 'produce latex for (e - e)m' do
+      exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:mtp,'x']]]])
+      expect(exp.new_latex).to eq '\left(5-y\right)3x'
+    end
 
+    it 'produce latex for ((e - m)m - (e + m))(e - m)' do
+      step_1_1 = step_factory.build([nil,2])
+      step_1_2 = step_factory.build([:sbt,[[nil,3],[:mtp,'x']]])
+      step_2 = step_factory.build([:mtp,[[nil,4],[:mtp,'y']]])
+      step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]])
+      step_4 = step_factory.build([:mtp,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])
+      exp = expression_factory.build([step_1_1,step_1_2,step_2,step_3,step_4])
+      expected_latex = "\\left(\\left(2-3x\\right)4y-\\left(5+6z\\right)\\righ"\
+        "t)\\left(7-8w\\right)"
+      expect(exp.new_latex).to eq expected_latex
+    end
   end
 
 
