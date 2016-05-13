@@ -1302,7 +1302,7 @@ describe Step do
     context 'subcase of m x e' do
       let(:step_1){step_factory.build([:sbt,[[nil,'x'],[:mtp,'y']]])}
       let(:step_2){step_factory.build([:sbt,5])}
-      let(:expected_step){step_factory.build([:add,[[:mtp,'x'],[:mtp,'y'],[nil,5]]])}
+      let(:expected_step){step_factory.build([:add,[[nil,'x'],[:mtp,'y'],[:mtp,5]]])}
       let(:result_step){step_1.em_mtp_em(step_2)}
 
       it 'm x e into m step' do

@@ -1804,30 +1804,70 @@ describe Expression do
       expect(exp.expand).to eq expected_exp
     end
 
-    xit 'expands (e + m) e into m + m' do
+    it 'expands (e + m) e into m + m' do
       exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,'y']]],[:mtp,5]])
       expected_exp = expression_factory.build([
         [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,'y'],[:mtp,5]]]])
       expect(exp.expand).to eq expected_exp
     end
 
-    # it 'expands (e + m) m into m + m' do
-    #   exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,'y']]],
-    #     [:mtp,[[nil,5],[:mtp,'z']]]])
-    #   expected_exp = expression_factory.build([
-    #     [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,'y'],[:mtp,5]]]])
-    #   expect(exp.expand).to eq expected_exp
-    # end
+    it 'expands (e + m) m into m + m' do
+      exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,'y']]],
+        [:mtp,[[nil,5],[:mtp,'z']]]])
+      expected_exp = expression_factory.build([
+        [nil,[[nil,4],[:mtp,5],[:mtp,'z']]],[:add, [[nil,'x'],[:mtp,'y'],[:mtp,5],[:mtp,'z']]]])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands (e + e)(e - e) into m + m + m + m' do
+      exp = expression_factory.build([[nil,4],[:add,'x'],[:mtp,[[nil,5],[:sbt,'y']]]])
+      expected_exp = expression_factory.build([
+        [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,5]]],
+        [:sbt, [[nil,4],[:mtp,'y']]],[:sbt, [[nil,'x'],[:mtp,'y']]]])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands (e - e)(e - e)(e + e)' do
+      exp = expression_factory.build([
+        [nil,[[nil,4],[:sbt,'x']]],
+        [:mtp,[[nil,7],[:sbt,'y']]],
+        [:mtp,[[nil,5],[:add,'z']]]
+      ])
+      expected_exp = expression_factory.build([
+        [nil,[[nil,4],[:mtp,7],[:mtp,5]]],
+        [:sbt,[[nil,'x'],[:mtp,7],[:mtp,5]]],
+        [:sbt,[[nil,4],[:mtp,'y'],[:mtp,5]]],
+        [:add,[[nil,'x'],[:mtp,'y'],[:mtp,5]]],
+        [:add,[[nil,4],[:mtp,7],[:mtp,'z']]],
+        [:sbt,[[nil,'x'],[:mtp,7],[:mtp,'z']]],
+        [:sbt,[[nil,4],[:mtp,'y'],[:mtp,'z']]],
+        [:add,[[nil,'x'],[:mtp,'y'],[:mtp,'z']]]
+      ])
+      expect(exp.expand).to eq expected_exp
+    end
+
+    xit 'expands ((e - m)m - (e + m))(e - m)' do
+      step_1 = step_factory.build([nil,[[nil,2],[:sbt,[[nil,3],[:mtp,'x']]]]])
+      step_2 = step_factory.build([:mtp,[[nil,4],[:mtp,'y']]])
+      step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]])
+      step_4 = step_factory.build([:mtp,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])
+      exp = expression_factory.build([step_1,step_2,step_3,step_4])
+      expected_exp = expression_factory.build([
+
+      ])
+
+      # exp_1 = expression_factory.build([
+      #   [nil,[[nil,2],[:sbt,[[nil,3],[:mtp,'x']]]]],
+      #   [:mtp,[[nil,4],[:mtp,'y']]],
+      #   [:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]]
+      # ])
+      # exp_2 = expression_factory.build([
+      #   [nil,7],[:sbt,[[nil,8],[:mtp,'w']]]
+      # ])
+      # exp = expression_factory.build([[nil,exp_1],[:mtp,exp_2]])
+    end
 
 
-    #
-    # it 'expands (e + e)(e + e) into m + m + m + m' do
-    #   exp = expression_factory.build([[nil,4],[:add,'x'],[:mtp,[[nil,5],[:add,'y']]]])
-    #   expected_exp = expression_factory.build([
-    #     [nil,[[nil,4],[:mtp,5]]],[:add, [[nil,'x'],[:mtp,5]]],
-    #     [:add, [[nil,4],[:mtp,'y']]],[:add, [[nil,'x'],[:mtp,'y']]]])
-    #   expect(exp.expand).to eq expected_exp
-    # end
 
   end
 

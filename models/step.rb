@@ -327,7 +327,7 @@ class Step
   end
 
   def _m_mtp_e(step)
-    step.ops, self.val.steps.first.ops = nil, :mtp
+    step.ops, self.val.steps.first.ops = :mtp, nil
     value_config = self.val.steps + [step]
   end
 
