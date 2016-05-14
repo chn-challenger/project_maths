@@ -568,8 +568,7 @@ class Expression
 
   def flatten
     return self if steps.length == 0
-    # copy = self.copy
-    #just do step1 here
+    
     step_1 = steps.delete_at(0)
     step_1.val.flatten_first_step if step_1.val.is_a?(Expression)
     steps.each do |step|

@@ -1930,6 +1930,14 @@ describe Expression do
         "t)\\left(7-8w\\right)"
       expect(exp.new_latex).to eq expected_latex
     end
+
+    it 'produce latex for (m + m - m) e m' do
+      exp = expression_factory.build([[nil, [[nil,5],[:mtp,'x']]  ],
+        [:add, [[nil,2],[:mtp,'y']] ],[:sbt, [[nil,3],[:mtp,'z']] ],
+        [:mtp,5],[:mtp, [[nil,4],[:mtp,'w']] ]])
+      expected_latex = "\\left(5x+2y-3z\\right)54w"
+      expect(exp.new_latex).to eq expected_latex
+    end
   end
 
 
