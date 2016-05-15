@@ -1937,6 +1937,10 @@ describe Expression do
         [:mtp,5],[:mtp, [[nil,4],[:mtp,'w']] ]])
       expected_latex = "\\left(5x+2y-3z\\right)54w"
       expect(exp.new_latex).to eq expected_latex
+      #for brackets for multiplication, do not rely on flattened expression,
+      #since it can cause other issues, which may also need to be resolved.
+      #Try to look at first non-one-step expression to see the step ops inside
+      #in determining the bracket
     end
   end
 
