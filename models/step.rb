@@ -280,6 +280,8 @@ class Step
     '\left(' + current_latex + '\right)'
   end
 
+
+
   def reverse_step
     return self.class.new(:sbt,val) if ops == :add || ops == nil
     return self.class.new(:div,val) if ops == :mtp
@@ -288,6 +290,11 @@ class Step
     return self.copy if ops == :div && dir == :lft
     return self.copy if ops == :sbt && dir == :lft
   end
+
+
+
+
+
 
   def em_mtp_em(step)
     sign = _sign(step)
@@ -350,6 +357,9 @@ class Step
     end
     self
   end
+
+
+
 
   def exp_valued?
     val.is_a?(expression_class)
