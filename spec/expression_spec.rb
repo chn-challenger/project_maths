@@ -1958,6 +1958,24 @@ describe Expression do
       expected_exp = expression_factory.build([[nil,5]])
       expect(exp.flatten).to eq expected_exp
     end
+
+    it 'flattens a one layer wrapping of two steps' do
+      exp = expression_factory.build([[nil,[[nil,5],[:mtp,'x']]]])
+      expected_exp = expression_factory.build([[nil,5],[:mtp,'x']])
+      expect(exp.flatten).to eq expected_exp
+    end
+
+    it 'flattens a 2 layer of exp step exp wrapping' do
+      exp = expression_factory.build([[nil,[[nil,[[nil,5]]]]]])
+      expected_exp = expression_factory.build([[nil,5]])
+      expect(exp.flatten).to eq expected_exp
+    end
+
+    xit 'flattens layers of wrapping recursively eg 1' do
+      exp = expression_factory.build([[nil,[[nil,'x'], [:add,[[nil,[[nil,5]]]]]  ]]])
+      expected_exp = expression_factory.build([[nil,'x'],[:add, [[nil,5]]      ]])
+      expect(exp.flatten).to eq expected_exp
+    end
   end
 
 end

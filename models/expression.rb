@@ -743,8 +743,25 @@ class Expression
   # end
 
   def flatten
-    expression_factory.build([[steps.first.val.steps.first.ops,steps.first.val.steps.first.val]])
+    _outer_flatten
   end
 
+  def _not_flat?
+    steps.length == 1 && steps.first.val.is_a?(expression_class)
+  end
+
+  def _outer_flatten
+    if _not_flat?
+      # result = steps.first.val
+      result = expression_factory.build(steps.first.val.steps)
+      if result._not_flat?
+        return result._outer_flatten
+      else
+        return result
+      end
+    else
+      return self
+    end
+  end
 
 end
