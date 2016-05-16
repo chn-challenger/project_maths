@@ -1890,50 +1890,55 @@ describe Expression do
       result = exp.flatten
       expect(exp.steps.last.val.object_id).to eq result.steps.last.val.object_id
     end
+
+    it 'can it flatten this?' do
+      exp = expression_factory.build([[nil,[[nil,5],[:sbt,'y']]],[:add,'x']])
+      expected_exp = expression_factory.build([[nil,5],[:sbt,'y'],[:add,'x']])
+      result = exp.flatten
+      expect(result).to eq expected_exp
+    end
   end
 
   describe '#new_latex' do
-    it 'produce latex for a single nil numerical e step' do
-      exp = expression_factory.build([[nil,2]])
-      expect(exp.new_latex).to eq '2'
-    end
-
-    it 'produce latex for a single nil string value e step' do
-      exp = expression_factory.build([[nil,'x']])
-      expect(exp.new_latex).to eq 'x'
-    end
-
-    it 'produce latex for e + e' do
-      exp = expression_factory.build([[nil,'x'],[:add,3]])
-      expect(exp.new_latex).to eq 'x+3'
-    end
-
-    it 'produce latex for e - e' do
-      exp = expression_factory.build([[nil,'x'],[:sbt,3]])
-      expect(exp.new_latex).to eq 'x-3'
-    end
-
-    it 'produce latex for e - e + e' do
-      exp = expression_factory.build([[nil,'x'],[:sbt,3],[:add,'y']])
-      expect(exp.new_latex).to eq 'x-3+y'
-    end
-
-    it 'produce latex for e + (e - e)' do
-      exp = expression_factory.build([[nil,'x'],[:add,[[nil,5],[:sbt,'y']]]])
-      expect(exp.new_latex).to eq 'x+\left(5-y\right)'
-    end
-
-    it 'produce latex for e - (e - e)' do
-      exp = expression_factory.build([[nil,'x'],[:sbt,[[nil,5],[:sbt,'y']]]])
-      expect(exp.new_latex).to eq 'x-\left(5-y\right)'
-    end
-
-    # # it 'produce latex for '
-    #
-    # it 'produce latex for (e - e) + e' do
-    #   exp = expression_factory.build([[nil,[[nil,5],[:sbt,'y']]],[:add,'x']])
-    #   expect(exp.new_latex).to eq '5-y+x'
+    # it 'produce latex for a single nil numerical e step' do
+    #   exp = expression_factory.build([[nil,2]])
+    #   expect(exp.new_latex).to eq '2'
     # end
+    #
+    # it 'produce latex for a single nil string value e step' do
+    #   exp = expression_factory.build([[nil,'x']])
+    #   expect(exp.new_latex).to eq 'x'
+    # end
+    #
+    # it 'produce latex for e + e' do
+    #   exp = expression_factory.build([[nil,'x'],[:add,3]])
+    #   expect(exp.new_latex).to eq 'x+3'
+    # end
+    #
+    # it 'produce latex for e - e' do
+    #   exp = expression_factory.build([[nil,'x'],[:sbt,3]])
+    #   expect(exp.new_latex).to eq 'x-3'
+    # end
+    #
+    # it 'produce latex for e - e + e' do
+    #   exp = expression_factory.build([[nil,'x'],[:sbt,3],[:add,'y']])
+    #   expect(exp.new_latex).to eq 'x-3+y'
+    # end
+    #
+    # it 'produce latex for e + (e - e)' do
+    #   exp = expression_factory.build([[nil,'x'],[:add,[[nil,5],[:sbt,'y']]]])
+    #   expect(exp.new_latex).to eq 'x+\left(5-y\right)'
+    # end
+    #
+    # it 'produce latex for e - (e - e)' do
+    #   exp = expression_factory.build([[nil,'x'],[:sbt,[[nil,5],[:sbt,'y']]]])
+    #   expect(exp.new_latex).to eq 'x-\left(5-y\right)'
+    # end
+
+    xit 'produce latex for (e - e) + e' do
+      exp = expression_factory.build([[nil,[[nil,5],[:sbt,'y']]],[:add,'x']])
+      expect(exp.new_latex).to eq '5-y+x'
+    end
     #
     # it 'produce latex for (e - e) x e' do
     #   exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,'x']])
