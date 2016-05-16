@@ -743,7 +743,10 @@ class Expression
   # end
 
   def flatten
-    _outer_flatten
+    _outer_flatten.steps.each do |step|
+      step.val = step.val.flatten if step.val.is_a?(expression_class)
+    end
+    self
   end
 
   def _not_flat?
@@ -751,8 +754,15 @@ class Expression
   end
 
   def _outer_flatten
-    _not_flat? ? steps.first.val._outer_flatten : self
+    if _not_flat?
+      self.steps = steps.first.val.steps
+      self._outer_flatten
+    else
+      self
+    end
   end
+
+
 
 end
 
