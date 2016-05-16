@@ -655,9 +655,9 @@ class Expression
 
 
   def new_latex  #all steps are right-sided, no division
-    copy = self.copy.flatten
+    return '' if steps.length == 0
 
-    p copy
+    copy = self.copy.flatten
 
     latexed_exp = expression_factory.build([copy.steps.first])
 
@@ -686,53 +686,24 @@ class Expression
         end
       end
 
+      if copy.steps[i].ops == :mtp
+        step_val = copy.steps[i].val
+        if step_val.is_a?(expression_class)
+          latex = _latex_brackets(latex) if latexed_exp._step_mtp_need_bracket?
+          step_latex = step_val.new_latex
+          step_latex = _latex_brackets(step_latex) if step_val._mtp_step_need_bracket?
+          latex += step_latex
+        else
+          latex = _latex_brackets(latex) if latexed_exp._step_mtp_need_bracket?
+          latex += step_val.to_s
+        end
+      end
+
       latexed_exp.steps << copy.steps[i]
 
     end
 
     return latex
-
-    # steps.each do |step|
-    #   if step.ops == nil
-    #     if step.val.is_a?(expression_class)
-    #       latex += step.val.new_latex
-    #     else
-    #       latex += step.val.to_s
-    #     end
-    #   end
-    #
-    #   if step.ops == :add
-    #     if step.val.is_a?(expression_class)
-    #       step_latex = step.val.new_latex
-    #       step_latex = _latex_brackets(step_latex) if step.val._add_step_need_bracket?
-    #       latex += '+' + step_latex
-    #     else
-    #       latex += '+' + step.val.to_s
-    #     end
-    #   end
-    #
-    #   if step.ops == :sbt
-    #     if step.val.is_a?(expression_class)
-    #       step_latex = step.val.new_latex
-    #       step_latex = _latex_brackets(step_latex) if step.val._add_step_need_bracket?
-    #       latex += '-' + step_latex
-    #     else
-    #       latex += '-' + step.val.to_s
-    #     end
-    #   end
-    #
-    #   if step.ops == :mtp
-    #     if step.val.is_a?(expression_class)
-    #       latex = _latex_brackets(latex) if latexed_exp._step_mtp_need_bracket?
-    #       step_latex = step.val.new_latex
-    #       step_latex = _latex_brackets(step_latex) if step.val._mtp_step_need_bracket?
-    #       latex += step_latex
-    #     else
-    #       latex = _latex_brackets(latex) if latexed_exp._step_mtp_need_bracket?
-    #       latex += step.val.to_s
-    #     end
-    #   end
-
 
   end
 
@@ -751,17 +722,13 @@ class Expression
   end
 
   def _step_mtp_need_bracket?
-    steps.each do |step|
-      return true if step.ops == :add || step.ops == :sbt
-    end
-    return false
+    return false if steps.length <= 1
+    return steps.last.ops == :mtp ? false : true
   end
 
   def _mtp_step_need_bracket?
-    steps.each do |step|
-      return true if step.ops == :add || step.ops == :sbt
-    end
-    return false
+    return false if steps.length <= 1
+    return steps.last.ops == :mtp ? false : true
   end
 
 
