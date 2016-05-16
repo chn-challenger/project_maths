@@ -351,4 +351,8 @@ class Step
     self
   end
 
+  def exp_valued?
+    val.is_a?(expression_class)
+  end
+
 end

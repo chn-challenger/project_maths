@@ -659,9 +659,9 @@ class Expression
     result = copy.steps.first.val.to_s
     for i in 1...copy.steps.length
       step = copy.steps[i]
-      result = _add_or_sbt_latex(step,result) if step.ops == :add
-      result = _add_or_sbt_latex(step,result) if step.ops == :sbt
-      result = _mtp_latex(step,result,curr_exp) if step.ops == :mtp
+      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :add
+      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :sbt
+      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :mtp
       result = _div_latex(step,result) if step.ops == :div
       curr_exp.steps << copy.steps[i]
     end
@@ -673,36 +673,32 @@ class Expression
     return (steps.last.ops == :mtp || steps.last.ops == :div) ? false : true
   end
 
-  def _latex_brackets(latex_string)
+  def _brackets(latex_string)
     "\\left(" + latex_string + "\\right)"
   end
 
-  def _add_or_sbt_latex(step,new_latex)
-    ops_latex = {:add => '+',:sbt => '-'}
-    if step.val.is_a?(expression_class)
-      step_latex = step.val.latex
-      step_latex = _latex_brackets(step_latex) if step.val._need_brackets?
-      new_latex += ops_latex[step.ops] + step_latex
-    else
-      new_latex += ops_latex[step.ops] + step.val.to_s
-    end
+  def _add_sbt_mtp_latex(step,result,curr_exp)
+    result = _brackets(result) if _mtp_need_brackets?(step,curr_exp)
+    step_latex = step.exp_valued? ? step.val.latex : step.val.to_s
+    step_latex = _brackets(step_latex) if _exp_need_brackets?(step)
+    result + _ops_latex[step.ops] + step_latex
   end
 
-  def _mtp_latex(step,new_latex,new_latexed_exp)
-    if step.val.is_a?(expression_class)
-      new_latex = _latex_brackets(new_latex) if new_latexed_exp._need_brackets?
-      step_latex = step.val.latex
-      step_latex = _latex_brackets(step_latex) if step.val._need_brackets?
-      new_latex += step_latex
-    else
-      new_latex = _latex_brackets(new_latex) if new_latexed_exp._need_brackets?
-      new_latex += step.val.to_s
-    end
+  def _div_latex(step,result)
+    step_latex = step.exp_valued? ? step.val.latex : step.val.to_s
+    '\frac{' + result + '}{' + step_latex + '}'
   end
 
-  def _div_latex(step,new_latex)
-    step_ltx = step.val.is_a?(expression_class) ? step.val.latex : step.val.to_s
-    '\frac{' + new_latex + '}{' + step_ltx + '}'
+  def _ops_latex
+    {:add => '+',:sbt => '-',:mtp => ''}
+  end
+
+  def _mtp_need_brackets?(step,curr_exp)
+    step.ops == :mtp && curr_exp._need_brackets?
+  end
+
+  def _exp_need_brackets?(step)
+    step.exp_valued? && step.val._need_brackets?
   end
 
 
