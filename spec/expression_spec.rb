@@ -1897,13 +1897,6 @@ describe Expression do
       result = exp.flatten
       expect(exp.steps.last.val.object_id).to eq result.steps.last.val.object_id
     end
-
-    # it 'can it flatten this?' do
-    #   exp = expression_factory.build([[nil,[[nil,5],[:sbt,'y']]],[:add,'x']])
-    #   expected_exp = expression_factory.build([[nil,5],[:sbt,'y'],[:add,'x']])
-    #   result = exp.flatten
-    #   expect(result).to eq expected_exp
-    # end
   end
 
   describe '#new_latex' do
@@ -2004,6 +1997,53 @@ describe Expression do
       expected_latex = '\left(2a-3+4bc+5-\left(6d-e\right)\right)7xy'
       expect(exp.new_latex).to eq expected_latex
     end
+
+    it 'produce latex for e/e' do
+      exp = expression_factory.build([[nil,'x'],[:div,5]])
+      expect(exp.new_latex).to eq '\frac{x}{5}'
+    end
+
+    it 'produce latex for e/e - e' do
+      exp = expression_factory.build([[nil,'x'],[:div,5],[:sbt,'y']])
+      expect(exp.new_latex).to eq '\frac{x}{5}-y'
+    end
+
+    it 'produce latex for m/(e - e) + m' do
+      exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]],
+        [:div,[[nil,3],[:sbt,'w']]],[:add,[[nil,'a'],[:mtp,'b']]]])
+      expect(exp.new_latex).to eq '\frac{2x}{3-w}+ab'
+    end
+
+    it 'produce latex for m/(e - e) + e/e' do
+      exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]],
+        [:div,[[nil,3],[:sbt,'w']]],[:add,[[nil,'a'],[:div,'b']]]])
+      expect(exp.new_latex).to eq '\frac{2x}{3-w}+\frac{a}{b}'
+    end
+
+    it 'produce latex for (m/(e - e) + e/e)m - e/e' do
+      exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]],
+        [:div,[[nil,3],[:sbt,'w']]],[:add,[[nil,'a'],[:div,'b']]],
+        [:mtp,[[nil,4],[:mtp,'c']]],[:sbt,[[nil,11],[:div,'f']]]])
+      expected_latex = '\left(\frac{2x}{3-w}+\frac{a}{b}\right)4c-\frac{11}{f}'
+      expect(exp.new_latex).to eq expected_latex
+    end
+
+    it 'produce latex for (((m/e + m - e) e + m) / (e-m) + m)(e / m-m + e)' do
+      step_1 = step_factory.build([nil,[[nil,[[nil,2],[:mtp,'a']]],[:div,3],
+        [:add,[[nil,4],[:mtp,'b']]],[:sbt,'c']]])
+      step_2 = step_factory.build([:mtp,5])
+      step_3 = step_factory.build([:add,[[nil,6],[:mtp,'d']]])
+      step_4 = step_factory.build([:div,[[nil,6],[:sbt, [[nil,[[nil,7],[:mtp,'e']]]]        ]]])
+      step_5 = step_factory.build([:add,[[nil,8],[:mtp,'f']]])
+      step_6 = step_factory.build([:mtp,[[nil,9],[:div,  [[nil,
+        [[nil,10],[:mtp,'x']]],[:sbt,[[nil,11],[:mtp,'y']]]]],[:add,12]]])
+      exp = expression_factory.build([step_1,step_2,step_3,step_4,step_5,step_6])
+      expected_latex = '\left(\frac{\left(\frac{2a}{3}+4b-c\right)5+6d}{6-7e}+8f\right)\left(\frac{9}{10x-11y}+12\right)'
+      expect(exp.new_latex).to eq expected_latex
+    end
   end
+
+
+
 
 end

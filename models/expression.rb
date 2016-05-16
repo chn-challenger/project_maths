@@ -652,9 +652,7 @@ class Expression
     _flatten_first_step if steps.first.val.is_a?(expression_class)
   end
 
-
-
-  def new_latex  #all steps are right-sided, no division
+  def new_latex
     return '' if steps.length == 0
 
     copy = self.copy.flatten
@@ -699,6 +697,16 @@ class Expression
         end
       end
 
+      if copy.steps[i].ops == :div
+        step_val = copy.steps[i].val
+        if step_val.is_a?(expression_class)
+          step_latex = step_val.new_latex
+          latex = '\frac{' + latex + '}{' + step_latex + '}'
+        else
+          latex = '\frac{' + latex + '}{' + step_val.to_s + '}'
+        end
+      end
+
       latexed_exp.steps << copy.steps[i]
 
     end
@@ -713,22 +721,22 @@ class Expression
 
   def _add_step_need_bracket?
     return false if steps.length <= 1
-    return steps.last.ops == :mtp ? false : true
+    return (steps.last.ops == :mtp || steps.last.ops == :div) ? false : true
   end
 
   def _sbt_step_need_bracket?
     return false if steps.length <= 1
-    return steps.last.ops == :mtp ? false : true
+    return (steps.last.ops == :mtp || steps.last.ops == :div) ? false : true
   end
 
   def _step_mtp_need_bracket?
     return false if steps.length <= 1
-    return steps.last.ops == :mtp ? false : true
+    return (steps.last.ops == :mtp || steps.last.ops == :div) ? false : true
   end
 
   def _mtp_step_need_bracket?
     return false if steps.length <= 1
-    return steps.last.ops == :mtp ? false : true
+    return (steps.last.ops == :mtp || steps.last.ops == :div) ? false : true
   end
 
 
