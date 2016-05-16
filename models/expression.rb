@@ -552,34 +552,7 @@ class Expression
     return true
   end
 
-  def flatten_first_step
-    return self if steps.length == 0
-    step_1 = steps.delete_at(0)
-    if step_1.val.is_a?(Expression)
-      step_1_steps = step_1.val.steps
-    end
-    self.steps = step_1_steps + steps
-    if steps[0].val.is_a?(Expression)
-      return flatten_first_step
-    else
-      return self
-    end
-  end
 
-  def flatten
-    return self if steps.length == 0
-    
-    step_1 = steps.delete_at(0)
-    step_1.val.flatten_first_step if step_1.val.is_a?(Expression)
-    steps.each do |step|
-      if step.val.is_a?(Expression)
-        step.val.flatten
-      end
-    end
-    return self
-
-
-  end
 
   def standardise_linear_expression
     continue = true
@@ -661,7 +634,7 @@ class Expression
     copy.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
   end
 
-  def new_latex  #all steps are right-sided, all exp are flattened, no division
+  def new_latex  #all steps are right-sided, no division
     latex = ''
     latexed_exp = expression_factory.build([])
     steps.each do |step|
@@ -737,5 +710,41 @@ class Expression
     end
     return false
   end
+
+
+  #
+  # def flatten_first_step
+  #   return self if steps.length == 0
+  #   step_1 = steps.delete_at(0)
+  #   if step_1.val.is_a?(Expression)
+  #     step_1_steps = step_1.val.steps
+  #   end
+  #   self.steps = step_1_steps + steps
+  #   if steps[0].val.is_a?(Expression)
+  #     return flatten_first_step
+  #   else
+  #     return self
+  #   end
+  # end
+
+  # def flatten
+  #   return self if steps.length == 0
+  #
+  #   step_1 = steps.delete_at(0)
+  #   step_1.val.flatten_first_step if step_1.val.is_a?(Expression)
+  #   steps.each do |step|
+  #     if step.val.is_a?(Expression)
+  #       step.val.flatten
+  #     end
+  #   end
+  #   return self
+  #
+  #
+  # end
+
+  def flatten
+    expression_factory.build([[steps.first.val.steps.first.ops,steps.first.val.steps.first.val]])
+  end
+
 
 end

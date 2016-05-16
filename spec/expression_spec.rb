@@ -1692,36 +1692,6 @@ describe Expression do
     end
   end
 
-  describe '#flatten_first_step?' do
-    it 'flattens one layer of exp step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
-      expected_expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
-      expect(expression.flatten_first_step).to eq expected_expression
-    end
-
-    it 'flattens two layer of exp step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,
-        Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))]))])
-      expected_expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
-      expect(expression.flatten_first_step).to eq expected_expression
-    end
-
-    # xit 'flattens all expressions whos first step value is an expression' do
-    #   expression = Expression.new([
-    #     Step.new(nil,
-    #       Expression.new([
-    #         Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])),
-    #     Step.new(:add,
-    #       Expression.new([
-    #         Step.new(nil,Expression.new([Step.new(nil,6),Step.new(:sbt,'y')]))]))
-    #     ])
-    #   expected_expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x'),
-    #     Step.new(:add,Expression.new([Step.new(nil,6),Step.new(:sbt,'y')]))
-    #     ])
-    #   expect(expression.flatten).to eq expected_expression
-    # end
-  end
-
   describe '#standardise_linear_expression' do
     it 'moves x term to first term in a flat expression' do
       expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
@@ -1899,50 +1869,95 @@ describe Expression do
       expect(exp.new_latex).to eq 'x-\left(5-y\right)'
     end
 
-    it 'produce latex for (e - e) + e' do
-      exp = expression_factory.build([[nil,[[nil,5],[:sbt,'y']]],[:add,'x']])
-      expect(exp.new_latex).to eq '5-y+x'
-    end
-
-    it 'produce latex for (e - e) x e' do
-      exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,'x']])
-      expect(exp.new_latex).to eq '\left(5-y\right)x'
-    end
-
-    it 'produce latex for (e - e)(e + e)' do
-      exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:add,'x']]]])
-      expect(exp.new_latex).to eq '\left(5-y\right)\left(3+x\right)'
-    end
-
-    it 'produce latex for (e - e)m' do
-      exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:mtp,'x']]]])
-      expect(exp.new_latex).to eq '\left(5-y\right)3x'
-    end
-
-    it 'produce latex for ((e - m)m - (e + m))(e - m)' do
-      step_1_1 = step_factory.build([nil,2])
-      step_1_2 = step_factory.build([:sbt,[[nil,3],[:mtp,'x']]])
-      step_2 = step_factory.build([:mtp,[[nil,4],[:mtp,'y']]])
-      step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]])
-      step_4 = step_factory.build([:mtp,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])
-      exp = expression_factory.build([step_1_1,step_1_2,step_2,step_3,step_4])
-      expected_latex = "\\left(\\left(2-3x\\right)4y-\\left(5+6z\\right)\\righ"\
-        "t)\\left(7-8w\\right)"
-      expect(exp.new_latex).to eq expected_latex
-    end
-
-    it 'produce latex for (m + m - m) e m' do
-      exp = expression_factory.build([[nil, [[nil,5],[:mtp,'x']]  ],
-        [:add, [[nil,2],[:mtp,'y']] ],[:sbt, [[nil,3],[:mtp,'z']] ],
-        [:mtp,5],[:mtp, [[nil,4],[:mtp,'w']] ]])
-      expected_latex = "\\left(5x+2y-3z\\right)54w"
-      expect(exp.new_latex).to eq expected_latex
-      #for brackets for multiplication, do not rely on flattened expression,
-      #since it can cause other issues, which may also need to be resolved.
-      #Try to look at first non-one-step expression to see the step ops inside
-      #in determining the bracket
-    end
+    # # it 'produce latex for '
+    #
+    # it 'produce latex for (e - e) + e' do
+    #   exp = expression_factory.build([[nil,[[nil,5],[:sbt,'y']]],[:add,'x']])
+    #   expect(exp.new_latex).to eq '5-y+x'
+    # end
+    #
+    # it 'produce latex for (e - e) x e' do
+    #   exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,'x']])
+    #   expect(exp.new_latex).to eq '\left(5-y\right)x'
+    # end
+    #
+    # it 'produce latex for (e - e)(e + e)' do
+    #   exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:add,'x']]]])
+    #   expect(exp.new_latex).to eq '\left(5-y\right)\left(3+x\right)'
+    # end
+    #
+    # it 'produce latex for (e - e)m' do
+    #   exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:mtp,'x']]]])
+    #   expect(exp.new_latex).to eq '\left(5-y\right)3x'
+    # end
+    #
+    # it 'produce latex for ((e - m)m - (e + m))(e - m)' do
+    #   step_1_1 = step_factory.build([nil,2])
+    #   step_1_2 = step_factory.build([:sbt,[[nil,3],[:mtp,'x']]])
+    #   step_2 = step_factory.build([:mtp,[[nil,4],[:mtp,'y']]])
+    #   step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]])
+    #   step_4 = step_factory.build([:mtp,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])
+    #   exp = expression_factory.build([step_1_1,step_1_2,step_2,step_3,step_4])
+    #   expected_latex = "\\left(\\left(2-3x\\right)4y-\\left(5+6z\\right)\\righ"\
+    #     "t)\\left(7-8w\\right)"
+    #   expect(exp.new_latex).to eq expected_latex
+    # end
+#
+    # it 'produce latex for (m + m - m) e m' do
+    #   exp = expression_factory.build([[nil, [[nil,5],[:mtp,'x']]  ],
+    #     [:add, [[nil,2],[:mtp,'y']] ],[:sbt, [[nil,3],[:mtp,'z']] ],
+    #     [:mtp,5],[:mtp, [[nil,4],[:mtp,'w']] ]])
+    #
+    #   # exp = expression_factory.build([[nil,[[nil,5],[:mtp,'x']]],
+    #   #   [:add,[[nil,2],[:mtp,'y']]],[:sbt,[[nil,3],[:mtp,'z']]],[:mtp,5],
+    #   #   [:mtp,[[nil,4],[:mtp,'w']]]])
+    #
+    #   expected_latex = "\\left(5x+2y-3z\\right)54w"
+    #   expect(exp.new_latex).to eq expected_latex
+    #   #for brackets for multiplication, do not rely on flattened expression,
+    #   #since it can cause other issues, which may also need to be resolved.
+    #   #Try to look at first non-one-step expression to see the step ops inside
+    #   #in determining the bracket
+    # end
   end
 
+
+  # describe '#flatten_first_step?' do
+  #   it 'flattens one layer of exp step' do
+  #     expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
+  #     expected_expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
+  #     expect(expression.flatten_first_step).to eq expected_expression
+  #   end
+  #
+  #   it 'flattens two layer of exp step' do
+  #     expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,
+  #       Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))]))])
+  #     expected_expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
+  #     expect(expression.flatten_first_step).to eq expected_expression
+  #   end
+  #
+  #   # xit 'flattens all expressions whos first step value is an expression' do
+  #   #   expression = Expression.new([
+  #   #     Step.new(nil,
+  #   #       Expression.new([
+  #   #         Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])),
+  #   #     Step.new(:add,
+  #   #       Expression.new([
+  #   #         Step.new(nil,Expression.new([Step.new(nil,6),Step.new(:sbt,'y')]))]))
+  #   #     ])
+  #   #   expected_expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x'),
+  #   #     Step.new(:add,Expression.new([Step.new(nil,6),Step.new(:sbt,'y')]))
+  #   #     ])
+  #   #   expect(expression.flatten).to eq expected_expression
+  #   # end
+  # end
+
+  describe '#flatten' do
+    it 'flattens a one layer of exp step exp wrapping' do
+      exp = expression_factory.build([[nil,[[nil,5]]]])
+      expected_exp = expression_factory.build([[nil,5]])
+      expect(exp.flatten).to eq expected_exp
+    end
+  end
 
 end
