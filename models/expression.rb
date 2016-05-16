@@ -634,23 +634,22 @@ class Expression
     copy.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
   end
 
+
   def flatten
-    _outer_flatten.steps.each do |step|
-      step.val = step.val.flatten if step.val.is_a?(expression_class)
+    _flatten_first_step
+    steps.each do |step|
+      step.val.flatten if step.val.is_a?(expression_class)
     end
     self
   end
 
-  def _not_flat?
-    steps.length == 1 && steps.first.val.is_a?(expression_class)
-  end
-
-  def _outer_flatten
-    if _not_flat?
-      self.steps = steps.first.val.steps
-      return self._outer_flatten
+  def _flatten_first_step
+    if steps.first.val.is_a?(expression_class)
+      first_steps = steps.first.val.steps
+      self.steps.delete_at(0)
+      self.steps = first_steps + self.steps
     end
-    self
+    _flatten_first_step if steps.first.val.is_a?(expression_class)
   end
 
 
@@ -860,3 +859,32 @@ end
   #   end
   #   return false
   # end
+
+
+    # def flatten
+    #   _outer_flatten.steps.each do |step|
+    #     step.val = step.val.flatten if step.val.is_a?(expression_class)
+    #   end
+    #   self
+    # end
+    #
+    # def _not_flat?
+    #   steps.length == 1 && steps.first.val.is_a?(expression_class)
+    # end
+    #
+    # def _outer_flatten
+    #   if _not_flat?
+    #     self.steps = steps.first.val.steps
+    #     return self._outer_flatten
+    #   end
+    #   self
+    # end
+
+
+      # def _outer_flatten
+      #   if _not_flat?
+      #     self.steps = steps.first.val.steps
+      #     return self._outer_flatten
+      #   end
+      #   self
+      # end

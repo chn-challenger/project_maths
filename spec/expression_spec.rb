@@ -1852,6 +1852,13 @@ describe Expression do
       expect(exp.flatten).to eq expected_exp
     end
 
+    it 'flattens a 4 layer of exp step exp wrapping' do
+      exp = expression_factory.build([[nil,[[nil,[[nil,[[nil,[[nil,5]]]]]]]]]])
+      expected_exp = expression_factory.build([[nil,5]])
+      expect(exp.flatten).to eq expected_exp
+    end
+
+
     it 'flattens layers of wrapping recursively eg 1' do
       exp = expression_factory.build([[nil,[[nil,'x'], [:add,[[nil,
         [[nil,5]]]]]]]])
