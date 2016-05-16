@@ -83,46 +83,6 @@ class Expression
     return true
   end
 
-  def m_sum_mtp_m_sum(m_sum_exp)
-    result_steps = []
-    m_sum_exp.steps.each do |term|
-      steps.each do |step|
-        operator = step.result_sign(term)
-        new_step = step.at_most_m_step_mtp_at_most_m_step(term)
-        new_step.ops = operator
-        result_steps << new_step
-      end
-    end
-    self.class.new(result_steps)._nullify_first_step_ops
-  end
-
-  def r_sum_mtp_r_sum(r_sum_exp)
-    result_steps = []
-    r_sum_exp.steps.each do |term|
-      steps.each do |step|
-        operator = step.result_sign(term)
-        new_step = step.step_mtp_step(term)
-        new_step.ops = operator
-        result_steps << new_step
-      end
-    end
-    self.class.new(result_steps)._nullify_first_step_ops
-  end
-
-  def _nullify_first_step_ops
-    return self if steps.length == 0
-    steps.first.ops = nil
-    self
-  end
-
-  def _sum_expression_sign_swap
-    steps.first.ops = :sbt
-    for i in 1..steps.length - 1
-      steps[i].ops = (steps[i].ops == :add)? :sbt : :add
-    end
-    self
-  end
-
   def _convert_lft_ops
     self.convert_lft_add_mtp_steps.convert_lft_sbt_div_steps
   end
@@ -222,22 +182,6 @@ class Expression
   def _to_at_most_m_form_sum_latex
     is_m_form_sum? ? m_form_sum_latex : m_form_latex
   end
-
-  # def latex
-  #   current_latex = ""
-  #   previous_steps = []
-  #   steps.each do |step|
-  #       current_latex += step.nil_step_latex if step.ops == nil
-  #       current_latex += step.add_or_sbt_rgt_step_latex if
-  #         (step.ops == :add || step.ops == :sbt) && step.dir == :rgt
-  #       current_latex = step.add_or_sbt_lft_step_latex(current_latex,previous_steps) if
-  #         (step.ops == :add || step.ops == :sbt) && step.dir == :lft
-  #       current_latex = step.mtp_step_latex(current_latex,previous_steps) if step.ops == :mtp
-  #       current_latex = step.div_step_latex(current_latex,previous_steps) if step.ops == :div
-  #       previous_steps << step
-  #   end
-  #   current_latex
-  # end
 
   def _all_steps_numerical?
     steps.each do |step|
