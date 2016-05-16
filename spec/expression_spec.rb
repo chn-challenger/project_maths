@@ -1288,94 +1288,94 @@ describe Expression do
     end
   end
 
-  describe '#latex' do
-    it 'returns latex for a 1 elementary step expression' do
-      expression = Expression.new([Step.new(nil,5)])
-      expect(expression.latex).to eq '5'
-    end
-
-    it 'returns latex for a 2 elementary step expression' do
-      expression = Expression.new([Step.new(nil,'x'),Step.new(:add,2,:lft)])
-      expect(expression.latex).to eq '2+x'
-    end
-
-    it 'returns latex for a 4 elementary step expression' do
-      expression = Expression.new([Step.new(nil,'x'),Step.new(:add,2),
-        Step.new(:div,15,:lft),Step.new(:mtp,4)])
-      expect(expression.latex).to eq '4\left(\frac{15}{x+2}\right)'
-    end
-
-    it 'returns latex for a 3 step expression with some exp steps' do
-      expression = Expression.new([
-        Step.new(nil,Expression.new([Step.new(nil,'a'),Step.new(:sbt,'b')])),
-        Step.new(:add,Expression.new([Step.new(nil,2),Step.new(:mtp,6)]),:lft),
-        Step.new(:div,Expression.new([Step.new(nil,'x'),Step.new(:sbt,11,:lft)]))
-        ])
-      expected_latex = '\frac{2\times6+\left(a-b\right)}{11-x}'
-      expect(expression.latex).to eq expected_latex
-    end
-
-    it 'returns latex for a multi-step expression with mixture of steps eg 1' do
-      rational_1 = Expression.new([
-        Step.new(nil,
-          Expression.new([
-            Step.new(nil,3),Step.new(:mtp,'x'),Step.new(:mtp,'y')])
-        ),
-        Step.new(:div,
-          Expression.new([
-            Step.new(nil,Expression.new([
-              Step.new(nil,2),Step.new(:mtp,4),Step.new(:mtp,'b')
-              ])
-            ),
-            Step.new(:sbt,5)
-          ])
-        )
-      ])
-      step_1 = Step.new(nil,rational_1)
-      step_2 = Step.new(:mtp,'x')
-      step_3 = Step.new(:sbt,123,:lft)
-      expression = Expression.new([step_1,step_2,step_3])
-      expected_latex = "123-x\\left(\\frac{3xy}{2\\times4b-5}\\right)"
-      result_latex = expression.latex
-      expect(result_latex).to eq expected_latex
-    end
-
-    it 'returns latex for a multi-step expression with mixture of steps eg 2' do
-      step_1 = Step.new(nil,Expression.new([Step.new(nil,3),Step.new(:div,
-        Expression.new([Step.new(nil,'x'),Step.new(:sbt,4,:lft)]))]))
-      step_2 = Step.new(:add,2,:lft)
-      step_3 = Step.new(:mtp,Expression.new([Step.new(nil,3),Step.new(:mtp,'a')]))
-      step_4 = Step.new(:sbt,Expression.new([
-        Step.new(nil,Expression.new([Step.new(nil,4),Step.new(:mtp,'x')])),
-        Step.new(:div,Expression.new([Step.new(nil,5),Step.new(:mtp,'y'),Step.new(:add,2)]))
-        ]),:lft)
-      expression = Expression.new([step_1,step_2,step_3,step_4])
-      result_latex = expression.latex
-      expected_latex = "\\frac{4x}{5y+2}-3a\\left(2+\\frac{3}{4-x}\\right)"
-      expect(result_latex).to eq expected_latex
-    end
-
-    it 'returns latex for a multi-step expression with mixture of steps eg 2 again' do
-      step_1 = Step.new(nil,Expression.new([
-        Step.new(nil,Expression.new([Step.new(nil,4),Step.new(:mtp,'x')])),
-        Step.new(:div,Expression.new([Step.new(nil,5),Step.new(:mtp,'y'),Step.new(:add,2)]))
-        ]))
-      step_2 = Step.new(:sbt,Expression.new([
-          Step.new(nil,3),
-          Step.new(:mtp,'a'),
-          Step.new(:mtp,Expression.new([
-              Step.new(nil,2),
-              Step.new(:add,Expression.new([Step.new(nil,3),Step.new(:div,
-                Expression.new([Step.new(nil,'x'),Step.new(:sbt,4,:lft)]))]))
-            ])
-          )
-        ]))
-      expression = Expression.new([step_1,step_2])
-      result_latex = expression.latex
-      expected_latex = "\\frac{4x}{5y+2}-3a\\left(2+\\frac{3}{4-x}\\right)"
-      expect(result_latex).to eq expected_latex
-    end
-  end
+  # describe '#latex' do
+  #   it 'returns latex for a 1 elementary step expression' do
+  #     expression = Expression.new([Step.new(nil,5)])
+  #     expect(expression.latex).to eq '5'
+  #   end
+  #
+  #   it 'returns latex for a 2 elementary step expression' do
+  #     expression = Expression.new([Step.new(nil,'x'),Step.new(:add,2,:lft)])
+  #     expect(expression.latex).to eq '2+x'
+  #   end
+  #
+  #   it 'returns latex for a 4 elementary step expression' do
+  #     expression = Expression.new([Step.new(nil,'x'),Step.new(:add,2),
+  #       Step.new(:div,15,:lft),Step.new(:mtp,4)])
+  #     expect(expression.latex).to eq '4\left(\frac{15}{x+2}\right)'
+  #   end
+  #
+  #   it 'returns latex for a 3 step expression with some exp steps' do
+  #     expression = Expression.new([
+  #       Step.new(nil,Expression.new([Step.new(nil,'a'),Step.new(:sbt,'b')])),
+  #       Step.new(:add,Expression.new([Step.new(nil,2),Step.new(:mtp,6)]),:lft),
+  #       Step.new(:div,Expression.new([Step.new(nil,'x'),Step.new(:sbt,11,:lft)]))
+  #       ])
+  #     expected_latex = '\frac{2\times6+\left(a-b\right)}{11-x}'
+  #     expect(expression.latex).to eq expected_latex
+  #   end
+  #
+  #   it 'returns latex for a multi-step expression with mixture of steps eg 1' do
+  #     rational_1 = Expression.new([
+  #       Step.new(nil,
+  #         Expression.new([
+  #           Step.new(nil,3),Step.new(:mtp,'x'),Step.new(:mtp,'y')])
+  #       ),
+  #       Step.new(:div,
+  #         Expression.new([
+  #           Step.new(nil,Expression.new([
+  #             Step.new(nil,2),Step.new(:mtp,4),Step.new(:mtp,'b')
+  #             ])
+  #           ),
+  #           Step.new(:sbt,5)
+  #         ])
+  #       )
+  #     ])
+  #     step_1 = Step.new(nil,rational_1)
+  #     step_2 = Step.new(:mtp,'x')
+  #     step_3 = Step.new(:sbt,123,:lft)
+  #     expression = Expression.new([step_1,step_2,step_3])
+  #     expected_latex = "123-x\\left(\\frac{3xy}{2\\times4b-5}\\right)"
+  #     result_latex = expression.latex
+  #     expect(result_latex).to eq expected_latex
+  #   end
+  #
+  #   it 'returns latex for a multi-step expression with mixture of steps eg 2' do
+  #     step_1 = Step.new(nil,Expression.new([Step.new(nil,3),Step.new(:div,
+  #       Expression.new([Step.new(nil,'x'),Step.new(:sbt,4,:lft)]))]))
+  #     step_2 = Step.new(:add,2,:lft)
+  #     step_3 = Step.new(:mtp,Expression.new([Step.new(nil,3),Step.new(:mtp,'a')]))
+  #     step_4 = Step.new(:sbt,Expression.new([
+  #       Step.new(nil,Expression.new([Step.new(nil,4),Step.new(:mtp,'x')])),
+  #       Step.new(:div,Expression.new([Step.new(nil,5),Step.new(:mtp,'y'),Step.new(:add,2)]))
+  #       ]),:lft)
+  #     expression = Expression.new([step_1,step_2,step_3,step_4])
+  #     result_latex = expression.latex
+  #     expected_latex = "\\frac{4x}{5y+2}-3a\\left(2+\\frac{3}{4-x}\\right)"
+  #     expect(result_latex).to eq expected_latex
+  #   end
+  #
+  #   it 'returns latex for a multi-step expression with mixture of steps eg 2 again' do
+  #     step_1 = Step.new(nil,Expression.new([
+  #       Step.new(nil,Expression.new([Step.new(nil,4),Step.new(:mtp,'x')])),
+  #       Step.new(:div,Expression.new([Step.new(nil,5),Step.new(:mtp,'y'),Step.new(:add,2)]))
+  #       ]))
+  #     step_2 = Step.new(:sbt,Expression.new([
+  #         Step.new(nil,3),
+  #         Step.new(:mtp,'a'),
+  #         Step.new(:mtp,Expression.new([
+  #             Step.new(nil,2),
+  #             Step.new(:add,Expression.new([Step.new(nil,3),Step.new(:div,
+  #               Expression.new([Step.new(nil,'x'),Step.new(:sbt,4,:lft)]))]))
+  #           ])
+  #         )
+  #       ]))
+  #     expression = Expression.new([step_1,step_2])
+  #     result_latex = expression.latex
+  #     expected_latex = "\\frac{4x}{5y+2}-3a\\left(2+\\frac{3}{4-x}\\right)"
+  #     expect(result_latex).to eq expected_latex
+  #   end
+  # end
 
   describe '#similar?' do
     it 'returns true when comparing two m-forms with same string valued steps' do
@@ -1899,70 +1899,70 @@ describe Expression do
     end
   end
 
-  describe '#new_latex' do
+  describe '#latex' do
     it 'produce an empty string for empty exp' do
       exp = expression_factory.build([])
-      expect(exp.new_latex).to eq ''
+      expect(exp.latex).to eq ''
     end
 
     it 'produce latex for a single nil numerical e step' do
       exp = expression_factory.build([[nil,2]])
-      expect(exp.new_latex).to eq '2'
+      expect(exp.latex).to eq '2'
     end
 
     it 'produce latex for a single nil string value e step' do
       exp = expression_factory.build([[nil,'x']])
-      expect(exp.new_latex).to eq 'x'
+      expect(exp.latex).to eq 'x'
     end
 
     it 'produce latex for e + e' do
       exp = expression_factory.build([[nil,'x'],[:add,3]])
-      expect(exp.new_latex).to eq 'x+3'
+      expect(exp.latex).to eq 'x+3'
     end
 
     it 'produce latex for e - e' do
       exp = expression_factory.build([[nil,'x'],[:sbt,3]])
-      expect(exp.new_latex).to eq 'x-3'
+      expect(exp.latex).to eq 'x-3'
     end
 
     it 'produce latex for e - e + e' do
       exp = expression_factory.build([[nil,'x'],[:sbt,3],[:add,'y']])
-      expect(exp.new_latex).to eq 'x-3+y'
+      expect(exp.latex).to eq 'x-3+y'
     end
 
     it 'produce latex for e + (e - e)' do
       exp = expression_factory.build([[nil,'x'],[:add,[[nil,5],[:sbt,'y']]]])
-      expect(exp.new_latex).to eq 'x+\left(5-y\right)'
+      expect(exp.latex).to eq 'x+\left(5-y\right)'
     end
 
     it 'produce latex for e - (e - e)' do
       exp = expression_factory.build([[nil,'x'],[:sbt,[[nil,5],[:sbt,'y']]]])
-      expect(exp.new_latex).to eq 'x-\left(5-y\right)'
+      expect(exp.latex).to eq 'x-\left(5-y\right)'
     end
 
     it 'produce latex for (e - e) + e' do
       exp = expression_factory.build([[nil,[[nil,5],[:sbt,'y']]],[:add,'x']])
-      expect(exp.new_latex).to eq '5-y+x'
+      expect(exp.latex).to eq '5-y+x'
     end
 
     it 'produce latex for (e - e) x e' do
       exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,'x']])
-      expect(exp.new_latex).to eq '\left(5-y\right)x'
+      expect(exp.latex).to eq '\left(5-y\right)x'
     end
 
     it 'produce latex for (e - e)(e + e)' do
       exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:add,'x']]]])
-      expect(exp.new_latex).to eq '\left(5-y\right)\left(3+x\right)'
+      expect(exp.latex).to eq '\left(5-y\right)\left(3+x\right)'
     end
 
     it 'produce latex for (e - e)m' do
       exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:mtp,'x']]]])
-      expect(exp.new_latex).to eq '\left(5-y\right)3x'
+      expect(exp.latex).to eq '\left(5-y\right)3x'
     end
 
     it 'produce latex for (e - e) x large m' do
       exp = expression_factory.build([[nil,5],[:sbt,'y'],[:mtp,[[nil,3],[:mtp,'x'],[:mtp,'z']]]])
-      expect(exp.new_latex).to eq '\left(5-y\right)3xz'
+      expect(exp.latex).to eq '\left(5-y\right)3xz'
     end
 
     it 'produce latex for ((e - m)m - (e + m))(e - m)' do
@@ -1974,7 +1974,7 @@ describe Expression do
       exp = expression_factory.build([step_1_1,step_1_2,step_2,step_3,step_4])
       expected_latex = "\\left(\\left(2-3x\\right)4y-\\left(5+6z\\right)\\righ"\
         "t)\\left(7-8w\\right)"
-      expect(exp.new_latex).to eq expected_latex
+      expect(exp.latex).to eq expected_latex
     end
 
     it 'produce latex for (m + m - m) e m' do
@@ -1982,7 +1982,7 @@ describe Expression do
         [:add, [[nil,2],[:mtp,'y']] ],[:sbt, [[nil,3],[:mtp,'z']] ],
         [:mtp,'a'],[:mtp, [[nil,4],[:mtp,'w']] ]])
       expected_latex = "\\left(5x+2y-3z\\right)a4w"
-      expect(exp.new_latex).to eq expected_latex
+      expect(exp.latex).to eq expected_latex
     end
 
     it 'produce latex for ((m + e - m) + e - (m + e))e m' do
@@ -1995,29 +1995,29 @@ describe Expression do
       step_5 = step_factory.build([:mtp,[[nil,[[nil,'x'],[:mtp,'y']]]]])
       exp = expression_factory.build([step_1,step_2,step_3,step_4,step_5])
       expected_latex = '\left(2a-3+4bc+5-\left(6d-e\right)\right)7xy'
-      expect(exp.new_latex).to eq expected_latex
+      expect(exp.latex).to eq expected_latex
     end
 
     it 'produce latex for e/e' do
       exp = expression_factory.build([[nil,'x'],[:div,5]])
-      expect(exp.new_latex).to eq '\frac{x}{5}'
+      expect(exp.latex).to eq '\frac{x}{5}'
     end
 
     it 'produce latex for e/e - e' do
       exp = expression_factory.build([[nil,'x'],[:div,5],[:sbt,'y']])
-      expect(exp.new_latex).to eq '\frac{x}{5}-y'
+      expect(exp.latex).to eq '\frac{x}{5}-y'
     end
 
     it 'produce latex for m/(e - e) + m' do
       exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]],
         [:div,[[nil,3],[:sbt,'w']]],[:add,[[nil,'a'],[:mtp,'b']]]])
-      expect(exp.new_latex).to eq '\frac{2x}{3-w}+ab'
+      expect(exp.latex).to eq '\frac{2x}{3-w}+ab'
     end
 
     it 'produce latex for m/(e - e) + e/e' do
       exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]],
         [:div,[[nil,3],[:sbt,'w']]],[:add,[[nil,'a'],[:div,'b']]]])
-      expect(exp.new_latex).to eq '\frac{2x}{3-w}+\frac{a}{b}'
+      expect(exp.latex).to eq '\frac{2x}{3-w}+\frac{a}{b}'
     end
 
     it 'produce latex for (m/(e - e) + e/e)m - e/e' do
@@ -2025,7 +2025,7 @@ describe Expression do
         [:div,[[nil,3],[:sbt,'w']]],[:add,[[nil,'a'],[:div,'b']]],
         [:mtp,[[nil,4],[:mtp,'c']]],[:sbt,[[nil,11],[:div,'f']]]])
       expected_latex = '\left(\frac{2x}{3-w}+\frac{a}{b}\right)4c-\frac{11}{f}'
-      expect(exp.new_latex).to eq expected_latex
+      expect(exp.latex).to eq expected_latex
     end
 
     it 'produce latex for (((m/e + m - e) e + m) / (e-m) + m)(e / m-m + e)' do
@@ -2039,7 +2039,7 @@ describe Expression do
         [[nil,10],[:mtp,'x']]],[:sbt,[[nil,11],[:mtp,'y']]]]],[:add,12]]])
       exp = expression_factory.build([step_1,step_2,step_3,step_4,step_5,step_6])
       expected_latex = '\left(\frac{\left(\frac{2a}{3}+4b-c\right)5+6d}{6-7e}+8f\right)\left(\frac{9}{10x-11y}+12\right)'
-      expect(exp.new_latex).to eq expected_latex
+      expect(exp.latex).to eq expected_latex
     end
   end
 
