@@ -160,16 +160,11 @@ class Step
   end
 
   def r_mtp_r(r_step)
-    numerator_1 = self.val.steps[0]
-    numerator_2 = r_step.val.steps[0]
-    numerator_steps = numerator_1._m_mtp_m(numerator_2)
-    numerator = expression_factory.build(numerator_steps)
-    denominator_1 = self.val.steps[1].val
-    denominator_2 = r_step.val.steps[1].val
-    denominator = expression_factory.build([[nil,denominator_1],[:mtp,denominator_2]]).expand
-    numerator_step = step_factory.build([nil,numerator])
-    denominator_step = step_factory.build([:div,denominator])
-    step_factory.build([_sign(r_step),[numerator_step,denominator_step]])
+    nrator_1, nrator_2 = self.val.steps[0], r_step.val.steps[0]
+    nrator = expression_factory.build(nrator_1._m_mtp_m(nrator_2))
+    dnator_1, dnator_2 = self.val.steps[1].val, r_step.val.steps[1].val
+    dnator = expression_factory.build([[nil,dnator_1],[:mtp,dnator_2]]).expand
+    step_factory.build([_sign(r_step),[[nil,nrator],[:div,dnator]]])
   end
 
 end
