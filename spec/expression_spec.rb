@@ -969,6 +969,48 @@ describe Expression do
       expect(exp.expand_to_rsum).to eq expected_exp
     end
 
+    it 'expands_to_rsum is a mutator method' do
+      exp = expression_factory.build([[nil,[[nil,5],[:mtp,'x']] ]])
+      r_conf = [[5,'x'], [ [nil,[1]] ]]
+      r_sum_conf = [[nil,r_conf]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      exp.expand_to_rsum
+      expect(exp).to eq expected_exp
+    end
+
+    it 'expands_to_rsum is a mutator method that returns self' do
+      exp = expression_factory.build([[nil,[[nil,5],[:mtp,'x']] ]])
+      r_conf = [[5,'x'], [ [nil,[1]] ]]
+      r_sum_conf = [[nil,r_conf]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      expect(exp.object_id).to eq result.object_id
+    end
+
+    it 'expands an unflattend e step exp' do
+      exp = expression_factory.build([[nil,[[nil,5]]]])
+      r_conf = [[5], [ [nil,[1]] ]]
+      r_sum_conf = [[nil,r_conf]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      expect(exp.expand_to_rsum).to eq expected_exp
+    end
+
+    it 'expands a 2 layer unflattend e step exp' do
+      exp = expression_factory.build([[nil,[[nil,[[nil,5]]]]]])
+      r_conf = [[5], [ [nil,[1]] ]]
+      r_sum_conf = [[nil,r_conf]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      expect(exp.expand_to_rsum).to eq expected_exp
+    end
+
+    # it 'expands (r) exp into itself (r) - no change' do
+    #   r_conf = [[5,'x'], [ [nil,['y']] ]]
+    #   r_sum_conf = [[nil,r_conf]]
+    #   exp = rsum_factory.build(r_sum_conf)
+    #   expected_exp = rsum_factory.build(r_sum_conf)
+    #   expect(exp.expand_to_rsum).to eq expected_exp
+    # end
+
   end
 
   #

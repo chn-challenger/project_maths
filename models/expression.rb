@@ -480,6 +480,7 @@ class Expression
     steps.each do |step|
       _nil_or_add_into_rsum(expanded_steps,step) if _nil_or_add?(step)
       _mtp_into_rsum(expanded_steps,step) if step.ops == :mtp
+      _div_into_rsum(expanded_steps,step) if step.ops == :div
     end
     self.steps = expanded_steps
     self.steps.first.ops = nil  #this is to be taken out once nullify first step is written
@@ -514,6 +515,17 @@ class Expression
     end
   end
 
+  def _div_into_rsum(expanded_steps,step)
+    if step.exp_valued?
+      step.val.expand_to_rsum
+      # step.val.steps.first.ops = :add
+      # step.val.steps.each{|step| expanded_steps << step}
+    else
+      expanded_steps.each do |r_step|
+        r_step.val.steps[0].val.steps << step
+      end
+    end
+  end
 
   def flatten
     _flatten_first_step
