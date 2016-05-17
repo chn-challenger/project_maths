@@ -473,10 +473,46 @@ class Expression
     copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
   end
 
-  def expand_to_rsum
 
+
+  def expand_to_rsum
+    expanded_steps = []
+    steps.each do |step|
+      _nil_or_add_into_rsum(expanded_steps,step) if _nil_or_add?(step)
+      _mtp_into_rsum(expanded_steps,step) if step.ops == :mtp
+    end
+    self.steps = expanded_steps
+    self.steps.first.ops = nil  #this is to be taken out once nullify first step is written
+    return self
   end
 
+  def _nil_or_add_into_rsum(expanded_steps,step)
+    if step.exp_valued?
+      step.val.expand_to_rsum
+      step.val.steps.first.ops = :add
+      step.val.steps.each{|step| expanded_steps << step}
+    else
+     expanded_steps << _wrap_into_rational(step)
+    end
+  end
+
+  def _wrap_into_rational(step)
+    rational_config = [[step.val],[[nil,[1]]]]
+    rational = rational_factory.build(rational_config)
+    step_factory.build([step.ops,rational])
+  end
+
+  def _mtp_into_rsum(expanded_steps,step)
+    if step.exp_valued?
+      # step.val.expand_to_rsum
+      # step.val.steps.first.ops = :add
+      # step.val.steps.each{|step| expanded_steps << step}
+    else
+      expanded_steps.each do |r_step|
+        r_step.val.steps[0].val.steps << step
+      end
+    end
+  end
 
 
   def flatten

@@ -961,6 +961,14 @@ describe Expression do
       expect(exp.expand_to_rsum).to eq expected_exp
     end
 
+    it 'expands an m step to a rsum' do
+      exp = expression_factory.build([[nil,[[nil,5],[:mtp,'x']] ]])
+      r_conf = [[5,'x'], [ [nil,[1]] ]]
+      r_sum_conf = [[nil,r_conf]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      expect(exp.expand_to_rsum).to eq expected_exp
+    end
+
   end
 
   #
