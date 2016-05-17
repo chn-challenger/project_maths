@@ -342,16 +342,28 @@ describe Step do
 
   describe '#r_mtp_r' do
     it 'multiply two strictly rational steps together eg 1' do
-      r_1 = rational_factory.build([[2,'x'],[ [nil,[3,'y']], [:add,[4,'z']]    ]])
+      r_1 = rational_factory.build([[2,'x'],[[nil,[3,'y']],[:add,[4,'z']]]])
       r_step_1 = step_factory.build([:add,r_1])
-      r_2 = rational_factory.build([[5,'a'],[ [nil,[6]], [:sbt,[7]]    ]])
+      r_2 = rational_factory.build([[5,'a'],[[nil,[6]],[:sbt,[7]]]])
       r_step_2 = step_factory.build([:sbt,r_2])
-      r_result = rational_factory.build([[2,'x',5,'a'],[ [nil,[3,'y',6]], [:add,[4,'z',6]],[:sbt,[3,'y',7]],[:sbt,[4,'z',7]]    ]])
+      r_result = rational_factory.build([[2,'x',5,'a'],[[nil,[3,'y',6]],
+        [:add,[4,'z',6]],[:sbt,[3,'y',7]],[:sbt,[4,'z',7]]]])
       r_step_result = step_factory.build([:sbt,r_result])
       expect(r_step_1.r_mtp_r(r_step_2)).to eq r_step_result
     end
 
-
+    it 'multiply two strictly rational steps together eg 2' do
+      r_1 = rational_factory.build([[2,'x','w'],[[nil,[3,'y']],
+        [:add,[4,'z','p']]]])
+      r_step_1 = step_factory.build([:sbt,r_1])
+      r_2 = rational_factory.build([['a'],[[nil,[6]],[:sbt,[7]],[:add,['b']]]])
+      r_step_2 = step_factory.build([:sbt,r_2])
+      r_result = rational_factory.build([[2,'x','w','a'],[ [nil,[3,'y',6]],
+        [:add,[4,'z','p',6]],[:sbt,[3,'y',7]],[:sbt,[4,'z','p',7]],
+        [:add,[3,'y','b']],[:add,[4,'z','p','b']]]])
+      r_step_result = step_factory.build([:add,r_result])
+      expect(r_step_1.r_mtp_r(r_step_2)).to eq r_step_result
+    end
   end
 
 
