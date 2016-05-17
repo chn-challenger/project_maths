@@ -155,11 +155,21 @@ class Step
     self
   end
 
-
-
-
   def exp_valued?
     val.is_a?(expression_class)
+  end
+
+  def r_mtp_r(r_step)
+    numerator_1 = self.val.steps[0]
+    numerator_2 = r_step.val.steps[0]
+    numerator_steps = numerator_1._m_mtp_m(numerator_2)
+    numerator = expression_factory.build(numerator_steps)
+    denominator_1 = self.val.steps[1].val
+    denominator_2 = r_step.val.steps[1].val
+    denominator = expression_factory.build([[nil,denominator_1],[:mtp,denominator_2]]).expand
+    numerator_step = step_factory.build([nil,numerator])
+    denominator_step = step_factory.build([:div,denominator])
+    step_factory.build([_sign(r_step),[numerator_step,denominator_step]])
   end
 
 end

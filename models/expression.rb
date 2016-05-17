@@ -532,6 +532,21 @@ class Expression
     end
   end
 
+  def rsum_mtp_rsum(rsum)
+    expanded_steps = []
+    rsum.steps.each do |r_step|
+      self_copy = self.copy
+      self_copy.steps.each do |self_step|
+        expanded_steps << self_step.r_mtp_r(r_step)
+      end
+    end
+    self.steps = expanded_steps
+    self
+  end
+
+
+
+
   def flatten
     _flatten_first_step
     steps.each do |step|

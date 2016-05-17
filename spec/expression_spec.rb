@@ -1013,6 +1013,24 @@ describe Expression do
 
   end
 
+  describe '#rsum_mtp_rsum' do
+    it '(r) x (r) into a new rsum' do
+      r_1 = [[5], [[nil,[2,'x']]]]
+      r_sum_conf_1 = [[nil,r_1]]
+      r_2 = [['a'], [[nil,['y','z']]]]
+      r_sum_conf_2 = [[nil,r_2]]
+      r_sum_1 = rsum_factory.build(r_sum_conf_1)
+      r_sum_2 = rsum_factory.build(r_sum_conf_2)
+      expected_result_conf = [[5,'a'], [[nil,[2,'x','y','z']]]]
+      expected_result = rsum_factory.build([[nil,expected_result_conf]])
+      puts expected_result.latex
+      expect(r_sum_1.rsum_mtp_rsum(r_sum_2)).to eq expected_result
+    end
+
+  end
+
+
+
   #
   # describe '#flatten' do
   #   it 'flattens a one layer of exp step exp wrapping' do
