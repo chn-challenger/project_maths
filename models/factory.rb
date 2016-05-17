@@ -48,9 +48,14 @@ end
 
 module RationalFactory
   def self.build(config_array)
-    numerator = msum_factory.build(config_array[0])
-    denominator = msum_factory.build(config_array[1])
-    expression_factory.build([[nil,numerator],[:div,denominator]])
+    # numerator = msum_factory.build(config_array[0])
+    # denominator = msum_factory.build(config_array[1])
+    # expression_factory.build([[nil,numerator],[:div,denominator]])
+
+    numerator_exp = mform_factory.build(config_array[0])
+    denominator_exp = msum_factory.build(config_array[1])
+    expression_factory.build([[nil,numerator_exp],[:div,denominator_exp]])
+
   end
 end
 
