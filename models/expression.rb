@@ -545,7 +545,33 @@ class Expression
     return self
   end
 
+  def rsum_to_rational
+    return self if steps.length == 0
+    return steps.first if steps.length == 1
+    result_step = steps.first
+    for i in 1...steps.length
+      result_step = _add_two_rationals(result_step,steps[i])
+    end
+    self.steps = result_step.val.steps
+    # self.steps.first.ops = nil
+    return self
+  end
 
+  def _add_two_rationals(r_1,r_2)
+    nrator_exp_1 = r_1.val.steps[0].val
+    dnator_exp_1 = r_1.val.steps[1].val
+    nrator_exp_2 = r_2.val.steps[0].val
+    dnator_exp_2 = r_2.val.steps[1].val
+    result_nrator_exp_conf = [
+      [r_1.ops,  [[nil,nrator_exp_1],[:mtp,dnator_exp_2]]   ],
+      [r_2.ops,  [[nil,nrator_exp_2],[:mtp,dnator_exp_1]]   ]
+    ]
+    result_dnator_exp_conf = [[nil,dnator_exp_1],[:mtp,dnator_exp_2]]
+    result_nrator = expression_factory.build(result_nrator_exp_conf).expand
+    result_dnator = expression_factory.build(result_dnator_exp_conf).expand
+    result = expression_factory.build([[nil,result_nrator],[:div,result_dnator]])
+    step_factory.build([nil,result])
+  end
 
 
   def flatten
