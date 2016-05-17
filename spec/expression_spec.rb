@@ -1004,7 +1004,7 @@ describe Expression do
     end
 
     # it 'expands (r) exp into itself (r) - no change' do
-    #   r_conf = [[5,'x'], [ [nil,['y']] ]]
+    #   r_conf = [[5], [ [nil,['y']] ]]
     #   r_sum_conf = [[nil,r_conf]]
     #   exp = rsum_factory.build(r_sum_conf)
     #   expected_exp = rsum_factory.build(r_sum_conf)
