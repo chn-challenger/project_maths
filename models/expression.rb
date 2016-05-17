@@ -571,6 +571,17 @@ class Expression
     step_factory.build([nil,[[nil,result_nrator],[:div,result_dnator]]])
   end
 
+  def rational_to_rsum
+    nrator_steps = steps.first.val.steps
+    result_steps = []
+    nrator_steps.each do |n_step|
+      operation = n_step.ops
+      n_step.ops = nil
+      result_steps << step_factory.build([operation,[n_step,steps.last.copy]])
+    end
+    self.steps = result_steps
+    return self
+  end
 
 
 
