@@ -1086,6 +1086,19 @@ describe Expression do
   end
 
   describe '#rsum_to_rational' do
+    it 'sum terms in a 1 term rsum into a rational' do
+      r_1_1 = [[5], [[nil,[2,'x']]]]
+      r_sum_conf_1 = [[nil,r_1_1]]
+      r_sum_1 = rsum_factory.build(r_sum_conf_1)
+      numerator_exp_config = [[nil,[5]]]
+      denominator_exp_config = [[nil,[2,'x']]]
+      nrator = msum_factory.build(numerator_exp_config)
+      dnator = msum_factory.build(denominator_exp_config)
+      expected_exp = expression_factory.build([[nil,nrator],[:div,dnator]])
+      result = r_sum_1.rsum_to_rational
+      expect(result).to eq expected_exp
+    end
+
     it 'sum terms in a 2 term rsum into a rational' do
       r_1_1 = [[5], [[nil,[2,'x']]]]
       r_1_2 = [[7], [[nil,[8,'a']],[:sbt,[6,'b']]]]
@@ -1115,6 +1128,7 @@ describe Expression do
       dnator = msum_factory.build(denominator_exp_config)
       expected_exp = expression_factory.build([[nil,nrator],[:div,dnator]])
       result = r_sum_1.rsum_to_rational
+      # p result.steps.length
       expect(result).to eq expected_exp
     end
 
