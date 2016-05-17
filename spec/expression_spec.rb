@@ -1026,6 +1026,23 @@ describe Expression do
       expect(r_sum_1.rsum_mtp_rsum(r_sum_2)).to eq expected_result
     end
 
+    it '(r + r) x (r) into a new rsum' do
+      r_1_1 = [[5], [[nil,[2,'x']]]]
+      r_1_2 = [[7], [[nil,[8,'a']]]]
+      r_sum_conf_1 = [[nil,r_1_1],[:sbt,r_1_2]]
+      r_2 = [['a'], [[nil,['y','z']]]]
+      r_sum_conf_2 = [[nil,r_2]]
+      r_sum_1 = rsum_factory.build(r_sum_conf_1)
+      r_sum_2 = rsum_factory.build(r_sum_conf_2)
+      expected_result_conf_1 = [[5,'a'], [[nil,[2,'x','y','z']]]]
+      expected_result_conf_2 = [[7,'a'], [[nil,[8,'a','y','z']]]]
+      expected_result = rsum_factory.build([
+        [nil,expected_result_conf_1],
+        [:sbt,expected_result_conf_2]
+      ])
+      expect(r_sum_1.rsum_mtp_rsum(r_sum_2)).to eq expected_result
+    end
+
   end
 
 
