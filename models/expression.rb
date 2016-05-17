@@ -420,7 +420,7 @@ class Expression
   def expand
     expanded_steps = []
     steps.each do |step|
-      _expand_nil_or_add_into(expanded_steps,step) if _nil_or_add?(step.ops)
+      _expand_nil_or_add_into(expanded_steps,step) if _nil_or_add?(step)
       _expand_sbt_into(expanded_steps,step) if step.ops == :sbt
       _expand_mtp_into(expanded_steps,step) if step.ops == :mtp
     end
@@ -430,7 +430,7 @@ class Expression
   end
 
   def _expand_nil_or_add_into(expanded_steps,step)
-    if step.val.is_a?(expression_class)
+    if step.exp_valued?
       step.val.expand
       step.val.steps.first.ops = :add
       step.val.steps.each{|step| expanded_steps << step}
@@ -439,13 +439,14 @@ class Expression
     end
   end
 
-  def _nil_or_add?(ops)
-    ops == nil || ops == :add
+  def _nil_or_add?(step)
+    step.ops == nil || step.ops == :add
   end
 
   def _expand_sbt_into(expanded_steps,step)
     if step.val.is_a?(expression_class)
-      step.val.expand._add_sbt_sign_switch
+      step.val.expand
+      step.val._add_sbt_sign_switch
       step.val.steps.each{|step| expanded_steps << step}
     else
      expanded_steps << step
@@ -455,22 +456,22 @@ class Expression
   def _add_sbt_sign_switch
     switch_hash = {nil =>:sbt,:add =>:sbt,:sbt=>:add}
     steps.each{|step| step.ops = switch_hash[step.ops]}
-    return self
   end
 
   def _expand_mtp_into(expanded_steps,step)
     step.mtp_prepare_value_as_ms
-    copy = expression_factory.build(expanded_steps).copy.steps
+    init_ms = expression_factory.build(expanded_steps).copy.steps
     expanded_steps.slice!(0..-1)
-    step.val.steps.each{|mtp_step| _expand_one_mtp_step_into(expanded_steps,copy,mtp_step)}
+    step.val.steps.each do |mtp_step|
+      _expand_one_mtp_step_into(expanded_steps,init_ms,mtp_step)
+    end
     expanded_steps.first.ops = nil
   end
 
-  def _expand_one_mtp_step_into(expanded_steps,init_ms_steps,mtp_step)
-    copy = expression_factory.build(init_ms_steps).copy.steps
-    copy.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
+  def _expand_one_mtp_step_into(expanded_steps,init_ms,mtp_step)
+    copy_init_ms = expression_factory.build(init_ms).copy.steps
+    copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
   end
-
 
   def flatten
     _flatten_first_step
