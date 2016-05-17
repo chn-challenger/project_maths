@@ -1023,7 +1023,6 @@ describe Expression do
       r_sum_2 = rsum_factory.build(r_sum_conf_2)
       expected_result_conf = [[5,'a'], [[nil,[2,'x','y','z']]]]
       expected_result = rsum_factory.build([[nil,expected_result_conf]])
-      puts expected_result.latex
       expect(r_sum_1.rsum_mtp_rsum(r_sum_2)).to eq expected_result
     end
 

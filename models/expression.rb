@@ -541,7 +541,8 @@ class Expression
       end
     end
     self.steps = expanded_steps
-    self
+    self.steps.first.ops = nil
+    return self
   end
 
 
