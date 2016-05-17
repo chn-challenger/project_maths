@@ -26,4 +26,8 @@ module ClassName
   def rational_factory
     RationalFactory
   end
+
+  def rsum_factory
+    RationalSumFactory
+  end
 end

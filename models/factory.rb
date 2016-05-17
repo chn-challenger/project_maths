@@ -53,3 +53,11 @@ module RationalFactory
     expression_factory.build([[nil,numerator],[:div,denominator]])
   end
 end
+
+module RationalSumFactory
+  def self.build(config_array)
+    expression_factory.build( config_array.inject([]) do |steps,array|
+      steps << step_factory.build([array[0],rational_factory.build(array[1])])
+    end )
+  end
+end
