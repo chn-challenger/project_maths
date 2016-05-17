@@ -423,6 +423,7 @@ class Expression
       _expand_nil_or_add_into(expanded_steps,step) if _nil_or_add?(step)
       _expand_sbt_into(expanded_steps,step) if step.ops == :sbt
       _expand_mtp_into(expanded_steps,step) if step.ops == :mtp
+      _expand_div_into(expanded_steps,step) if step.ops == :div
     end
     self.steps = expanded_steps
     self.steps.first.ops = nil  #this is to be taken out once nullify first step is written

@@ -22,4 +22,8 @@ module ClassName
   def msum_factory
     MtpFormSumFactory
   end
+
+  def rational_factory
+    RationalFactory
+  end
 end

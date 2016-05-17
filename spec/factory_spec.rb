@@ -151,3 +151,29 @@ describe MtpFormSumFactory do
     end
   end
 end
+
+describe RationalFactory do
+  describe '#build' do
+    it 'builds a e/e rational expression' do
+      config = [[[nil,[2]]],[[nil,['x']]]]
+      exp_factory_conf = [
+        [nil,[[nil,[[nil,2]]]]],
+        [:div,[[nil,[[nil,'x']]]]]
+      ]
+      expected_exp = expression_factory.build(exp_factory_conf)
+      expect(rational_factory.build(config)).to eq expected_exp
+    end
+
+    it 'builds a ms/ms rational expression' do
+      numerator_ms_conf = [[nil,[2,'x']],[:add,[4,'z','w']]]
+      denominator_ms_conf = [[nil,['y']],[:sbt,[3,'a']]]
+      config = [numerator_ms_conf,denominator_ms_conf]
+      exp_factory_conf = [
+        [nil,[[nil,[[nil,2],[:mtp,'x']]],[:add,[[nil,4],[:mtp,'z'],[:mtp,'w']]]]],
+        [:div,[[nil,[[nil,'y']]],[:sbt,[[nil,3],[:mtp,'a']]]]]
+      ]
+      expected_exp = expression_factory.build(exp_factory_conf)
+      expect(rational_factory.build(config)).to eq expected_exp
+    end
+  end
+end

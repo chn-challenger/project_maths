@@ -45,3 +45,11 @@ module MtpFormSumFactory
     expression_factory.build(steps)
   end
 end
+
+module RationalFactory
+  def self.build(config_array)
+    numerator = msum_factory.build(config_array[0])
+    denominator = msum_factory.build(config_array[1])
+    expression_factory.build([[nil,numerator],[:div,denominator]])
+  end
+end
