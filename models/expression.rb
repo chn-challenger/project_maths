@@ -553,7 +553,6 @@ class Expression
       result_step = _add_two_rationals(result_step,steps[i])
     end
     self.steps = result_step.val.steps
-    # self.steps.first.ops = nil
     return self
   end
 

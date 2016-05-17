@@ -1099,6 +1099,24 @@ describe Expression do
       expect(r_sum_1.rsum_to_rational).to eq expected_exp
     end
 
+    it 'sum terms in a 3 term rsum into a rational' do
+      r_1_1 = [[5], [[nil,[2,'x']]]]
+      r_1_2 = [[7], [[nil,[8,'a']],[:sbt,[6,'b']]]]
+      r_1_3 = [[9], [[nil,['n']],[:add,['m']]]]
+      r_sum_conf_1 = [[nil,r_1_1],[:sbt,r_1_2],[:add,r_1_3]]
+      r_sum_1 = rsum_factory.build(r_sum_conf_1)
+      numerator_exp_config = [[nil,[5,8,'a','n']],[:sbt,[5,6,'b','n']],
+        [:sbt,[7,2,'x','n']],[:add,[5,8,'a','m']],[:sbt,[5,6,'b','m']],
+        [:sbt,[7,2,'x','m']],[:add,[9,2,'x',8,'a']],[:sbt,[9,2,'x',6,'b']]
+      ]
+      denominator_exp_config = [[nil,[2,'x',8,'a','n']],[:sbt,[2,'x',6,'b','n']],
+      [:add,[2,'x',8,'a','m']],[:sbt,[2,'x',6,'b','m']]]
+      nrator = msum_factory.build(numerator_exp_config)
+      dnator = msum_factory.build(denominator_exp_config)
+      expected_exp = expression_factory.build([[nil,nrator],[:div,dnator]])
+      result = r_sum_1.rsum_to_rational
+      expect(result).to eq expected_exp
+    end
 
 
   end
