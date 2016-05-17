@@ -473,6 +473,12 @@ class Expression
     copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
   end
 
+  def expand_to_rsum
+
+  end
+
+
+
   def flatten
     _flatten_first_step
     steps.each do |step|

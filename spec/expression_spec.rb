@@ -955,10 +955,10 @@ describe Expression do
   describe 'expand_to_rsum' do
     it 'expands an e step to a rsum' do
       exp = expression_factory.build([[nil,5]])
-      expected_exp = rsum_factory.build([
-        [nil,   [ [],    [] ]   ]   
-      ])
-
+      r_conf = [[5], [ [nil,[1]] ]]
+      r_sum_conf = [[nil,r_conf]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      expect(exp.expand_to_rsum).to eq expected_exp
     end
 
   end
