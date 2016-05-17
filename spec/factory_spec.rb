@@ -164,12 +164,12 @@ describe RationalFactory do
       expect(rational_factory.build(config)).to eq expected_exp
     end
 
-    it 'builds a ms/ms rational expression' do
-      numerator_ms_conf = [[nil,[2,'x']],[:add,[4,'z','w']]]
+    it 'builds a m/ms rational expression' do
+      numerator_ms_conf = [[nil,[2,'x']]]
       denominator_ms_conf = [[nil,['y']],[:sbt,[3,'a']]]
       config = [numerator_ms_conf,denominator_ms_conf]
       exp_factory_conf = [
-        [nil,[[nil,[[nil,2],[:mtp,'x']]],[:add,[[nil,4],[:mtp,'z'],[:mtp,'w']]]]],
+        [nil,[[nil,[[nil,2],[:mtp,'x']]]]],
         [:div,[[nil,[[nil,'y']]],[:sbt,[[nil,3],[:mtp,'a']]]]]
       ]
       expected_exp = expression_factory.build(exp_factory_conf)
@@ -192,7 +192,7 @@ describe RationalSumFactory do
 
     it 'builds a e/ms - ms/m rational sum expression' do
       r_config_1 = [[[nil,[2]]],[[nil,['x']],[:add,[4,'w']]]]
-      r_config_2 = [[[nil,[3,'y']],[:sbt,[5,'z']]],[[nil,[7,'a']]]]
+      r_config_2 = [[[nil,[3,'y']]],[[nil,[7,'a']]]]
       rs_config = [[nil,r_config_1],[:sbt,r_config_2]]
       exp_factory_conf = [
         [nil,[
@@ -200,7 +200,7 @@ describe RationalSumFactory do
           [:div,[[nil,[[nil,'x']]],[:add,[[nil,4],[:mtp,'w']]]]]
         ]],
         [:sbt,[
-          [nil,[[nil,[[nil,3],[:mtp,'y']]], [:sbt,[[nil,5],[:mtp,'z']]]]],
+          [nil,[[nil,[[nil,3],[:mtp,'y']]]]],
           [:div,[[nil,[[nil,7],[:mtp,'a']]]]]
         ]]]
       expected_exp = expression_factory.build(exp_factory_conf)
