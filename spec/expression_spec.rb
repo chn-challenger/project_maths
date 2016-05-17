@@ -1026,23 +1026,63 @@ describe Expression do
       expect(r_sum_1.rsum_mtp_rsum(r_sum_2)).to eq expected_result
     end
 
+    it 'rsum_mtp_rsum is a mutator method' do
+      r_1 = [[5], [[nil,[2,'x']]]]
+      r_sum_conf_1 = [[nil,r_1]]
+      r_2 = [['a'], [[nil,['y','z']]]]
+      r_sum_conf_2 = [[nil,r_2]]
+      r_sum_1 = rsum_factory.build(r_sum_conf_1)
+      r_sum_2 = rsum_factory.build(r_sum_conf_2)
+      result = r_sum_1.rsum_mtp_rsum(r_sum_2)
+      expected_result_conf = [[5,'a'], [[nil,[2,'x','y','z']]]]
+      expected_result = rsum_factory.build([[nil,expected_result_conf]])
+      expect(result.object_id).to eq r_sum_1.object_id
+      expect(r_sum_1).to eq expected_result
+    end
+
     it '(r + r) x (r) into a new rsum' do
       r_1_1 = [[5], [[nil,[2,'x']]]]
-      r_1_2 = [[7], [[nil,[8,'a']]]]
+      r_1_2 = [[7], [[nil,[8,'a']],[:sbt,[6,'b']]]]
       r_sum_conf_1 = [[nil,r_1_1],[:sbt,r_1_2]]
       r_2 = [['a'], [[nil,['y','z']]]]
       r_sum_conf_2 = [[nil,r_2]]
       r_sum_1 = rsum_factory.build(r_sum_conf_1)
       r_sum_2 = rsum_factory.build(r_sum_conf_2)
       expected_result_conf_1 = [[5,'a'], [[nil,[2,'x','y','z']]]]
-      expected_result_conf_2 = [[7,'a'], [[nil,[8,'a','y','z']]]]
+      expected_result_conf_2 = [[7,'a'], [[nil,[8,'a','y','z']],
+        [:sbt,[6,'b','y','z']]]]
       expected_result = rsum_factory.build([
         [nil,expected_result_conf_1],
         [:sbt,expected_result_conf_2]
       ])
-      expect(r_sum_1.rsum_mtp_rsum(r_sum_2)).to eq expected_result
+      result = r_sum_1.rsum_mtp_rsum(r_sum_2)
+      expect(result).to eq expected_result
     end
 
+    it '(r + r) x (r - r) into new rsum' do
+      r_1_1 = [[5], [[nil,[2,'x']]]]
+      r_1_2 = [[7], [[nil,[8,'a']],[:sbt,[6,'b']]]]
+      r_sum_conf_1 = [[nil,r_1_1],[:sbt,r_1_2]]
+      r_2_1 = [[7], [[nil,[9]],[:add,['c','d']]]]
+      r_2_2 = [['a'], [[nil,['y','z']]]]
+      r_sum_conf_2 = [[nil,r_2_1],[:add,r_2_2]]
+      r_sum_1 = rsum_factory.build(r_sum_conf_1)
+      r_sum_2 = rsum_factory.build(r_sum_conf_2)
+      expected_result_conf_1 = [[5,7], [[nil,[2,'x',9]],[:add,[2,'x','c','d']]]]
+      expected_result_conf_2 = [[7,7], [[nil,[8,'a',9]],[:sbt,[6,'b',9]],
+        [:add,[8,'a','c','d']],[:sbt,[6,'b','c','d']]]]
+      expected_result_conf_3 = [[5,'a'], [[nil,[2,'x','y','z']]]]
+      expected_result_conf_4 = [[7,'a'], [[nil,[8,'a','y','z']],
+        [:sbt,[6,'b','y','z']]]]
+      expected_result = rsum_factory.build([
+        [nil,expected_result_conf_1],
+        [:sbt,expected_result_conf_2],
+        [:add,expected_result_conf_3],
+        [:sbt,expected_result_conf_4]
+      ])
+      result = r_sum_1.rsum_mtp_rsum(r_sum_2)
+      expect(result).to eq expected_result
+    end
   end
 
 
