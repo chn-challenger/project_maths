@@ -508,13 +508,27 @@ class Expression
 
   def _mtp_into_rsum(expanded_steps,step)
     if step.exp_valued?
-      # 1. step.val.expand_to_rsum
-      # 2. expression_factory.build(expanded_steps).rsum_mtp_rsum(step.val)
+      step.val.expand_to_rsum
+      expanded_rsum = expression_factory.build(expanded_steps).rsum_mtp_rsum(step.val)
+      expanded_steps.slice!(0..-1)
+      expanded_rsum.steps.each do |step|
+        expanded_steps << step
+      end
+
+      # expanded_steps = expanded_rsum.steps
       #     returns an expression with the expansion,  (new method)
     else
       expanded_steps.each do |r_step|
         r_step.val.steps[0].val.steps << step
       end
+    end
+  end
+
+  def _div_mtp(expanded_steps,step)
+    expanded_rsum = expression_factory.build(expanded_steps).rsum_mtp_rsum(step.val)
+    expanded_steps.slice!(0..-1)
+    expanded_rsum.steps.each do |step|
+      expanded_steps << step
     end
   end
 
@@ -525,6 +539,12 @@ class Expression
       # 3. _rational_div_to_mtp(step)   (mutate step)
       # 4. step.val.rational_to_rsum    (mutator) (new method)
       # 5. _mtp_into_rsum(expanded_steps,step)
+
+      step.val.expand_to_rsum
+      step.val.rsum_to_rational
+      step.val.steps.first.val.steps[0], step.val.steps.first.val.steps[1] = step.val.steps.first.val.steps[1], step.val.steps.first.val.steps[0]
+      step.val.rational_to_rsum
+      _div_mtp(expanded_steps,step)
     else
       expanded_steps.each do |r_step|
         r_step.val.steps[0].val.steps << step
