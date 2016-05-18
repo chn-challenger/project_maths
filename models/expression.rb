@@ -555,7 +555,17 @@ class Expression
       # test_1 = expression_factory.build(expanded_steps)
       # p test_1.is_rational_sum?
       expanded_steps.each do |r_step|
-        r_step.val.steps[1].val.steps << step_factory.build([:mtp,step.val])
+
+        m_sum_dnator = r_step.val.steps[1].val
+        init_m_sum_step = step_factory.build([nil,m_sum_dnator])
+        mtp_step = step_factory.build([:mtp,step.val])
+        expanded_m_sum = expression_factory.build([init_m_sum_step,mtp_step]).expand
+
+        r_step.val.steps[1].val = expanded_m_sum
+
+        # r_step.val.steps[1].val.steps << step_factory.build([:mtp,step.val])
+
+
       end
     end
   end
