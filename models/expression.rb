@@ -755,19 +755,4 @@ class Expression
     self.flatten
   end
 
-  # def convert_lft_steps
-  #   converted_exp = self.class.new
-  #   steps.each do |step|
-  #     step.val = step.val.convert_lft_steps if step.exp_valued?
-  #     if step.dir == :lft
-  #       converted_exp = expression_factory.build([
-  #         [nil,step.val],[step.ops,converted_exp]])
-  #     else
-  #       converted_exp.steps << step
-  #     end
-  #   end
-  #   converted_exp.flatten
-  # end
-
-
 end

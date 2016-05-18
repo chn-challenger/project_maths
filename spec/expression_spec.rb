@@ -1527,6 +1527,14 @@ describe Expression do
       expect(exp.convert_lft_steps).to eq expected_exp
     end
 
+    it 'convert_lft_steps is a mutator method' do
+      exp = expression_factory.build([[nil,5],[:add,'x',:lft]])
+      expected_exp = expression_factory.build([[nil,'x'],[:add,5]])
+      result = exp.convert_lft_steps
+      expect(exp).to eq expected_exp
+      expect(result.object_id).to eq exp.object_id
+    end
+
     it 'converts a - (b + c) so there are no lft steps' do
       exp = expression_factory.build([[nil,'b'],[:add,'c'],[:sbt,'a',:lft]])
       expected_exp = expression_factory.build([[nil,'a'],[:sbt,[[nil,'b'],
