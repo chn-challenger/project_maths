@@ -477,61 +477,113 @@ class Expression
 
   def expand_to_rsum
     expanded_steps = []
-    steps.each do |step|
-      _nil_or_add_into_rsum(expanded_steps,step) if _nil_or_add?(step)
-      _mtp_into_rsum(expanded_steps,step) if step.ops == :mtp
-      _div_into_rsum(expanded_steps,step) if step.ops == :div
-    end
+    steps.each{|step| _expand_step_into(expanded_steps,step)}
     self.steps = expanded_steps
-    self.steps.first.ops = nil  #this is to be taken out once nullify first step is written
+    self.steps.first.ops = nil
     self._clean_one
-    return self
   end
 
-  def _nil_or_add_into_rsum(expanded_steps,step)
+  def _expand_step_into(expanded_steps,step)
     if step.exp_valued?
       step.val.expand_to_rsum
-      step.val.steps.first.ops = :add
-      step.val.steps.each{|step| expanded_steps << step}
+      _exp_step_into(expanded_steps,step)
     else
-     expanded_steps << _wrap_into_rational(step)
+      _ele_step_into(expanded_steps,step)
     end
   end
+
+  def _exp_step_into(expanded_steps,step)
+    _exp_add_step_into(expanded_steps,step) if step.ops == nil || step.ops == :add
+    _exp_mtp_step_into(expanded_steps,step) if step.ops == :mtp
+    _exp_div_step_into(expanded_steps,step) if step.ops == :div
+  end
+
+  def _ele_step_into(expanded_steps,step)
+    _ele_add_step_into(expanded_steps,step) if step.ops == nil || step.ops == :add
+    _ele_mtp_step_into(expanded_steps,step) if step.ops == :mtp
+    _ele_div_step_into(expanded_steps,step) if step.ops == :div
+  end
+
+  def _exp_add_step_into(expanded_steps,step)
+    step.val.steps.first.ops = :add
+    step.val.steps.each{|step| expanded_steps << step}
+  end
+
+  def _exp_mtp_step_into(expanded_steps,step)
+    rsum = expression_factory.build(expanded_steps).rsum_mtp_rsum(step.val)
+    expanded_steps.slice!(0..-1)
+    rsum.steps.each{|step| expanded_steps << step}
+  end
+
+  def _exp_div_step_into(expanded_steps,step)
+    step.val.rsum_to_rational
+    _recipricate(step.val.steps)
+    step.val.rational_to_rsum
+    _div_mtp(expanded_steps,step)
+  end
+
+  def _ele_add_step_into(expanded_steps,step)
+    expanded_steps << _wrap_into_rational(step)
+  end
+
+  def _ele_mtp_step_into(expanded_steps,step)
+    expanded_steps.each{|r_step| r_step.val.steps[0].val.steps << step}
+  end
+
+  def _ele_div_step_into(expanded_steps,step)
+    expanded_steps.each do |r_step|
+      m_sum_dnator = r_step.val.steps[1].val
+      dnator = expression_factory.build([[nil,m_sum_dnator],[:mtp,step.val]])
+      r_step.val.steps[1].val = dnator.expand
+    end
+  end
+
+
+  #
+  # def _add_into_rsum(expanded_steps,step)
+  #   if step.exp_valued?
+  #     step.val.expand_to_rsum
+  #     step.val.steps.first.ops = :add
+  #     step.val.steps.each{|step| expanded_steps << step}
+  #   else
+  #    expanded_steps << _wrap_into_rational(step)
+  #   end
+  # end
 
   def _wrap_into_rational(step)
     rational_config = [[step.val],[[nil,[1]]]]
     rational = rational_factory.build(rational_config)
     step_factory.build([step.ops,rational])
   end
-
-  def _mtp_into_rsum(expanded_steps,step)
-    if step.exp_valued?
-      step.val.expand_to_rsum
-      expanded_rsum = expression_factory.build(expanded_steps).rsum_mtp_rsum(step.val)
-      expanded_steps.slice!(0..-1)
-      expanded_rsum.steps.each{|step| expanded_steps << step}
-    else
-      expanded_steps.each{|r_step| r_step.val.steps[0].val.steps << step}
-    end
-  end
-
-  def _div_into_rsum(expanded_steps,step)
-    if step.exp_valued?
-      step.val.expand_to_rsum
-      step.val.rsum_to_rational
-      _recipricate(step.val.steps)
-      step.val.rational_to_rsum
-      _div_mtp(expanded_steps,step)
-    else
-      expanded_steps.each do |r_step|
-        m_sum_dnator = r_step.val.steps[1].val
-        init_m_sum_step = step_factory.build([nil,m_sum_dnator])
-        mtp_step = step_factory.build([:mtp,step.val])
-        expanded_m_sum = expression_factory.build([init_m_sum_step,mtp_step]).expand
-        r_step.val.steps[1].val = expanded_m_sum
-      end
-    end
-  end
+  #
+  # def _mtp_into_rsum(expanded_steps,step)
+  #   if step.exp_valued?
+  #     step.val.expand_to_rsum
+  #     rsum = expression_factory.build(expanded_steps).rsum_mtp_rsum(step.val)
+  #     expanded_steps.slice!(0..-1)
+  #     rsum.steps.each{|step| expanded_steps << step}
+  #   else
+  #     expanded_steps.each{|r_step| r_step.val.steps[0].val.steps << step}
+  #   end
+  # end
+  #
+  # def _div_into_rsum(expanded_steps,step)
+  #   if step.exp_valued?
+  #     step.val.expand_to_rsum
+  #     step.val.rsum_to_rational
+  #     _recipricate(step.val.steps)
+  #     step.val.rational_to_rsum
+  #     _div_mtp(expanded_steps,step)
+  #   else
+  #     expanded_steps.each do |r_step|
+  #       m_sum_dnator = r_step.val.steps[1].val
+  #       init_sum = step_factory.build([nil,m_sum_dnator])
+  #       mtp_step = step_factory.build([:mtp,step.val])
+  #       expanded_m_sum = expression_factory.build([init_sum,mtp_step]).expand
+  #       r_step.val.steps[1].val = expanded_m_sum
+  #     end
+  #   end
+  # end
 
   def _recipricate(steps)
       steps[0].val, steps[1].val = steps[1].val, steps[0].val
