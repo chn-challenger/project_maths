@@ -1406,16 +1406,18 @@ describe Expression do
       expect(exp.object_id).to eq result.object_id
     end
 
-    # it 'expands (r) exp into itself (r) - no change' do
-    #   r_conf = [[3], [ [nil,['x']] ]]
-    #   r_sum_conf = [[nil,r_conf]]
-    #   exp = rsum_factory.build(r_sum_conf)
-    #   expected_exp = rsum_factory.build(r_sum_conf)
-    #   result = exp.expand_to_rsum
-    #   # puts expected_exp.latex
-    #   # puts exp.latex
-    #   # expect(result).to eq expected_exp
-    # end
+    it 'expands (r) exp into itself (r) - no change' do
+      r_conf = [[3], [ [nil,['x']] ]]
+      r_sum_conf = [[nil,r_conf]]
+      exp = rsum_factory.build(r_sum_conf)
+      expected_r_conf = [[3,1], [ [nil,[1,'x']] ]]
+      expected_r_sum_conf = [[nil,expected_r_conf]]
+      expected_exp = rsum_factory.build(expected_r_sum_conf)
+      result = exp.expand_to_rsum
+      puts expected_exp.latex
+      puts exp.latex
+      expect(result).to eq expected_exp
+    end
 
 
 

@@ -480,6 +480,7 @@ class Expression
     steps.each do |step|
       _nil_or_add_into_rsum(expanded_steps,step) if _nil_or_add?(step)
       _mtp_into_rsum(expanded_steps,step) if step.ops == :mtp
+
       if step.ops == :div
         puts 'just before div_into_rsum'
         # p expanded_steps.length
@@ -492,8 +493,6 @@ class Expression
 
     self.steps = expanded_steps
     self.steps.first.ops = nil  #this is to be taken out once nullify first step is written
-    # p self.steps
-    # p self.steps.length
     return self
   end
 
@@ -546,21 +545,17 @@ class Expression
       # 3. _rational_div_to_mtp(step)   (mutate step)
       # 4. step.val.rational_to_rsum    (mutator) (new method)
       # 5. _mtp_into_rsum(expanded_steps,step)
-
+      puts 'just before expanding div value'
       step.val.expand_to_rsum
+      puts 'expanding div value worked'
       # p step.val.latex
       step.val.rsum_to_rational   #msums on top and bot
+      puts 'rsum_to_rational worked'
       p step.val.latex
-      # p step.val.steps.length
-      # p step.val.steps.first.val.steps.length
-      # p step.val.steps.first.val.steps[1]
-      # p step.val.steps.first.val.steps[0]
-      # p step.val.steps.first.val.steps[0].val
-      # p step.val.steps.first.val.steps[1].val
-      step.val.steps.first.val.steps[0].val, step.val.steps.first.val.steps[1].val = step.val.steps.first.val.steps[1].val, step.val.steps.first.val.steps[0].val
-      p step.val.steps.first.val.steps[0].val
-      p step.val.steps.first.val.steps[1].val
-      # p step.val.latex
+      step.val.steps[0].val, step.val.steps[1].val = step.val.steps[1].val, step.val.steps[0].val
+
+      puts '==========================='
+      puts 'swaps worked'
       step.val.rational_to_rsum
       _div_mtp(expanded_steps,step)
     else
