@@ -1134,6 +1134,29 @@ describe Expression do
   end
 
   describe '#rational_to_rsum' do
+    it 'split a suitable rational to 1 term rsum' do
+      nrator = msum_factory.build([[nil,[8,'a']]])
+      dnator = msum_factory.build([[nil,[3,'x']],[:add,[4,'y']]])
+      exp = expression_factory.build([[nil,nrator],[:div,dnator]])
+      r_1_1 = [[8,'a'],[[nil,[3,'x']],[:add,[4,'y']]]]
+      r_sum_conf_1 = [[nil,r_1_1]]
+      expected_r_sum = rsum_factory.build(r_sum_conf_1)
+      result = exp.rational_to_rsum
+      expect(result).to eq expected_r_sum
+    end
+
+    it 'is a mutator method' do
+      nrator = msum_factory.build([[nil,[8,'a']]])
+      dnator = msum_factory.build([[nil,[3,'x']],[:add,[4,'y']]])
+      exp = expression_factory.build([[nil,nrator],[:div,dnator]])
+      r_1_1 = [[8,'a'],[[nil,[3,'x']],[:add,[4,'y']]]]
+      r_sum_conf_1 = [[nil,r_1_1]]
+      expected_r_sum = rsum_factory.build(r_sum_conf_1)
+      result = exp.rational_to_rsum
+      expect(result.object_id).to eq exp.object_id
+      expect(exp).to eq expected_r_sum
+    end
+
     it 'split a suitable rational to 2 term rsum' do
       nrator = msum_factory.build([[nil,[8,'a']],[:sbt,[6,'b']]])
       dnator = msum_factory.build([[nil,[3,'x']],[:add,[4,'y']]])
@@ -1143,8 +1166,19 @@ describe Expression do
       r_sum_conf_1 = [[nil,r_1_1],[:sbt,r_1_2]]
       expected_r_sum = rsum_factory.build(r_sum_conf_1)
       result = exp.rational_to_rsum
-      # puts expected_r_sum.latex
-      # puts result.latex
+      expect(result).to eq expected_r_sum
+    end
+
+    it 'split a suitable rational to 3 term rsum' do
+      nrator = msum_factory.build([[nil,[8,'a']],[:sbt,[6,'b']],[:add,[11,'z']]])
+      dnator = msum_factory.build([[nil,[3,'x']],[:add,[4,'y']]])
+      exp = expression_factory.build([[nil,nrator],[:div,dnator]])
+      r_1_1 = [[8,'a'],[[nil,[3,'x']],[:add,[4,'y']]]]
+      r_1_2 = [[6,'b'],[[nil,[3,'x']],[:add,[4,'y']]]]
+      r_1_3 = [[11,'z'],[[nil,[3,'x']],[:add,[4,'y']]]]
+      r_sum_conf_1 = [[nil,r_1_1],[:sbt,r_1_2],[:add,r_1_3]]
+      expected_r_sum = rsum_factory.build(r_sum_conf_1)
+      result = exp.rational_to_rsum
       expect(result).to eq expected_r_sum
     end
   end

@@ -454,7 +454,7 @@ class Expression
   end
 
   def _add_sbt_sign_switch
-    switch_hash = {nil =>:sbt,:add =>:sbt,:sbt=>:add}
+    switch_hash = {nil=>:sbt,:add=>:sbt,:sbt=>:add}
     steps.each{|step| step.ops = switch_hash[step.ops]}
   end
 
