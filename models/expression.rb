@@ -466,20 +466,38 @@ class Expression
   end
 
   def flatten
+    _flatten_first_steps_recursively
+    _flatten_mid_terms_recursively
+  end
+
+  def _flatten_first_steps_recursively
     _flatten_first_step
     steps.each do |step|
-      step.val.flatten if step.val.is_a?(expression_class)
+      step.val._flatten_first_steps_recursively if step.exp_valued?
     end
     self
   end
 
   def _flatten_first_step
-    if steps.first.val.is_a?(expression_class)
+    if steps.first.exp_valued?
       first_steps = steps.first.val.steps
       self.steps.delete_at(0)
       self.steps = first_steps + self.steps
     end
-    _flatten_first_step if steps.first.val.is_a?(expression_class)
+    _flatten_first_step if steps.first.exp_valued?
+  end
+
+  def _flatten_mid_terms_recursively
+    steps.each do |step|
+      step.val = step.val.steps.first.val if _single_ele_step_exp_valued?(step)
+      step.val._flatten_mid_terms_recursively if step.exp_valued?
+    end
+    self
+  end
+
+  def _single_ele_step_exp_valued?(step)
+    step.exp_valued? && step.val.steps.length == 1 &&
+      !step.val.steps.first.exp_valued?
   end
 
   def latex
@@ -753,57 +771,4 @@ class Expression
     converted_exp.flatten
   end
 
-
-  def flatten_old_version
-    _flatten_first_step
-    steps.each do |step|
-      step.val.flatten if step.val.is_a?(expression_class)
-    end
-    self
-  end
-
-  def _flatten_first_step_old_version
-    if steps.first.val.is_a?(expression_class)
-      first_steps = steps.first.val.steps
-      self.steps.delete_at(0)
-      self.steps = first_steps + self.steps
-    end
-    _flatten_first_step if steps.first.val.is_a?(expression_class)
-  end
-
-
-  def flatten
-    _flatten_first_steps_recursively
-    _flatten_mid_terms_recursively
-  end
-
-  def _flatten_first_steps_recursively
-    _flatten_first_step
-    steps.each do |step|
-      step.val._flatten_first_steps_recursively if step.exp_valued?
-    end
-    self
-  end
-
-  def _flatten_first_step
-    if steps.first.exp_valued?
-      first_steps = steps.first.val.steps
-      self.steps.delete_at(0)
-      self.steps = first_steps + self.steps
-    end
-    _flatten_first_step if steps.first.exp_valued?
-  end
-
-  def _flatten_mid_terms_recursively
-    steps.each do |step|
-      step.val = step.val.steps.first.val if _single_ele_step_exp_valued?(step)
-      step.val._flatten_mid_terms_recursively if step.exp_valued?
-    end
-    self
-  end
-
-  def _single_ele_step_exp_valued?(step)
-    step.exp_valued? && step.val.steps.length == 1 &&
-      !step.val.steps.first.exp_valued?
-  end
 end

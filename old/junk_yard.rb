@@ -461,3 +461,22 @@
   #   end
   #   self
   # end
+
+
+
+    # def flatten_old_version
+    #   _flatten_first_step
+    #   steps.each do |step|
+    #     step.val.flatten if step.val.is_a?(expression_class)
+    #   end
+    #   self
+    # end
+    #
+    # def _flatten_first_step_old_version
+    #   if steps.first.val.is_a?(expression_class)
+    #     first_steps = steps.first.val.steps
+    #     self.steps.delete_at(0)
+    #     self.steps = first_steps + self.steps
+    #   end
+    #   _flatten_first_step if steps.first.val.is_a?(expression_class)
+    # end
