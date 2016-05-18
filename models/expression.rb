@@ -723,19 +723,19 @@ class Expression
   end
 
 
-    def convert_lft_sbt_div_steps
-      converted_exp = self.class.new
-      steps.each do |step|
-        step.val = step.val.convert_lft_sbt_div_steps unless step.is_elementary?
-        if step.dir == :lft && (step.ops == :sbt || step.ops == :div)
-          converted_exp = self.class.new([Step.new(nil,step.val),
-            Step.new(step.ops,converted_exp)])
-        else
-          converted_exp.steps << step
-        end
-      end
-      converted_exp
-    end
+    # def convert_lft_sbt_div_steps
+    #   converted_exp = self.class.new
+    #   steps.each do |step|
+    #     step.val = step.val.convert_lft_sbt_div_steps unless step.is_elementary?
+    #     if step.dir == :lft && (step.ops == :sbt || step.ops == :div)
+    #       converted_exp = self.class.new([Step.new(nil,step.val),
+    #         Step.new(step.ops,converted_exp)])
+    #     else
+    #       converted_exp.steps << step
+    #     end
+    #   end
+    #   converted_exp
+    # end
 
 
 
@@ -751,6 +751,51 @@ class Expression
       end
     end
     converted_exp.flatten
+  end
+
+
+  def flatten_old_version
+    _flatten_first_step
+    steps.each do |step|
+      step.val.flatten if step.val.is_a?(expression_class)
+    end
+    self
+  end
+
+  def _flatten_first_step_old_version
+    if steps.first.val.is_a?(expression_class)
+      first_steps = steps.first.val.steps
+      self.steps.delete_at(0)
+      self.steps = first_steps + self.steps
+    end
+    _flatten_first_step if steps.first.val.is_a?(expression_class)
+  end
+
+
+  def flatten
+    _flatten_first_step
+    steps.each do |step|
+      step.val.flatten if step.exp_valued?
+    end
+    self
+  end
+
+  def _flatten_first_step
+    if steps.first.exp_valued?
+      first_steps = steps.first.val.steps
+      self.steps.delete_at(0)
+      self.steps = first_steps + self.steps
+    end
+    _flatten_first_step if steps.first.exp_valued?
+  end
+
+  def flatten_one_step_exp_vals
+    steps.each do |step|
+      if step.exp_valued? && step.val.steps.length == 1 && !step.val.steps.first.exp_valued?
+        step.val = step.val.steps.first.val
+      end
+    end
+    self
   end
 
 
