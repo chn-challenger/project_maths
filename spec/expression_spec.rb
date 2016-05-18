@@ -1516,6 +1516,32 @@ describe Expression do
       expect(result).to eq expected_exp
     end
 
+    it 'expands ((e - e)/(e - e) exp into r + r' do
+      exp = expression_factory.build([[nil,3],[:sbt,'x'],[:div,[[nil,2],
+        [:sbt,'y']]]])
+      r_conf_1 = [[3], [[nil,[2]],[:sbt,['y']]]]
+      r_conf_2 = [['x'], [[nil,[2]],[:sbt,['y']]]]
+      r_sum_conf = [[nil,r_conf_1],[:sbt,r_conf_2]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      expect(result).to eq expected_exp
+    end
+
+    it 'expands (((e - e)/(r - e) exp into r - r - r + r' do
+      r_1 = rational_factory.build([[4],[[nil,['b']],[:sbt,['a']]]])
+      exp = expression_factory.build([[nil,2],[:sbt,'x'],[:div,[[nil,r_1],
+        [:sbt,'y']]]])
+      r_conf_1 = [[2,'b'], [[nil,[4]],[:sbt,['y','b']],[:add,['y','a']]]]
+      r_conf_2 = [['x','b'], [[nil,[4]],[:sbt,['y','b']],[:add,['y','a']]]]
+      r_conf_3 = [[2,'a'], [[nil,[4]],[:sbt,['y','b']],[:add,['y','a']]]]
+      r_conf_4 = [['x','a'], [[nil,[4]],[:sbt,['y','b']],[:add,['y','a']]]]
+      r_sum_conf = [[nil,r_conf_1],[:sbt,r_conf_2],
+        [:sbt,r_conf_3],[:add,r_conf_4]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      expect(result).to eq expected_exp
+    end
+
   end
 
 
