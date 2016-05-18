@@ -480,7 +480,14 @@ class Expression
     steps.each do |step|
       _nil_or_add_into_rsum(expanded_steps,step) if _nil_or_add?(step)
       _mtp_into_rsum(expanded_steps,step) if step.ops == :mtp
-      _div_into_rsum(expanded_steps,step) if step.ops == :div
+      if step.ops == :div
+        puts 'just before div_into_rsum'
+        # p expanded_steps.length
+        p expanded_steps
+        puts 'end just before div_into_rsum'
+        _div_into_rsum(expanded_steps,step)
+      end
+
     end
 
     self.steps = expanded_steps
@@ -541,8 +548,19 @@ class Expression
       # 5. _mtp_into_rsum(expanded_steps,step)
 
       step.val.expand_to_rsum
-      step.val.rsum_to_rational
-      step.val.steps.first.val.steps[0], step.val.steps.first.val.steps[1] = step.val.steps.first.val.steps[1], step.val.steps.first.val.steps[0]
+      # p step.val.latex
+      step.val.rsum_to_rational   #msums on top and bot
+      p step.val.latex
+      # p step.val.steps.length
+      # p step.val.steps.first.val.steps.length
+      # p step.val.steps.first.val.steps[1]
+      # p step.val.steps.first.val.steps[0]
+      # p step.val.steps.first.val.steps[0].val
+      # p step.val.steps.first.val.steps[1].val
+      step.val.steps.first.val.steps[0].val, step.val.steps.first.val.steps[1].val = step.val.steps.first.val.steps[1].val, step.val.steps.first.val.steps[0].val
+      p step.val.steps.first.val.steps[0].val
+      p step.val.steps.first.val.steps[1].val
+      # p step.val.latex
       step.val.rational_to_rsum
       _div_mtp(expanded_steps,step)
     else
@@ -569,7 +587,8 @@ class Expression
     if steps.length == 1
       step_1 = step_factory.build([nil,[steps.first.val.steps[0]]])
       step_2 = steps.first.val.steps[1]
-      return expression_factory.build([step_1,step_2])
+      self.steps = [step_1,step_2]
+      return self
     end
     result_step = steps.first
     for i in 1...steps.length

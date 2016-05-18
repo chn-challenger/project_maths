@@ -1022,6 +1022,19 @@ describe Expression do
   end
 
   describe '#rsum_to_rational' do
+    it 'does this work for x/1?' do
+      r_1_1 = [['x'], [[nil,[1]]]]
+      r_sum_conf_1 = [[nil,r_1_1]]
+      r_sum_1 = rsum_factory.build(r_sum_conf_1)
+      numerator_exp_config = [[nil,['x']]]
+      denominator_exp_config = [[nil,[1]]]
+      nrator = msum_factory.build(numerator_exp_config)
+      dnator = msum_factory.build(denominator_exp_config)
+      expected_exp = expression_factory.build([[nil,nrator],[:div,dnator]])
+      result = r_sum_1.rsum_to_rational
+      expect(r_sum_1).to eq expected_exp
+    end
+
     it 'sum terms in a 1 term rsum into a rational' do
       r_1_1 = [[5], [[nil,[2,'x']]]]
       r_sum_conf_1 = [[nil,r_1_1]]
@@ -1334,6 +1347,33 @@ describe Expression do
   describe '#expand_to_rsum' do
     it 'expands an e step to a rsum' do
       exp = expression_factory.build([[nil,5]])
+      r_conf = [[5], [[nil,[1]]]]
+      r_sum_conf = [[nil,r_conf]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      expect(exp.expand_to_rsum).to eq expected_exp
+    end
+
+    it 'expands e + e to a rsum' do
+      exp = expression_factory.build([[nil,5],[:add,'x']])
+      r_conf_1 = [[5], [[nil,[1]]]]
+      r_conf_2 = [['x'], [[nil,[1]]]]
+      r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      expect(result).to eq expected_exp
+    end
+
+    it 'expands an unflattend e step exp' do
+      exp = expression_factory.build([[nil,[[nil,5],[:add,'x']]]])
+      r_conf_1 = [[5], [[nil,[1]]]]
+      r_conf_2 = [['x'], [[nil,[1]]]]
+      r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      expect(exp.expand_to_rsum).to eq expected_exp
+    end
+
+    it 'expands a 2 layer unflattend e step exp' do
+      exp = expression_factory.build([[nil,[[nil,[[nil,5]]]]]])
       r_conf = [[5], [ [nil,[1]] ]]
       r_sum_conf = [[nil,r_conf]]
       expected_exp = rsum_factory.build(r_sum_conf)
@@ -1366,32 +1406,19 @@ describe Expression do
       expect(exp.object_id).to eq result.object_id
     end
 
-    it 'expands an unflattend e step exp' do
-      exp = expression_factory.build([[nil,[[nil,5]]]])
-      r_conf = [[5], [ [nil,[1]] ]]
-      r_sum_conf = [[nil,r_conf]]
-      expected_exp = rsum_factory.build(r_sum_conf)
-      expect(exp.expand_to_rsum).to eq expected_exp
-    end
+    # it 'expands (r) exp into itself (r) - no change' do
+    #   r_conf = [[3], [ [nil,['x']] ]]
+    #   r_sum_conf = [[nil,r_conf]]
+    #   exp = rsum_factory.build(r_sum_conf)
+    #   expected_exp = rsum_factory.build(r_sum_conf)
+    #   result = exp.expand_to_rsum
+    #   # puts expected_exp.latex
+    #   # puts exp.latex
+    #   # expect(result).to eq expected_exp
+    # end
 
-    it 'expands a 2 layer unflattend e step exp' do
-      exp = expression_factory.build([[nil,[[nil,[[nil,5]]]]]])
-      r_conf = [[5], [ [nil,[1]] ]]
-      r_sum_conf = [[nil,r_conf]]
-      expected_exp = rsum_factory.build(r_sum_conf)
-      expect(exp.expand_to_rsum).to eq expected_exp
-    end
 
-    it 'expands (r) exp into itself (r) - no change' do
-      r_conf = [[5], [ [nil,['y']] ]]
-      r_sum_conf = [[nil,r_conf]]
-      exp = rsum_factory.build(r_sum_conf)
-      expected_exp = rsum_factory.build(r_sum_conf)
-      result = exp.expand_to_rsum
-      puts expected_exp.latex
-      puts result.latex
-      expect(exp.expand_to_rsum).to eq expected_exp
-    end
+
 
   end
 
