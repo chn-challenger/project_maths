@@ -1419,7 +1419,47 @@ describe Expression do
       expect(result).to eq expected_exp
     end
 
+    it 'expands (e + e) m exp into itself r + r' do
+      exp = expression_factory.build([[nil,3],[:add,'x'],[:mtp,[[nil,2],[:mtp,'y']]]])
+      r_conf_1 = [[3,2,'y'], [[nil,[1,1]]]]
+      r_conf_2 = [['x',2,'y'], [[nil,[1,1]]]]
+      r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      puts result.latex
+      expect(result).to eq expected_exp
+    end
 
+    it 'expands (e + e) m exp into itself r + r' do
+      exp = expression_factory.build([[nil,3],[:add,'x'],[:div,[[nil,2],[:mtp,'y']]]])
+      r_conf_1 = [[3,2,'y'], [[nil,[1,1]]]]
+      r_conf_2 = [['x',2,'y'], [[nil,[1,1]]]]
+      r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      puts result.latex
+      # expect(result).to eq expected_exp
+    end
+
+    # it 'expands (e + e) m exp into itself r + r' do
+    #   exp = expression_factory.build([[nil,3],[:add,'x'],[:div,[[nil,2],[:div,'y']]]])
+    #   r_conf_1 = [[3,2,'y'], [[nil,[1,1]]]]
+    #   r_conf_2 = [['x',2,'y'], [[nil,[1,1]]]]
+    #   r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
+    #   expected_exp = rsum_factory.build(r_sum_conf)
+    #   result = exp.expand_to_rsum
+    #   puts result.latex
+    #   # expect(result).to eq expected_exp
+    # end
+
+    it 'expands e / e into r' do
+      exp = expression_factory.build([[nil,2],[:div,'y']])
+      # exp = expression_factory.build([[nil,2]])
+      result = exp.expand_to_rsum
+
+      puts result.latex
+      # puts result.is_rational_sum?
+    end
 
 
   end

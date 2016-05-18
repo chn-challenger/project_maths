@@ -482,10 +482,10 @@ class Expression
       _mtp_into_rsum(expanded_steps,step) if step.ops == :mtp
 
       if step.ops == :div
-        puts 'just before div_into_rsum'
-        # p expanded_steps.length
-        p expanded_steps
-        puts 'end just before div_into_rsum'
+        # puts 'just before div_into_rsum'
+        # # p expanded_steps.length
+        # p expanded_steps
+        # puts 'end just before div_into_rsum'
         _div_into_rsum(expanded_steps,step)
       end
 
@@ -520,9 +520,6 @@ class Expression
       expanded_rsum.steps.each do |step|
         expanded_steps << step
       end
-
-      # expanded_steps = expanded_rsum.steps
-      #     returns an expression with the expansion,  (new method)
     else
       expanded_steps.each do |r_step|
         r_step.val.steps[0].val.steps << step
@@ -540,27 +537,25 @@ class Expression
 
   def _div_into_rsum(expanded_steps,step)
     if step.exp_valued?
-      # 1. step.val.expand_to_rsum      (mutator)
-      # 2. step.val.rsum_to_rational    (mutator) (new method)
-      # 3. _rational_div_to_mtp(step)   (mutate step)
-      # 4. step.val.rational_to_rsum    (mutator) (new method)
-      # 5. _mtp_into_rsum(expanded_steps,step)
-      puts 'just before expanding div value'
+      # puts 'just before expanding div value'
       step.val.expand_to_rsum
-      puts 'expanding div value worked'
+      # puts 'expanding div value worked'
       # p step.val.latex
       step.val.rsum_to_rational   #msums on top and bot
-      puts 'rsum_to_rational worked'
-      p step.val.latex
+      # puts 'rsum_to_rational worked'
+      # p step.val.latex
       step.val.steps[0].val, step.val.steps[1].val = step.val.steps[1].val, step.val.steps[0].val
-
-      puts '==========================='
-      puts 'swaps worked'
+      #
+      # puts '==========================='
+      # puts 'swaps worked'
       step.val.rational_to_rsum
       _div_mtp(expanded_steps,step)
     else
+      # puts '£££££££££££££££££££££'
+      # test_1 = expression_factory.build(expanded_steps)
+      # p test_1.is_rational_sum?
       expanded_steps.each do |r_step|
-        r_step.val.steps[0].val.steps << step
+        r_step.val.steps[1].val.steps << step_factory.build([:mtp,step.val])
       end
     end
   end
