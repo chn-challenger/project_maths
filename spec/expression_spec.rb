@@ -1410,46 +1410,39 @@ describe Expression do
       r_conf = [[3], [ [nil,['x']] ]]
       r_sum_conf = [[nil,r_conf]]
       exp = rsum_factory.build(r_sum_conf)
-      expected_r_conf = [[3,1], [ [nil,[1,'x']] ]]
-      expected_r_sum_conf = [[nil,expected_r_conf]]
-      expected_exp = rsum_factory.build(expected_r_sum_conf)
+      expected_exp = rsum_factory.build(r_sum_conf)
       result = exp.expand_to_rsum
-      puts expected_exp.latex
-      puts exp.latex
       expect(result).to eq expected_exp
     end
 
     it 'expands (e + e) m exp into itself r + r' do
       exp = expression_factory.build([[nil,3],[:add,'x'],[:mtp,[[nil,2],[:mtp,'y']]]])
-      r_conf_1 = [[3,2,'y'], [[nil,[1,1]]]]
-      r_conf_2 = [['x',2,'y'], [[nil,[1,1]]]]
+      r_conf_1 = [[3,2,'y'], [[nil,[1]]]]
+      r_conf_2 = [['x',2,'y'], [[nil,[1]]]]
       r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
       expected_exp = rsum_factory.build(r_sum_conf)
       result = exp.expand_to_rsum
-      puts result.latex
       expect(result).to eq expected_exp
     end
 
     it 'expands (e + e) m exp into itself r + r' do
       exp = expression_factory.build([[nil,3],[:add,'x'],[:div,[[nil,2],[:mtp,'y']]]])
-      r_conf_1 = [[3,2,'y'], [[nil,[1,1]]]]
-      r_conf_2 = [['x',2,'y'], [[nil,[1,1]]]]
+      r_conf_1 = [[3], [[nil,[2,'y']]]]
+      r_conf_2 = [['x'], [[nil,[2,'y']]]]
       r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
       expected_exp = rsum_factory.build(r_sum_conf)
       result = exp.expand_to_rsum
-      puts result.latex
-      # expect(result).to eq expected_exp
+      expect(result).to eq expected_exp
     end
 
     it 'expands (e + e) / r exp into itself r + r' do
       exp = expression_factory.build([[nil,3],[:add,'x'],[:div,[[nil,2],[:div,'y']]]])
-      r_conf_1 = [[3,2,'y'], [[nil,[1,1]]]]
-      r_conf_2 = [['x',2,'y'], [[nil,[1,1]]]]
+      r_conf_1 = [[3,'y'], [[nil,[2]]]]
+      r_conf_2 = [['x','y'], [[nil,[2]]]]
       r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
       expected_exp = rsum_factory.build(r_sum_conf)
       result = exp.expand_to_rsum
-      puts result.latex
-      # expect(result).to eq expected_exp
+      expect(result).to eq expected_exp
     end
 
     it 'expands ((e + e)/(e + e) exp into itself r + r' do
@@ -1459,18 +1452,21 @@ describe Expression do
       # expect(result).to eq expected_exp
     end
 
-    it 'expands (((e + e)/(r + e) + (e + m))(e + r) exp into itself r + r' do
-      r_1 = rational_factory.build([[4],[[nil,['b']],[:add,['a']]]])
-      r_2 = rational_factory.build([['e'],[[nil,['f']],[:add,['gs']]]])
-      exp = expression_factory.build([[nil,2],[:add,'x'],[:div,[[nil,r_1],
-        [:add,'y']]]
-        # [:add,[[nil,'c'],[:add,5]]]
-        # [:mtp,[[nil,6],[:add,r_2]]]
-      ])
-      result = exp.expand_to_rsum
-      puts result.latex
-      # expect(result).to eq expected_exp
-    end
+    # it 'expands (((e + e)/(r + e) + (e + m))(e + r) exp into itself r + r' do
+    #   r_1 = rational_factory.build([[4],[[nil,['b']],[:add,['a']]]])
+    #   r_2 = rational_factory.build([['e'],[[nil,['f']],[:add,['gs']]]])
+    #   exp = expression_factory.build([[nil,2],[:add,'x'],[:div,[[nil,r_1],
+    #     [:add,'y']]]
+    #     # [:add,[[nil,'c'],[:add,5]]]
+    #     # [:mtp,[[nil,6],[:add,r_2]]]
+    #   ])
+    #   result = exp.expand_to_rsum
+    #   puts result.latex
+    #   # one_step = result.steps[0].val.steps[1].val.steps[0].val.steps[0]
+    #   # _nil_one_step = step_factory.build([:nil,1])
+    #   # p one_step.ops == _nil_one_step.ops
+    #   # expect(result).to eq expected_exp
+    # end
 
 
 
