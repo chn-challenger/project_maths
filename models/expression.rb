@@ -493,7 +493,7 @@ class Expression
 
     self.steps = expanded_steps
     self.steps.first.ops = nil  #this is to be taken out once nullify first step is written
-    self.clean_mtp_one
+    self.clean_one
     return self
   end
 
@@ -571,7 +571,7 @@ class Expression
     end
   end
 
-  def clean_mtp_one  #to be applied to rsum only - expecting rsum as object
+  def clean_one  #to be applied to rsum only - expecting rsum as object
     _mtp_one_step = step_factory.build([:mtp,1])
     _nil_one_step = step_factory.build([nil,1])
     steps.each do |step|

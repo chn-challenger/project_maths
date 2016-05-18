@@ -1415,7 +1415,7 @@ describe Expression do
       expect(result).to eq expected_exp
     end
 
-    it 'expands (e + e) m exp into itself r + r' do
+    it 'expands (e + e) m exp into r + r' do
       exp = expression_factory.build([[nil,3],[:add,'x'],[:mtp,[[nil,2],[:mtp,'y']]]])
       r_conf_1 = [[3,2,'y'], [[nil,[1]]]]
       r_conf_2 = [['x',2,'y'], [[nil,[1]]]]
@@ -1425,7 +1425,7 @@ describe Expression do
       expect(result).to eq expected_exp
     end
 
-    it 'expands (e + e) m exp into itself r + r' do
+    it 'expands (e + e) m exp into r + r' do
       exp = expression_factory.build([[nil,3],[:add,'x'],[:div,[[nil,2],[:mtp,'y']]]])
       r_conf_1 = [[3], [[nil,[2,'y']]]]
       r_conf_2 = [['x'], [[nil,[2,'y']]]]
@@ -1435,7 +1435,7 @@ describe Expression do
       expect(result).to eq expected_exp
     end
 
-    it 'expands (e + e) / r exp into itself r + r' do
+    it 'expands (e + e) / r exp into r + r' do
       exp = expression_factory.build([[nil,3],[:add,'x'],[:div,[[nil,2],[:div,'y']]]])
       r_conf_1 = [[3,'y'], [[nil,[2]]]]
       r_conf_2 = [['x','y'], [[nil,[2]]]]
@@ -1445,31 +1445,55 @@ describe Expression do
       expect(result).to eq expected_exp
     end
 
-    it 'expands ((e + e)/(e + e) exp into itself r + r' do
+    it 'expands ((e + e)/(e + e) exp into r + r' do
       exp = expression_factory.build([[nil,3],[:add,'x'],[:div,[[nil,2],[:add,'y']]]])
+      r_conf_1 = [[3], [[nil,[2]],[:add,['y']]]]
+      r_conf_2 = [['x'], [[nil,[2]],[:add,['y']]]]
+      r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2]]
+      expected_exp = rsum_factory.build(r_sum_conf)
       result = exp.expand_to_rsum
-      puts result.latex
-      # expect(result).to eq expected_exp
+      expect(result).to eq expected_exp
     end
 
-    # it 'expands (((e + e)/(r + e) + (e + m))(e + r) exp into itself r + r' do
-    #   r_1 = rational_factory.build([[4],[[nil,['b']],[:add,['a']]]])
-    #   r_2 = rational_factory.build([['e'],[[nil,['f']],[:add,['gs']]]])
-    #   exp = expression_factory.build([[nil,2],[:add,'x'],[:div,[[nil,r_1],
-    #     [:add,'y']]]
-    #     # [:add,[[nil,'c'],[:add,5]]]
-    #     # [:mtp,[[nil,6],[:add,r_2]]]
-    #   ])
-    #   result = exp.expand_to_rsum
-    #   puts result.latex
-    #   # one_step = result.steps[0].val.steps[1].val.steps[0].val.steps[0]
-    #   # _nil_one_step = step_factory.build([:nil,1])
-    #   # p one_step.ops == _nil_one_step.ops
-    #   # expect(result).to eq expected_exp
-    # end
+    it 'expands (((e + e)/(r + e) + (e + m))(e + r) exp into r + r + r + r' do
+      r_1 = rational_factory.build([[4],[[nil,['b']],[:add,['a']]]])
+      exp = expression_factory.build([[nil,2],[:add,'x'],[:div,[[nil,r_1],
+        [:add,'y']]]])
+      r_conf_1 = [[2,'b'], [[nil,[4]],[:add,['y','b']],[:add,['y','a']]]]
+      r_conf_2 = [['x','b'], [[nil,[4]],[:add,['y','b']],[:add,['y','a']]]]
+      r_conf_3 = [[2,'a'], [[nil,[4]],[:add,['y','b']],[:add,['y','a']]]]
+      r_conf_4 = [['x','a'], [[nil,[4]],[:add,['y','b']],[:add,['y','a']]]]
+      r_sum_conf = [[nil,r_conf_1],[:add,r_conf_2],
+        [:add,r_conf_3],[:add,r_conf_4]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      expect(result).to eq expected_exp
+    end
 
-
-
+    it 'expands some crazy stuff correctly!' do
+      r_1 = rational_factory.build([[4],[[nil,['b']]]])
+      r_2 = rational_factory.build([['e'],[[nil,['f']]]])
+      r_3 = rational_factory.build([['p'],[[nil,['q']]]])
+      exp = expression_factory.build([[nil,2],[:add,'x'],
+        [:div,[[nil,r_1],[:add,'y'],[:div,r_2]]],
+        [:add,[[nil,'c'],[:add,5]]],
+        [:mtp,[[nil,6],[:add,r_3]]]
+      ])
+      r_conf_1 = [[2,'b','e','e',6], [[nil,[4,'f','e']],[:add,['y','f','b','e']]]]
+      r_conf_2 = [['x','b','e','e',6], [[nil,[4,'f','e']],[:add,['y','f','b','e']]]]
+      r_conf_3 = [['c',6], [[nil,[1]]]]
+      r_conf_4 = [[5,6], [[nil,[1]]]]
+      r_conf_5 = [[2,'b','e','e','p'], [[nil,[4,'f','e','q']],[:add,['y','f','b','e','q']]]]
+      r_conf_6 = [['x','b','e','e','p'], [[nil,[4,'f','e','q']],[:add,['y','f','b','e','q']]]]
+      r_conf_7 = [['c','p'], [[nil,['q']]]]
+      r_conf_8 = [[5,'p'], [[nil,['q']]]]
+      r_sum_conf = [    [nil,r_conf_1], [:add,r_conf_2],[:add,r_conf_3],
+        [:add,r_conf_4],[:add,r_conf_5],[:add,r_conf_6],[:add,r_conf_7],
+        [:add,r_conf_8]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      expect(result).to eq expected_exp
+    end
   end
 
 
