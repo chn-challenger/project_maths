@@ -1494,7 +1494,30 @@ describe Expression do
       result = exp.expand_to_rsum
       expect(result).to eq expected_exp
     end
+
+    it 'expand e - e' do
+      exp = expression_factory.build([[nil,2],[:sbt,'x']])
+      r_conf_1 = [[2], [[nil,[1]]]]
+      r_conf_2 = [['x'], [[nil,[1]]]]
+      r_sum_conf = [[nil,r_conf_1],[:sbt,r_conf_2]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      expect(result).to eq expected_exp
+    end
+
+    it 'expand e - (e + e)' do
+      exp = expression_factory.build([[nil,2],[:sbt,[[nil,'x'],[:add,'y']]]])
+      r_conf_1 = [[2], [[nil,[1]]]]
+      r_conf_2 = [['x'], [[nil,[1]]]]
+      r_conf_3 = [['y'], [[nil,[1]]]]
+      r_sum_conf = [[nil,r_conf_1],[:sbt,r_conf_2],[:sbt,r_conf_3]]
+      expected_exp = rsum_factory.build(r_sum_conf)
+      result = exp.expand_to_rsum
+      expect(result).to eq expected_exp
+    end
+
   end
+
 
 
 end

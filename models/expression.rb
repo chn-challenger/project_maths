@@ -494,12 +494,14 @@ class Expression
 
   def _exp_step_into(expanded_steps,step)
     _exp_add_step_into(expanded_steps,step) if step.ops == nil || step.ops == :add
+    _exp_sbt_step_into(expanded_steps,step) if step.ops == :sbt
     _exp_mtp_step_into(expanded_steps,step) if step.ops == :mtp
     _exp_div_step_into(expanded_steps,step) if step.ops == :div
   end
 
   def _ele_step_into(expanded_steps,step)
     _ele_add_step_into(expanded_steps,step) if step.ops == nil || step.ops == :add
+    _ele_sbt_step_into(expanded_steps,step) if step.ops == :sbt
     _ele_mtp_step_into(expanded_steps,step) if step.ops == :mtp
     _ele_div_step_into(expanded_steps,step) if step.ops == :div
   end
@@ -507,6 +509,14 @@ class Expression
   def _exp_add_step_into(expanded_steps,step)
     step.val.steps.first.ops = :add
     step.val.steps.each{|step| expanded_steps << step}
+  end
+
+  def _exp_sbt_step_into(expanded_steps,step)
+    switch_hash = {nil=>:sbt,:add=>:sbt,:sbt=>:add}
+    step.val.steps.each do |step|
+      step.ops = switch_hash[step.ops]
+      expanded_steps << step
+    end
   end
 
   def _exp_mtp_step_into(expanded_steps,step)
@@ -523,6 +533,10 @@ class Expression
   end
 
   def _ele_add_step_into(expanded_steps,step)
+    expanded_steps << _wrap_into_rational(step)
+  end
+
+  def _ele_sbt_step_into(expanded_steps,step)
     expanded_steps << _wrap_into_rational(step)
   end
 
