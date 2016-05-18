@@ -929,25 +929,7 @@ describe Expression do
       result = exp.expand
       expect(exp.expand).to eq expected_exp
     end
-    #
-    # it 'expands (e + e) / e' do
-    #   exp = expression_factory.build([[nil,4],[:add,'x'],[:div,11]])
-    #   expected_exp = expression_factory.build([
-    #     [nil,[[nil,  [[nil,4]]  ],[:div, [[nil,11]]  ]]],
-    #     [:add,[[nil,'x'],[:div,11]]]])
-    #   puts exp.latex
-    #   puts expected_exp.latex
-    #
-    # end
-
-    #THIS IS RUNNING INTO THE SAME PROBLEMS AS PREVIOUS ITERATION OF THIS METHOD
-    #THIS TIME, I WILL CREATE A METHOD FOR EXPANDING RATIONAL SUMS WHERE
-    #TO MAKE THINGS EASIER TO MANAGE, EVERY TERM WILL BE RATIONAL.
-
   end
-
-
-# space for '#expand_to_rsum'
 
   describe '#rsum_mtp_rsum' do
     it '(r) x (r) into a new rsum' do
@@ -1341,9 +1323,6 @@ describe Expression do
     end
   end
 
-
-
-
   describe '#expand_to_rsum' do
     it 'expands an e step to a rsum' do
       exp = expression_factory.build([[nil,5]])
@@ -1541,7 +1520,6 @@ describe Expression do
       result = exp.expand_to_rsum
       expect(result).to eq expected_exp
     end
-
   end
 
 

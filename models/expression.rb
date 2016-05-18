@@ -473,7 +473,123 @@ class Expression
     copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
   end
 
+  def flatten
+    _flatten_first_step
+    steps.each do |step|
+      step.val.flatten if step.val.is_a?(expression_class)
+    end
+    self
+  end
 
+  def _flatten_first_step
+    if steps.first.val.is_a?(expression_class)
+      first_steps = steps.first.val.steps
+      self.steps.delete_at(0)
+      self.steps = first_steps + self.steps
+    end
+    _flatten_first_step if steps.first.val.is_a?(expression_class)
+  end
+
+  def latex
+    return '' if steps.length == 0
+    copy = self.copy.flatten
+    curr_exp = expression_factory.build([copy.steps.first])
+    result = copy.steps.first.val.to_s
+    for i in 1...copy.steps.length
+      step = copy.steps[i]
+      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :add
+      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :sbt
+      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :mtp
+      result = _div_latex(step,result) if step.ops == :div
+      curr_exp.steps << copy.steps[i]
+    end
+    result
+  end
+
+  def _need_brackets?
+    return false if steps.length <= 1
+    return (steps.last.ops == :mtp || steps.last.ops == :div) ? false : true
+  end
+
+  def _brackets(latex_string)
+    "\\left(" + latex_string + "\\right)"
+  end
+
+  def _add_sbt_mtp_latex(step,result,curr_exp)
+    result = _brackets(result) if _mtp_need_brackets?(step,curr_exp)
+    step_latex = step.exp_valued? ? step.val.latex : step.val.to_s
+    step_latex = _brackets(step_latex) if _exp_need_brackets?(step)
+    result + _ops_latex[step.ops] + step_latex
+  end
+
+  def _div_latex(step,result)
+    step_latex = step.exp_valued? ? step.val.latex : step.val.to_s
+    '\frac{' + result + '}{' + step_latex + '}'
+  end
+
+  def _ops_latex
+    {:add => '+',:sbt => '-',:mtp => ''}
+  end
+
+  def _mtp_need_brackets?(step,curr_exp)
+    step.ops == :mtp && curr_exp._need_brackets?
+  end
+
+  def _exp_need_brackets?(step)
+    step.exp_valued? && step.val._need_brackets?
+  end
+
+  def rsum_mtp_rsum(rsum)
+    expanded_steps = []
+    rsum.steps.each do |r_step|
+      self_copy = self.copy
+      self_copy.steps.each do |self_step|
+        expanded_steps << self_step.r_mtp_r(r_step)
+      end
+    end
+    self.steps = expanded_steps
+    self.steps.first.ops = nil
+    return self
+  end
+
+  def rsum_to_rational
+    if steps.length == 1
+      step_1 = step_factory.build([nil,[steps.first.val.steps[0]]])
+      step_2 = steps.first.val.steps[1]
+      self.steps = [step_1,step_2]
+      return self
+    end
+    result_step = steps.first
+    for i in 1...steps.length
+      result_step = _add_two_rationals(result_step,steps[i])
+    end
+    self.steps = result_step.val.steps
+    return self
+  end
+
+  def _add_two_rationals(r_1,r_2)
+    nrator_exp_1, dnator_exp_1 = r_1.val.steps[0].val, r_1.val.steps[1].val
+    nrator_exp_2, dnator_exp_2 = r_2.val.steps[0].val, r_2.val.steps[1].val
+    result_nrator_exp_conf = [
+      [r_1.ops,[[nil,nrator_exp_1],[:mtp,dnator_exp_2]]],
+      [r_2.ops,[[nil,nrator_exp_2],[:mtp,dnator_exp_1]]]]
+    result_dnator_exp_conf = [[nil,dnator_exp_1],[:mtp,dnator_exp_2]]
+    result_nrator = expression_factory.build(result_nrator_exp_conf).expand
+    result_dnator = expression_factory.build(result_dnator_exp_conf).expand
+    step_factory.build([nil,[[nil,result_nrator],[:div,result_dnator]]])
+  end
+
+  def rational_to_rsum
+    nrator_steps = steps.first.val.steps
+    result_steps = []
+    nrator_steps.each do |n_step|
+      operation = n_step.ops
+      n_step.ops = nil
+      result_steps << step_factory.build([operation,[n_step,steps.last.copy]])
+    end
+    self.steps = result_steps
+    return self
+  end
 
   def expand_to_rsum
     expanded_steps = []
@@ -606,227 +722,4 @@ class Expression
 
 
 
-  def rsum_mtp_rsum(rsum)
-    expanded_steps = []
-    rsum.steps.each do |r_step|
-      self_copy = self.copy
-      self_copy.steps.each do |self_step|
-        expanded_steps << self_step.r_mtp_r(r_step)
-      end
-    end
-    self.steps = expanded_steps
-    self.steps.first.ops = nil
-    return self
-  end
-
-  def rsum_to_rational
-    if steps.length == 1
-      step_1 = step_factory.build([nil,[steps.first.val.steps[0]]])
-      step_2 = steps.first.val.steps[1]
-      self.steps = [step_1,step_2]
-      return self
-    end
-    result_step = steps.first
-    for i in 1...steps.length
-      result_step = _add_two_rationals(result_step,steps[i])
-    end
-    self.steps = result_step.val.steps
-    return self
-  end
-
-  def _add_two_rationals(r_1,r_2)
-    nrator_exp_1, dnator_exp_1 = r_1.val.steps[0].val, r_1.val.steps[1].val
-    nrator_exp_2, dnator_exp_2 = r_2.val.steps[0].val, r_2.val.steps[1].val
-    result_nrator_exp_conf = [
-      [r_1.ops,[[nil,nrator_exp_1],[:mtp,dnator_exp_2]]],
-      [r_2.ops,[[nil,nrator_exp_2],[:mtp,dnator_exp_1]]]]
-    result_dnator_exp_conf = [[nil,dnator_exp_1],[:mtp,dnator_exp_2]]
-    result_nrator = expression_factory.build(result_nrator_exp_conf).expand
-    result_dnator = expression_factory.build(result_dnator_exp_conf).expand
-    step_factory.build([nil,[[nil,result_nrator],[:div,result_dnator]]])
-  end
-
-  def rational_to_rsum
-    nrator_steps = steps.first.val.steps
-    result_steps = []
-    nrator_steps.each do |n_step|
-      operation = n_step.ops
-      n_step.ops = nil
-      result_steps << step_factory.build([operation,[n_step,steps.last.copy]])
-    end
-    self.steps = result_steps
-    return self
-  end
-
-
-
-  def flatten
-    _flatten_first_step
-    steps.each do |step|
-      step.val.flatten if step.val.is_a?(expression_class)
-    end
-    self
-  end
-
-  def _flatten_first_step
-    if steps.first.val.is_a?(expression_class)
-      first_steps = steps.first.val.steps
-      self.steps.delete_at(0)
-      self.steps = first_steps + self.steps
-    end
-    _flatten_first_step if steps.first.val.is_a?(expression_class)
-  end
-
-  def latex
-    return '' if steps.length == 0
-    copy = self.copy.flatten
-    curr_exp = expression_factory.build([copy.steps.first])
-    result = copy.steps.first.val.to_s
-    for i in 1...copy.steps.length
-      step = copy.steps[i]
-      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :add
-      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :sbt
-      result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :mtp
-      result = _div_latex(step,result) if step.ops == :div
-      curr_exp.steps << copy.steps[i]
-    end
-    result
-  end
-
-  def _need_brackets?
-    return false if steps.length <= 1
-    return (steps.last.ops == :mtp || steps.last.ops == :div) ? false : true
-  end
-
-  def _brackets(latex_string)
-    "\\left(" + latex_string + "\\right)"
-  end
-
-  def _add_sbt_mtp_latex(step,result,curr_exp)
-    result = _brackets(result) if _mtp_need_brackets?(step,curr_exp)
-    step_latex = step.exp_valued? ? step.val.latex : step.val.to_s
-    step_latex = _brackets(step_latex) if _exp_need_brackets?(step)
-    result + _ops_latex[step.ops] + step_latex
-  end
-
-  def _div_latex(step,result)
-    step_latex = step.exp_valued? ? step.val.latex : step.val.to_s
-    '\frac{' + result + '}{' + step_latex + '}'
-  end
-
-  def _ops_latex
-    {:add => '+',:sbt => '-',:mtp => ''}
-  end
-
-  def _mtp_need_brackets?(step,curr_exp)
-    step.ops == :mtp && curr_exp._need_brackets?
-  end
-
-  def _exp_need_brackets?(step)
-    step.exp_valued? && step.val._need_brackets?
-  end
-
-
-
-
-
-
 end
-
-
-
-  #
-  # def expand_to_rsum
-  #   expanded_steps = []
-  #   steps.each do |step|
-  #     _nil_or_add_into_rsum(expanded_steps,step) if _nil_or_add?(step)
-  #     _mtp_into_rsum(expanded_steps,step) if step.ops == :mtp
-  #     _div_into_rsum(expanded_steps,step) if step.ops == :div
-  #   end
-  #   self.steps = expanded_steps
-  #   self.steps.first.ops = nil  #this is to be taken out once nullify first step is written
-  #   self._clean_one
-  #   return self
-  # end
-  #
-  # def _nil_or_add_into_rsum(expanded_steps,step)
-  #   if step.exp_valued?
-  #     step.val.expand_to_rsum
-  #     step.val.steps.first.ops = :add
-  #     step.val.steps.each{|step| expanded_steps << step}
-  #   else
-  #    expanded_steps << _wrap_into_rational(step)
-  #   end
-  # end
-  #
-  # def _wrap_into_rational(step)
-  #   rational_config = [[step.val],[[nil,[1]]]]
-  #   rational = rational_factory.build(rational_config)
-  #   step_factory.build([step.ops,rational])
-  # end
-  #
-  # def _mtp_into_rsum(expanded_steps,step)
-  #   if step.exp_valued?
-  #     step.val.expand_to_rsum
-  #     expanded_rsum = expression_factory.build(expanded_steps).rsum_mtp_rsum(step.val)
-  #     expanded_steps.slice!(0..-1)
-  #     expanded_rsum.steps.each{|step| expanded_steps << step}
-  #   else
-  #     expanded_steps.each{|r_step| r_step.val.steps[0].val.steps << step}
-  #   end
-  # end
-  #
-  # def _div_into_rsum(expanded_steps,step)
-  #   if step.exp_valued?
-  #     step.val.expand_to_rsum
-  #     step.val.rsum_to_rational
-  #     _recipricate(step.val.steps)
-  #     step.val.rational_to_rsum
-  #     _div_mtp(expanded_steps,step)
-  #   else
-  #     expanded_steps.each do |r_step|
-  #       m_sum_dnator = r_step.val.steps[1].val
-  #       init_m_sum_step = step_factory.build([nil,m_sum_dnator])
-  #       mtp_step = step_factory.build([:mtp,step.val])
-  #       expanded_m_sum = expression_factory.build([init_m_sum_step,mtp_step]).expand
-  #       r_step.val.steps[1].val = expanded_m_sum
-  #     end
-  #   end
-  # end
-  #
-  # def _recipricate(steps)
-  #     steps[0].val, steps[1].val = steps[1].val, steps[0].val
-  # end
-  #
-  # def _div_mtp(expanded_steps,step)
-  #   expanded_rsum = expression_factory.build(expanded_steps).rsum_mtp_rsum(step.val)
-  #   expanded_steps.slice!(0..-1)
-  #   expanded_rsum.steps.each do |step|
-  #     expanded_steps << step
-  #   end
-  # end
-  #
-  # def _clean_one
-  #   _mtp_one_step = step_factory.build([:mtp,1])
-  #   _nil_one_step = step_factory.build([nil,1])
-  #   steps.each do |step|
-  #     nrator = step.val.steps.first.val
-  #     nrator.steps.delete(_mtp_one_step)
-  #     nrator.steps.delete(_nil_one_step)
-  #     if nrator.steps.length == 0
-  #       nrator.steps << _nil_one_step
-  #     end
-  #     nrator.steps.first.ops = nil
-  #     dnator = step.val.steps.last.val
-  #     dnator.steps.each do |d_step|
-  #       d_step.val.steps.delete(_mtp_one_step)
-  #       d_step.val.steps.delete(_nil_one_step)
-  #       if d_step.val.steps.length == 0
-  #         d_step.val.steps << _nil_one_step
-  #       end
-  #       d_step.val.steps.first.ops = nil
-  #     end
-  #   end
-  #   self
-  # end
-  #
