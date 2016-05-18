@@ -1568,7 +1568,21 @@ describe Expression do
     it 'flattens a non-nil step with a nil step value' do
       exp = expression_factory.build([[nil,'x'],[:add,[[nil,7]]]])
       expected_exp = expression_factory.build([[nil,'x'],[:add,7]])
-      result = exp.flatten.flatten_one_step_exp_vals
+      result = exp.flatten.flatten_mid_terms
+      expect(result).to eq expected_exp
+    end
+
+    it 'flattens a mid terms recursively 2 layers' do
+      exp = expression_factory.build([[nil,'x'],[:mtp,[[nil,5], [:add,[[nil,7]]] ]]])
+      expected_exp = expression_factory.build([[nil,'x'],[:mtp,[[nil,5], [:add,7] ]]])
+      result = exp.flatten.flatten_mid_terms
+      expect(result).to eq expected_exp
+    end
+
+    it 'flattens a mid terms recursively 3 layers' do
+      exp = expression_factory.build([[nil,'x'],[:mtp,[[nil,5], [:add,[[nil,7],[:div,[[nil,'y']]]]] ]]])
+      expected_exp = expression_factory.build([[nil,'x'],[:mtp,[[nil,5], [:add,[[nil,7],[:div,'y']]] ]]])
+      result = exp.flatten.flatten_mid_terms
       expect(result).to eq expected_exp
     end
   end

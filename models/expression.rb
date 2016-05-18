@@ -789,14 +789,16 @@ class Expression
     _flatten_first_step if steps.first.exp_valued?
   end
 
-  def flatten_one_step_exp_vals
+  def flatten_mid_terms
     steps.each do |step|
-      if step.exp_valued? && step.val.steps.length == 1 && !step.val.steps.first.exp_valued?
-        step.val = step.val.steps.first.val
-      end
+      step.val = step.val.steps.first.val if _single_ele_step_exp_valued?(step)
+      step.val.flatten_mid_terms if step.exp_valued?
     end
     self
   end
 
-
+  def _single_ele_step_exp_valued?(step)
+    step.exp_valued? && step.val.steps.length == 1 &&
+      !step.val.steps.first.exp_valued?
+  end
 end
