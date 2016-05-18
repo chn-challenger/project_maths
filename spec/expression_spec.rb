@@ -1500,6 +1500,17 @@ describe Expression do
       expect(exp.modify_add_mtp_dir_to_rgt).to eq expected_exp
     end
 
+    it 'modify_add_mtp_dir_to_rgt is a mutator method' do
+      exp = expression_factory.build([[:add,5,:lft],[:mtp,'x',:lft],
+        [:add,6,:lft],[:mtp,'y',:lft]])
+      expected_exp = expression_factory.build([[:add,5],[:mtp,'x'],[:add,6],
+        [:mtp,'y']])
+      result = exp.modify_add_mtp_dir_to_rgt
+      expect(exp).to eq expected_exp
+      expect(result.object_id).to eq exp.object_id
+    end
+
+
     it 'converts multi-layered lft add mtp steps recursively' do
       exp = expression_factory.build([[:add,5,:lft],[:add,[[nil,7],[:mtp,
         [[nil,6],[:add,'y',:lft],[:mtp,'z',:lft]],:lft]],:lft]])
@@ -1516,6 +1527,20 @@ describe Expression do
       expect(exp.convert_lft_steps).to eq expected_exp
     end
 
+    it 'converts a - (b + c) so there are no lft steps' do
+      exp = expression_factory.build([[nil,'b'],[:add,'c'],[:sbt,'a',:lft]])
+      expected_exp = expression_factory.build([[nil,'a'],[:sbt,[[nil,'b'],
+        [:add,'c']]]])
+      expect(exp.convert_lft_steps).to eq expected_exp
+    end
+
+    it 'converts d / (a - (b + c)) so there are no lft steps recursively' do
+      exp = expression_factory.build([[nil,'b'],[:add,'c'],[:sbt,'a',:lft],
+        [:div,'d',:lft]])
+      expected_exp = expression_factory.build([[nil,'d'],[:div,[[nil,'a'],[:sbt,[[nil,'b'],
+        [:add,'c']]]]]])
+      expect(exp.convert_lft_steps).to eq expected_exp
+    end
   end
 
 

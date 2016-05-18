@@ -740,35 +740,34 @@ class Expression
     self
   end
 
-
-    # def convert_lft_sbt_div_steps
-    #   converted_exp = self.class.new
-    #   steps.each do |step|
-    #     step.val = step.val.convert_lft_sbt_div_steps unless step.is_elementary?
-    #     if step.dir == :lft && (step.ops == :sbt || step.ops == :div)
-    #       converted_exp = self.class.new([Step.new(nil,step.val),
-    #         Step.new(step.ops,converted_exp)])
-    #     else
-    #       converted_exp.steps << step
-    #     end
-    #   end
-    #   converted_exp
-    # end
-
-
-
   def convert_lft_steps
-    converted_exp = self.class.new
+    converted_steps = []
     steps.each do |step|
       step.val = step.val.convert_lft_steps if step.exp_valued?
       if step.dir == :lft
-        converted_exp = self.class.new([Step.new(nil,step.val),
-          Step.new(step.ops,converted_exp)])
+        converted_steps = [step_factory.build([nil,step.val]),
+          step_factory.build([step.ops,expression_factory.build(converted_steps)])]
       else
-        converted_exp.steps << step
+        converted_steps << step
       end
     end
-    converted_exp.flatten
+    self.steps = converted_steps
+    self.flatten
   end
+
+  # def convert_lft_steps
+  #   converted_exp = self.class.new
+  #   steps.each do |step|
+  #     step.val = step.val.convert_lft_steps if step.exp_valued?
+  #     if step.dir == :lft
+  #       converted_exp = expression_factory.build([
+  #         [nil,step.val],[step.ops,converted_exp]])
+  #     else
+  #       converted_exp.steps << step
+  #     end
+  #   end
+  #   converted_exp.flatten
+  # end
+
 
 end
