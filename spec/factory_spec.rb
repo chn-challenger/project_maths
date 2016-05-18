@@ -36,7 +36,8 @@ describe ExpressionFactory do
     it 'creates 2 level multiple nested expression' do
       step_config_array = [[nil,5],[:mtp,[[nil,7],[:div,[[nil,2],[:add,3,:lft]]]]]]
       expected_exp = Expression.new([Step.new(nil,5),Step.new(:mtp,
-        Expression.new([Step.new(nil,7),Step.new(:div,Expression.new([Step.new(nil,2),Step.new(:add,3,:lft)]))]))])
+        Expression.new([Step.new(nil,7),Step.new(:div,Expression.new([
+          Step.new(nil,2),Step.new(:add,3,:lft)]))]))])
       expect(ExpressionFactory.build(step_config_array)).to eq expected_exp
     end
 

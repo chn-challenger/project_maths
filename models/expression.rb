@@ -52,14 +52,6 @@ class Expression
     _is_gen_sum? && _steps_are_gen_rational?
   end
 
-  def convert_lft_add_mtp_steps
-    steps.each do |step|
-      step.val.convert_lft_add_mtp_steps unless step.is_elementary?
-      step.dir = :rgt if step.dir == :lft && (step.ops == :add || step.ops == :mtp)
-    end
-    self
-  end
-
   def convert_lft_sbt_div_steps
     converted_exp = self.class.new
     steps.each do |step|
@@ -720,6 +712,15 @@ class Expression
     step_factory.build([nil,1])
   end
 
+  def modify_add_mtp_dir_to_rgt
+    steps.each do |step|
+      step.val.modify_add_mtp_dir_to_rgt if step.exp_valued?
+      if step.dir == :lft && (step.ops == :add || step.ops == :mtp)
+        step.dir = :rgt
+      end
+    end
+    self
+  end
 
 
 end

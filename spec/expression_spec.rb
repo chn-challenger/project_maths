@@ -367,58 +367,6 @@ describe Expression do
     end
   end
 
-  describe 'convert_lft_add_mtp_steps' do
-    it 'converts all left addition steps to right addition steps' do
-      expression = Expression.new([Step.new(:add,5,:lft),Step.new(:add,'x',:lft)])
-      expected_expression = Expression.new([Step.new(:add,5),Step.new(:add,'x')])
-      expect(expression.convert_lft_add_mtp_steps).to eq expected_expression
-    end
-
-    it 'converts all left addition steps to right addition steps recursively' do
-      expression = Expression.new([Step.new(:add,5,:lft),Step.new(:add,'x',:lft),
-        Step.new(:div,Expression.new([Step.new(:add,7,:lft),
-        Step.new(:add,'y',:lft)]),:lft)])
-      expected_expression = Expression.new([Step.new(:add,5),Step.new(:add,'x'),
-        Step.new(:div,Expression.new([Step.new(:add,7),Step.new(:add,'y')]),:lft)])
-      expect(expression.convert_lft_add_mtp_steps).to eq expected_expression
-    end
-
-    it 'converts all left addition steps recursively in two iterations' do
-      expression = Expression.new([Step.new(:add,5,:lft),Step.new(:add,'x',:lft),
-        Step.new(:div,Expression.new([Step.new(:add,7,:lft),Step.new(:add,'y',:lft),
-        Step.new(:sbt,Expression.new([Step.new(:add,8,:lft)]))]),:lft)])
-      expected_expression = Expression.new([Step.new(:add,5),Step.new(:add,'x'),
-        Step.new(:div,Expression.new([Step.new(:add,7),Step.new(:add,'y'),
-        Step.new(:sbt,Expression.new([Step.new(:add,8)]))]),:lft)])
-      expect(expression.convert_lft_add_mtp_steps).to eq expected_expression
-    end
-
-    it 'converts all left multiplication steps to right multiplication steps' do
-      expression = Expression.new([Step.new(:mtp,5,:lft),Step.new(:mtp,'x',:lft)])
-      expected_expression = Expression.new([Step.new(:mtp,5),Step.new(:mtp,'x')])
-      expect(expression.convert_lft_add_mtp_steps).to eq expected_expression
-    end
-
-    it 'converts all left multiplication steps to right multiplication steps recursively' do
-      expression = Expression.new([Step.new(:mtp,5,:lft),Step.new(:mtp,'x',:lft),
-        Step.new(:div,Expression.new([Step.new(:mtp,7,:lft),
-        Step.new(:mtp,'y',:lft)]),:lft)])
-      expected_expression = Expression.new([Step.new(:mtp,5),Step.new(:mtp,'x'),
-        Step.new(:div,Expression.new([Step.new(:mtp,7),Step.new(:mtp,'y')]),:lft)])
-      expect(expression.convert_lft_add_mtp_steps).to eq expected_expression
-    end
-
-    it 'converts all left addition or multiplication steps recursively in two iterations' do
-      expression = Expression.new([Step.new(:mtp,5,:lft),Step.new(:mtp,'x',:lft),
-        Step.new(:div,Expression.new([Step.new(:add,7,:lft),Step.new(:mtp,'y',:lft),
-        Step.new(:sbt,Expression.new([Step.new(:add,8,:lft)]))]),:lft)])
-      expected_expression = Expression.new([Step.new(:mtp,5),Step.new(:mtp,'x'),
-        Step.new(:div,Expression.new([Step.new(:add,7),Step.new(:mtp,'y'),
-        Step.new(:sbt,Expression.new([Step.new(:add,8)]))]),:lft)])
-      expect(expression.convert_lft_add_mtp_steps).to eq expected_expression
-    end
-  end
-
   describe '#convert_lft_sbt_div_steps' do
     it 'converts a left subtraction step' do
       expression = Expression.new([Step.new(nil,5),Step.new(:mtp,'x'),Step.new(:sbt,10,:lft)])
@@ -1519,6 +1467,24 @@ describe Expression do
       expected_exp = rsum_factory.build(r_sum_conf)
       result = exp.expand_to_rsum
       expect(result).to eq expected_exp
+    end
+  end
+
+  describe '#modify_add_mtp_dir_to_rgt' do
+    it 'modifies all left add mtp steps to right steps' do
+      exp = expression_factory.build([[:add,5,:lft],[:mtp,'x',:lft],
+        [:add,6,:lft],[:mtp,'y',:lft]])
+      expected_exp = expression_factory.build([[:add,5],[:mtp,'x'],[:add,6],
+        [:mtp,'y']])
+      expect(exp.modify_add_mtp_dir_to_rgt).to eq expected_exp
+    end
+
+    it 'converts multi-layered lft add mtp steps recursively' do
+      exp = expression_factory.build([[:add,5,:lft],[:add,[[nil,7],[:mtp,
+        [[nil,6],[:add,'y',:lft],[:mtp,'z',:lft]],:lft]],:lft]])
+      expected_exp = expression_factory.build([[:add,5],[:add,[[nil,7],[:mtp,
+        [[nil,6],[:add,'y'],[:mtp,'z']]]]]])
+      expect(exp.modify_add_mtp_dir_to_rgt).to eq expected_exp
     end
   end
 
