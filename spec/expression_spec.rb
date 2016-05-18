@@ -1488,6 +1488,13 @@ describe Expression do
     end
   end
 
+  describe '#convert_lft_steps' do
+    it 'converts (b) (add,a,lft) to b (add,b)' do
+      exp = expression_factory.build([[nil,5],[:add,'x',:lft]])
+      expected_exp = expression_factory.build([[nil,'x'],[:add,5,:lft]])
+      expect(exp.convert_lft_steps).to eq expected_exp
+    end
 
+  end
 
 end

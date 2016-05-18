@@ -723,4 +723,35 @@ class Expression
   end
 
 
+    def convert_lft_sbt_div_steps
+      converted_exp = self.class.new
+      steps.each do |step|
+        step.val = step.val.convert_lft_sbt_div_steps unless step.is_elementary?
+        if step.dir == :lft && (step.ops == :sbt || step.ops == :div)
+          converted_exp = self.class.new([Step.new(nil,step.val),
+            Step.new(step.ops,converted_exp)])
+        else
+          converted_exp.steps << step
+        end
+      end
+      converted_exp
+    end
+
+
+
+  def convert_lft_steps
+    converted_exp = self.class.new
+    steps.each do |step|
+      step.val = step.val.convert_lft_steps if step.exp_valued?
+      if step.dir == :lft
+        converted_exp = self.class.new([Step.new(nil,step.val),
+          Step.new(step.ops,converted_exp)])
+      else
+        converted_exp.steps << step
+      end
+    end
+    converted_exp.flatten
+  end
+
+
 end
