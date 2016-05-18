@@ -773,9 +773,14 @@ class Expression
 
 
   def flatten
+    _flatten_first_steps_recursively
+    _flatten_mid_terms_recursively
+  end
+
+  def _flatten_first_steps_recursively
     _flatten_first_step
     steps.each do |step|
-      step.val.flatten if step.exp_valued?
+      step.val._flatten_first_steps_recursively if step.exp_valued?
     end
     self
   end
@@ -789,10 +794,10 @@ class Expression
     _flatten_first_step if steps.first.exp_valued?
   end
 
-  def flatten_mid_terms
+  def _flatten_mid_terms_recursively
     steps.each do |step|
       step.val = step.val.steps.first.val if _single_ele_step_exp_valued?(step)
-      step.val.flatten_mid_terms if step.exp_valued?
+      step.val._flatten_mid_terms_recursively if step.exp_valued?
     end
     self
   end

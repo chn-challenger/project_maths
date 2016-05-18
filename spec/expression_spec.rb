@@ -1529,7 +1529,7 @@ describe Expression do
     it 'flattens layers of wrapping recursively eg 1' do
       exp = expression_factory.build([[nil,[[nil,'x'], [:add,[[nil,
         [[nil,5]]]]]]]])
-      expected_exp = expression_factory.build([[nil,'x'],[:add,[[nil,5]]]])
+      expected_exp = expression_factory.build([[nil,'x'],[:add,5]])
       expect(exp.flatten).to eq expected_exp
     end
 
@@ -1543,8 +1543,8 @@ describe Expression do
     it 'flattens layers of wrapping recursively eg 3' do
       exp = expression_factory.build([[nil,[[nil,'x'], [:add,[[nil,[[nil,5],
         [:mtp,[[nil,[[nil,'y']]]]]]]]]]]])
-      expected_exp = expression_factory.build([[nil,'x'],[:add, [[nil,5],[:mtp,
-        [[nil,'y']]]]]])
+      expected_exp = expression_factory.build([[nil,'x'],[:add, [[nil,5],
+        [:mtp,'y']]]])
       result = exp.flatten
       expect(result).to eq expected_exp
     end
@@ -1568,21 +1568,21 @@ describe Expression do
     it 'flattens a non-nil step with a nil step value' do
       exp = expression_factory.build([[nil,'x'],[:add,[[nil,7]]]])
       expected_exp = expression_factory.build([[nil,'x'],[:add,7]])
-      result = exp.flatten.flatten_mid_terms
+      result = exp.flatten
       expect(result).to eq expected_exp
     end
 
     it 'flattens a mid terms recursively 2 layers' do
       exp = expression_factory.build([[nil,'x'],[:mtp,[[nil,5], [:add,[[nil,7]]] ]]])
       expected_exp = expression_factory.build([[nil,'x'],[:mtp,[[nil,5], [:add,7] ]]])
-      result = exp.flatten.flatten_mid_terms
+      result = exp.flatten
       expect(result).to eq expected_exp
     end
 
     it 'flattens a mid terms recursively 3 layers' do
       exp = expression_factory.build([[nil,'x'],[:mtp,[[nil,5], [:add,[[nil,7],[:div,[[nil,'y']]]]] ]]])
       expected_exp = expression_factory.build([[nil,'x'],[:mtp,[[nil,5], [:add,[[nil,7],[:div,'y']]] ]]])
-      result = exp.flatten.flatten_mid_terms
+      result = exp.flatten
       expect(result).to eq expected_exp
     end
   end
