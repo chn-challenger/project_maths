@@ -59,9 +59,13 @@ This module is responsible for two methods which invokes topic question generato
 
 This class is responsible for rendering the generated questions array from the QuestionGenerator module together with some other information about the practice paper or worksheet (e.g. student name, paper serial) into latex string.  One for questions, one for solutions.
 
+##### Equation class
+
+This does not do too much at the present, apart from holding a left-hand-side expression and a right-hand-side expression.  It may have more responsibilities to solve certain generic equation forms later.
+
 ##### Expression and Step class
 
-These two classes are central and especially important, as almost every topic class will utilize these two classes to do the equation solving.  
+These two classes are central and especially important, as almost every topic class will utilize these two classes to do equation solving.  
 * A mathematical ```Step ``` consists of an *operation* (+,- etc), *value*, and *direction*.
 * A mathematical ```Expression``` consists of an array of ```Step```s.
 * For example *x + 2* is an Expression consisting of two steps:  (no-operation,'x',right) and (add,2,right).
@@ -78,11 +82,7 @@ Some of the critical methods that ```Expression``` need to implement are:
 
 The above methods are also the most challenging to write, I have spent too long writing and rewriting them.  And an effort to refactor these methods is the main reason for all the rewrites.  In my latest attempt (5th? 6th? lost count...), I feel I may have it.
 
-__My main need of outsider expertise is precisely on these methods: I am still looking for improvements to make these methods more readable and extensible for the future.  I am still open to rewrite (*completely!?!?!*) / reorganization if it will make significant improvements.__
-
-##### Equation class
-
-This does not do too much at the present, apart from holding a left-hand-side expression and a right-hand-side expression.  It may have more responsibilities to solve certain generic equation forms later.
+__Help sought!: I am still looking for improvements to make these methods more readable and extensible for the future.  I am still open to rewrite (*completely!?!?!*) / reorganization if it will make significant improvements.__
 
 ## Latest Progress and Ordered To Do List
 
