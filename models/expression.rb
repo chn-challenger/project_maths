@@ -182,46 +182,46 @@ class Expression
     return true
   end
 
-  def simplify_m_form
-    return self unless is_m_form?
-    _combine_m_form_numerical_steps
-    _bsort_m_form_steps
-    _standardise_m_form_ops
-  end
-
-  def _combine_m_form_numerical_steps
-    numerical_steps = steps.collect_move{|step| step.val.is_a?(Fixnum)}
-    new_value = numerical_steps.inject(1){|result,step| result *= step.val}
-    steps.insert(0,Step.new(nil,new_value))
-    self
-  end
-
-  def _bsort_m_form_steps
-    return self if steps.length == 1
-    copy = self.copy
-    for i in 0..steps.length-2
-      if steps[i].val.is_a?(Fixnum)
-        next
-      end
-      if steps[i+1].val.is_a?(Fixnum)
-        steps[i],steps[i+1] = steps[i+1],steps[i]
-        next
-      end
-      if steps[i].val > steps[i+1].val
-        steps[i],steps[i+1] = steps[i+1],steps[i]
-        next
-      end
-    end
-    return self == copy ? self : self._bsort_m_form_steps
-  end
-
-  def _standardise_m_form_ops
-    steps.first.ops = nil
-    for i in 1..steps.length-1
-      steps[i].ops = :mtp
-    end
-    self
-  end
+  # def simplify_m_form
+  #   return self unless is_m_form?
+  #   _combine_m_form_numerical_steps
+  #   _bsort_m_form_steps
+  #   _standardise_m_form_ops
+  # end
+  #
+  # def _combine_m_form_numerical_steps
+  #   numerical_steps = steps.collect_move{|step| step.val.is_a?(Fixnum)}
+  #   new_value = numerical_steps.inject(1){|result,step| result *= step.val}
+  #   steps.insert(0,Step.new(nil,new_value))
+  #   self
+  # end
+  #
+  # def _bsort_m_form_steps
+  #   return self if steps.length == 1
+  #   copy = self.copy
+  #   for i in 0..steps.length-2
+  #     if steps[i].val.is_a?(Fixnum)
+  #       next
+  #     end
+  #     if steps[i+1].val.is_a?(Fixnum)
+  #       steps[i],steps[i+1] = steps[i+1],steps[i]
+  #       next
+  #     end
+  #     if steps[i].val > steps[i+1].val
+  #       steps[i],steps[i+1] = steps[i+1],steps[i]
+  #       next
+  #     end
+  #   end
+  #   return self == copy ? self : self._bsort_m_form_steps
+  # end
+  #
+  # def _standardise_m_form_ops
+  #   steps.first.ops = nil
+  #   for i in 1..steps.length-1
+  #     steps[i].ops = :mtp
+  #   end
+  #   self
+  # end
 
   def simplify_m_forms_in_sum
     if _is_gen_m_form_sum?
@@ -258,102 +258,102 @@ class Expression
     self
   end
 
-  def simplify
-    return self unless _is_sum?
-
-    convert_string_value_steps_to_m_forms
-
-    simplify_m_forms_in_sum
-
-    result_steps = []
-
-    while steps.length > 0
-      comparison_step = steps.delete_at(0)
-
-      if steps != []
-        similar_steps = steps.collect_move do |step|
-          if comparison_step.val.is_a?(Expression) && step.val.is_a?(Expression)
-            comparison_step.val.similar?(step.val)
-          elsif comparison_step.val.is_a?(Fixnum) && step.val.is_a?(Fixnum)
-            true
-          elsif comparison_step.val.is_a?(String) && step.val.is_a?(String)
-            if comparison_step.val == step.val
-              comparison_step = comparison_step.to_m_form
-              step = step.to_m_form
-              true
-            else
-              false
-            end
-          elsif !comparison_step.val.is_a?(Expression) && !step.val.is_a?(Expression)
-            false
-          else
-            false
-          end
-        end
-      else
-        similar_steps = []
-      end
-
-      similar_steps = [comparison_step] + similar_steps
-
-      value = 0
-      similar_steps.each do |step|
-        if step.ops == nil || step.ops == :add
-          if step.val.is_a?(Expression)
-            value += step.val.steps.first.val
-          else
-            value += step.val
-          end
-        else
-          if step.val.is_a?(Expression)
-            value -= step.val.steps.first.val
-          else
-            value -= step.val
-          end
-        end
-      end
-
-      equivalent_step = comparison_step.copy
-
-      if value > 0
-        equivalent_step.ops = :add
-        if equivalent_step.val.is_a?(Expression)
-          equivalent_step.val.steps.first.val = value
-        else
-          equivalent_step.val = value
-        end
-        result_steps << equivalent_step
-      end
-
-      if value < 0
-        equivalent_step.ops = :sbt
-        if equivalent_step.val.is_a?(Expression)
-          equivalent_step.val.steps.first.val = value * -1
-        else
-          equivalent_step.val = value * -1
-        end
-        result_steps << equivalent_step
-      end
-
-    end
-
-    if result_steps.length == 0
-      return self.class.new([Step.new(nil,0)])
-    end
-
-    if result_steps.first.ops == :sbt
-      result_steps.first.ops = nil
-      if result_steps.first.val.is_a?(Expression)
-        result_steps.first.val.steps.first.val *= -1
-      else
-        result_steps.first.val *= -1
-      end
-    else
-      result_steps.first.ops = nil
-    end
-
-    self.class.new(result_steps).convert_m_form_to_elementary
-  end
+  # def simplify
+  #   return self unless _is_sum?
+  #
+  #   convert_string_value_steps_to_m_forms
+  #
+  #   simplify_m_forms_in_sum
+  #
+  #   result_steps = []
+  #
+  #   while steps.length > 0
+  #     comparison_step = steps.delete_at(0)
+  #
+  #     if steps != []
+  #       similar_steps = steps.collect_move do |step|
+  #         if comparison_step.val.is_a?(Expression) && step.val.is_a?(Expression)
+  #           comparison_step.val.similar?(step.val)
+  #         elsif comparison_step.val.is_a?(Fixnum) && step.val.is_a?(Fixnum)
+  #           true
+  #         elsif comparison_step.val.is_a?(String) && step.val.is_a?(String)
+  #           if comparison_step.val == step.val
+  #             comparison_step = comparison_step.to_m_form
+  #             step = step.to_m_form
+  #             true
+  #           else
+  #             false
+  #           end
+  #         elsif !comparison_step.val.is_a?(Expression) && !step.val.is_a?(Expression)
+  #           false
+  #         else
+  #           false
+  #         end
+  #       end
+  #     else
+  #       similar_steps = []
+  #     end
+  #
+  #     similar_steps = [comparison_step] + similar_steps
+  #
+  #     value = 0
+  #     similar_steps.each do |step|
+  #       if step.ops == nil || step.ops == :add
+  #         if step.val.is_a?(Expression)
+  #           value += step.val.steps.first.val
+  #         else
+  #           value += step.val
+  #         end
+  #       else
+  #         if step.val.is_a?(Expression)
+  #           value -= step.val.steps.first.val
+  #         else
+  #           value -= step.val
+  #         end
+  #       end
+  #     end
+  #
+  #     equivalent_step = comparison_step.copy
+  #
+  #     if value > 0
+  #       equivalent_step.ops = :add
+  #       if equivalent_step.val.is_a?(Expression)
+  #         equivalent_step.val.steps.first.val = value
+  #       else
+  #         equivalent_step.val = value
+  #       end
+  #       result_steps << equivalent_step
+  #     end
+  #
+  #     if value < 0
+  #       equivalent_step.ops = :sbt
+  #       if equivalent_step.val.is_a?(Expression)
+  #         equivalent_step.val.steps.first.val = value * -1
+  #       else
+  #         equivalent_step.val = value * -1
+  #       end
+  #       result_steps << equivalent_step
+  #     end
+  #
+  #   end
+  #
+  #   if result_steps.length == 0
+  #     return self.class.new([Step.new(nil,0)])
+  #   end
+  #
+  #   if result_steps.first.ops == :sbt
+  #     result_steps.first.ops = nil
+  #     if result_steps.first.val.is_a?(Expression)
+  #       result_steps.first.val.steps.first.val *= -1
+  #     else
+  #       result_steps.first.val *= -1
+  #     end
+  #   else
+  #     result_steps.first.ops = nil
+  #   end
+  #
+  #   self.class.new(result_steps).convert_m_form_to_elementary
+  # end
 
   def first_two_steps_swap
     return self if steps.length == 0
@@ -754,5 +754,43 @@ class Expression
     self.steps = converted_steps
     self.flatten
   end
+
+
+  def simplify_m_form
+    _combine_m_form_numerical_steps
+    copy = self.copy._bsort_m_form_steps
+    self.steps = copy.steps
+    _standardise_m_form_ops
+  end
+
+  def _combine_m_form_numerical_steps
+    numerical_steps = steps.collect_move{|step| step.val.is_a?(integer)}
+    new_value = numerical_steps.inject(1){|result,step| result *= step.val}
+    steps.insert(0,step_factory.build([nil,new_value])) unless new_value == 1
+    self
+  end
+
+  def _bsort_m_form_steps
+    return self if steps.length == 1
+    copy = self.copy
+    for i in 0..steps.length-2
+      # next if steps[i].val.is_a?(integer)
+      if steps[i+1].val.is_a?(integer) || steps[i].val > steps[i+1].val
+        steps[i],steps[i+1] = steps[i+1],steps[i]
+        next
+      end
+    end
+    return self == copy ? self : self._bsort_m_form_steps
+  end
+
+  def _standardise_m_form_ops
+    steps.first.ops = nil
+    for i in 1..steps.length-1
+      steps[i].ops = :mtp
+    end
+    self
+  end
+
+
 
 end

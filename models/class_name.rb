@@ -1,4 +1,8 @@
 module ClassName
+  def integer
+    Fixnum
+  end
+
   def expression_class
     Expression
   end
