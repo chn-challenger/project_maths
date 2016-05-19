@@ -480,3 +480,46 @@
     #   end
     #   _flatten_first_step if steps.first.val.is_a?(expression_class)
     # end
+
+
+
+      # def simplify_m_form
+      #   return self unless is_m_form?
+      #   _combine_m_form_numerical_steps
+      #   _bsort_m_form_steps
+      #   _standardise_m_form_ops
+      # end
+      #
+      # def _combine_m_form_numerical_steps
+      #   numerical_steps = steps.collect_move{|step| step.val.is_a?(Fixnum)}
+      #   new_value = numerical_steps.inject(1){|result,step| result *= step.val}
+      #   steps.insert(0,Step.new(nil,new_value))
+      #   self
+      # end
+      #
+      # def _bsort_m_form_steps
+      #   return self if steps.length == 1
+      #   copy = self.copy
+      #   for i in 0..steps.length-2
+      #     if steps[i].val.is_a?(Fixnum)
+      #       next
+      #     end
+      #     if steps[i+1].val.is_a?(Fixnum)
+      #       steps[i],steps[i+1] = steps[i+1],steps[i]
+      #       next
+      #     end
+      #     if steps[i].val > steps[i+1].val
+      #       steps[i],steps[i+1] = steps[i+1],steps[i]
+      #       next
+      #     end
+      #   end
+      #   return self == copy ? self : self._bsort_m_form_steps
+      # end
+      #
+      # def _standardise_m_form_ops
+      #   steps.first.ops = nil
+      #   for i in 1..steps.length-1
+      #     steps[i].ops = :mtp
+      #   end
+      #   self
+      # end
