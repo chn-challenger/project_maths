@@ -87,7 +87,7 @@ __Help sought!: I am still looking for improvements to make these methods more r
 ## Latest Progress and Ordered To Do List
 
 Currently, ```expand,latex,expand_to_rsum``` have been rewritten.  To do:
-* Rewrite ```simplify```.
+* Rewrite ```simplify``` - almost complete but need refactoring more.
 * Amend ```LinearEquation```, ```Fraction``` to adopt to the new ```latex``` method of the expression class.
 * Amend ```LatexPrinter``` tests.
 * Complete ```AgeProblem``` topic class.
