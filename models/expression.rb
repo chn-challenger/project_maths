@@ -755,8 +755,7 @@ class Expression
     self.flatten
   end
 
-
-  def simplify_m_form
+  def simplify_a_m_form
     _combine_m_form_numerical_steps
     copy = self.copy._bsort_m_form_steps
     self.steps = copy.steps
@@ -794,6 +793,17 @@ class Expression
     self
   end
 
-
+  def simplify_all_m_forms
+    steps.each do |step|
+      if step.exp_valued?
+        if step.val.is_m_form?
+          step.val.simplify_a_m_form
+        else
+          step.val.simplify_all_m_forms
+        end
+      end
+    end
+    self
+  end
 
 end

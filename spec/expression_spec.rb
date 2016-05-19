@@ -1551,17 +1551,17 @@ describe Expression do
     end
   end
 
-  describe 'simplify_m_form' do
+  describe 'simplify_a_m_form' do
     it 'sorts a consecutive collection of mtp ele steps' do
       exp = expression_factory.build([[nil,'b'],[:mtp,'a']])
       expected_exp = expression_factory.build([[nil,'a'],[:mtp,'b']])
-      expect(exp.simplify_m_form).to eq expected_exp
+      expect(exp.simplify_a_m_form).to eq expected_exp
     end
 
     it 'simplify_m_form is a mutator method' do
       exp = expression_factory.build([[nil,'b'],[:mtp,'a']])
       expected_exp = expression_factory.build([[nil,'a'],[:mtp,'b']])
-      result = exp.simplify_m_form
+      result = exp.simplify_a_m_form
       expect(result.object_id).to eq exp.object_id
       expect(exp).to eq expected_exp
     end
@@ -1569,16 +1569,34 @@ describe Expression do
     it 'simplifies an m-form of 3 steps containing two numerical steps' do
       exp = expression_factory.build([[nil,'a'],[:mtp,3],[:mtp,4]])
       expected_exp = expression_factory.build([[nil,12],[:mtp,'a']])
-      expect(exp.simplify_m_form).to eq expected_exp
+      expect(exp.simplify_a_m_form).to eq expected_exp
     end
 
     it 'simplifies an m-form of 5 steps containing three numerical steps' do
       exp = expression_factory.build([[nil,2],[:mtp,'b'],[:mtp,4],
         [:mtp,'a'],[:mtp,3]])
       expected_exp = expression_factory.build([[nil,24],[:mtp,'a'],[:mtp,'b']])
-      expect(exp.simplify_m_form).to eq expected_exp
+      expect(exp.simplify_a_m_form).to eq expected_exp
     end
   end
+
+  describe '#simplify_all_m_forms' do
+    it 'finds an m-form in an expression and simplifies it' do
+      exp = expression_factory.build([[nil,6],[:add,[[nil,'a'],[:mtp,3],[:mtp,4]]]])
+      expected_exp = expression_factory.build([[nil,6],[:add,[[nil,12],[:mtp,'a']]]])
+      expect(exp.simplify_all_m_forms).to eq expected_exp
+    end
+
+
+
+
+
+
+
+
+  end
+
+
 
 
 end
