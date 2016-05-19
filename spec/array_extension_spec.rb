@@ -15,6 +15,13 @@ describe Array do
       expect(array).to eq [1,2,3,4]
       expect(collected_elements).to eq ['hello','world']
     end
+
+    it 'return empty array if invoked on an empty array' do
+      array = []
+      collected_elements = array.collect_move{|e| e.is_a?(String)}
+      expect(array).to eq []
+      expect(collected_elements).to eq []
+    end
   end
   #
   # describe '#sort_multiplication_division_steps' do

@@ -1,6 +1,7 @@
 class Array
 
   def collect_move &block
+    return [] if self.length == 0
     collected_elements = []
     index = 0
     while true
