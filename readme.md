@@ -9,34 +9,34 @@ The MVP will contain
 * A course that covers all topics for 11 plus maths exams.
 * High quality video tutorials on each topic.
 * Unlimited supply of online questions and detailed solutions (solutions given in stages following hints).
-* Track student progress through the *course track*.  Each topic has a base level of difficulty a student must achieve in order to move onto topics for which the current topic is a prerequiste.
+* Track student progress through the *course track*.  Each topic has a base level of difficulty a student must achieve in order to move onto topics for which the current topic is a prerequisite.
 * An achievement system - yet to be decided (points? badges? levels?)
 * For each student, on a given topic, the website generates questions on the same topic of higher level of difficulty based on what the student has completed already.
 * Student profile and parent dashboard.
 * Unlimited supply of computer generated worksheets based on the student's current level on any topic, together with detailed solution sheet, for if the student/parent wish to do handwritten practice.
 * Unlimited supply of computer generated 11 plus practice papers based on the student's current level across all 11 plus topics, together with detailed solution sheet.
 
-Post MVP course list (*these will definetely happen*)
+Post MVP course list (*these will definitely happen*)
 -------
 All additional course tracks will follow the same structure of the 11 plus course - videos, online questions, offline worksheets and practice paper.
 * GCSE Maths course (mostly computer generated content)
 * Maths problem solving course based on GCSE level of knowledge (non-generated problems)
 * A-level Maths course (mostly computer generated content)
-* A-level Further Maths course (mostly computer genenated content)
+* A-level Further Maths course (mostly computer generated content)
 
-Post MVP feature ideas / wish-list (*not limited to these*)
+Post MVP feature ideas / wish-list (*some of these may happen*)
 -------
-- *ebook* with printable worksheets and practice papers on any topic.  This can be a seperate product line.  The idea is that the contents of the website will more than serve function of current school text books and much more.
-- *teacher* portal - allow teachers to set up teaching plans, so that the website generate content based on the teacher's teaching plans.  This is also a seperate product line.  This can also be extended for school usage.
+- *ebook* with printable worksheets and practice papers on any topic.  This can be a separate product line.  The idea is that the contents of the website will more than serve function of current school text books and much more.
+- *teacher* portal - allow teachers to set up teaching plans, so that the website generate content based on the teacher's teaching plans.  This is also a separate product line.  This can also be extended for school usage.
 - *one-to-one sessions* have tutors/teachers on the site giving either written comments on student's practice paper or online lesson to discuss the student's work.
-- *weekly fun maths-jam* lead by a teacher of the site, live-streamed session (akin to twitch), dicuss an interesting problem with students.
+- *weekly fun maths-jam* lead by a teacher of the site, live-streamed session (akin to twitch), discuss an interesting problem with students.
 
 *Ok before we get too carried away...here and now...*
 
 
 # Outline of *this* repository
 
-This repository contains the ruby-written maths content generation engine that will eventually power the website described above for maths learning for students between ages 8 - 18.  Currently making maths 11 plus (keystage 2) topics.
+This repository contains the ruby-written maths content generation engine that will eventually power the website described above for maths learning for students between ages 8 - 18.  Currently making maths 11 plus (key-stage 2) topics.
 
 Structure
 --------
@@ -66,7 +66,7 @@ These two classes are central and especially important, as almost every topic cl
 * A mathematical ```Expression``` consists of an array of ```Step```s.
 * For example *x + 2* is an Expression consisting of two steps:  (no-operation,'x',right) and (add,2,right).
 * *x + 2* can also be expressed as these two steps:  (no-operation,2,right) and (add,'x',left).
-* The *value* of a ```Step``` can also be an ```Expression```, thus *11 - (x+2)* can be expressioned as (no-operation,Expression(x+2),right) and (subtract,11,left).
+* The *value* of a ```Step``` can also be an ```Expression```, thus *11 - (x+2)* can be expressed as (no-operation,Expression(x+2),right) and (subtract,11,left).
 
 This system allows most maths expressions to be expressed flexibly in many different ways depending on need of the context.
 
@@ -76,7 +76,9 @@ Some of the critical methods that ```Expression``` need to implement are:
 * ```expand_to_rsum``` short for expand to a sum of rationals.  This is a more general way to expand, it will expand an expression involving fractions/division into a sum of fractions.  Note it will need to deal with fractions inside fraction situation.
 * ```simplify``` cancelling terms, collecting like terms.
 
-The above methods are also the most challenging to write, I have spent too long writing and rewriting them.  And an effort to refactor these methods is the main reason for all the rewrites.  In my latest attempt (5th? 6th? lost count...), I feel I may have it, but I am looking for improvements still to make it more readable and organize better if possible.
+The above methods are also the most challenging to write, I have spent too long writing and rewriting them.  And an effort to refactor these methods is the main reason for all the rewrites.  In my latest attempt (5th? 6th? lost count...), I feel I may have it.
+
+__My main need of outsider expertise is precisely on these methods: I am still looking for improvements to make these methods more readable and extensible for the future.  I am still open to rewrite (*completely!?!?!*) / reorganization if it will make significant improvements.__
 
 ##### Equation class
 
