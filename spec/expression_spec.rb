@@ -1674,6 +1674,24 @@ describe Expression do
       expect(result).to eq expected_exp
     end
 
+    it 'collect 2 sets of different like terms' do
+      exp = expression_factory.build([[nil,'x'],[:add,[[nil,3],[:mtp,'x']]],
+        [:add,[[nil,6],[:mtp,'x']]],[:add,[[nil,5],[:mtp,'y']]],[:sbt,[[nil,7],
+        [:mtp,'x']]],[:sbt,[[nil,7],[:mtp,'y']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]],
+        [:sbt,[[nil,2],[:mtp,'y']]]])
+      result = exp.simplify_a_m_sum
+      expect(result).to eq expected_exp
+    end
+
+    it 'collect 2 sets same string valued terms' do
+      exp = expression_factory.build([[nil,'x'],[:add,'y'],[:sbt,'y'],
+        [:add,'x'],[:add,'y'],[:add,'x']])
+      expected_exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]],
+        [:add,[[nil,1],[:mtp,'y']]]])
+      result = exp.simplify_a_m_sum
+      expect(result).to eq expected_exp
+    end
 
     #
     # it 'combines 2 like terms together amongst one other term' do

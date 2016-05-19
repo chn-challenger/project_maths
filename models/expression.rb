@@ -815,34 +815,14 @@ class Expression
 
 
   def simplify_a_m_sum
-    # result_steps = []
-    #
-    # m_form_steps = _wrap_into_mforms(steps)
-    #
-    # while m_form_steps.length > 0
-    #   curr_step = m_form_steps.delete_at(0)
-    #   similar_steps = _select_similar_steps(m_form_steps,curr_step)
-    #   combined_step_array = _combine_similar_steps(similar_steps)
-    #   result_steps = result_steps + combined_step_array
-    # end
-
     result_steps = []
-
     m_form_steps = _wrap_into_mforms(steps)
-
     while m_form_steps.length > 0
       curr_step = m_form_steps.delete_at(0)
       similar_steps = _select_similar_steps(m_form_steps,curr_step)
       combined_step_array = _combine_similar_steps(similar_steps)
       result_steps = result_steps + combined_step_array
     end
-
-    # similar_steps = m_form_steps
-
-    # combined_step_array = _combine_similar_steps(similar_steps)
-
-    # result_steps = result_steps + combined_step_array
-
     self.steps = result_steps
     if steps.length > 0
       self.steps.first.val.steps.first.val *= -1 if self.steps.first.ops == :sbt
