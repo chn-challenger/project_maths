@@ -1587,7 +1587,23 @@ describe Expression do
       expect(exp.simplify_all_m_forms).to eq expected_exp
     end
 
+    it 'simplify_all_m_forms is a mutator method' do
+      exp = expression_factory.build([[nil,6],[:add,[[nil,'a'],[:mtp,3],[:mtp,4]]]])
+      expected_exp = expression_factory.build([[nil,6],[:add,[[nil,12],[:mtp,'a']]]])
+      result = exp.simplify_all_m_forms
+      expect(result.object_id).to eq exp.object_id
+      expect(exp).to eq expected_exp 
+    end
 
+    it 'finds 2 deeply buried m-forms and simplifies it' do
+      exp = expression_factory.build([[nil,6],[:add,[[nil,'a'],[:mtp,3],
+        [:mtp,4]]],[:sbt,[[nil,5],[:div,[[nil,7],[:add,[[nil,'e'],[:mtp,2],
+        [:mtp,'d']]]]]]]])
+      expected_exp = expression_factory.build([[nil,6],[:add,[[nil,12],
+        [:mtp,'a']]],[:sbt,[[nil,5],[:div,[[nil,7],[:add,[[nil,2],[:mtp,'d'],
+        [:mtp,'e']]]]]]]])
+      expect(exp.simplify_all_m_forms).to eq expected_exp
+    end
 
 
 
