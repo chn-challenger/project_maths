@@ -50,3 +50,43 @@ self.latex(question)  #the argument is the returned hash from previous method
 # return hash => {question_latex:question_latex,solution_latex:solution_latex}
 ```
 The returned hash contains the latex string for the question and the latex string for the solutions.
+
+##### QuestionGenerator module
+
+This module is responsible for two methods which invokes topic question generators from all the topic classes to produce arrays of questions for worksheet and practice paper.
+
+##### LatexPrinter class
+
+This class is responsible for rendering the generated questions array from the QuestionGenerator module together with some other information about the practice paper or worksheet (e.g. student name, paper serial) into latex string.  One for questions, one for solutions.
+
+##### Expression and Step class
+
+These two classes are central and especially important, as almost every topic class will utilize these two classes to do the equation solving.  
+* A mathematical ```Step ``` consists of an *operation* (+,- etc), *value*, and *direction*.
+* A mathematical ```Expression``` consists of an array of ```Step```s.
+* For example *x + 2* is an Expression consisting of two steps:  (no-operation,'x',right) and (add,2,right).
+* *x + 2* can also be expressed as these two steps:  (no-operation,2,right) and (add,'x',left).
+* The *value* of a ```Step``` can also be an ```Expression```, thus *11 - (x+2)* can be expressioned as (no-operation,Expression(x+2),right) and (subtract,11,left).
+
+This system allows most maths expressions to be expressed flexibly in many different ways depending on need of the context.
+
+Some of the critical methods that ```Expression``` need to implement are:
+* ```expand``` to expand something like *(x+2)(y-3)* into a sum *xy+2y-3x-6*, and any such expressions such as *((x+2)(y-3)+4)(a-b+5)*.
+* ```latex``` return latex string representation of any expression.
+* ```expand_to_rsum``` short for expand to a sum of rationals.  This is a more general way to expand, it will expand an expression involving fractions/division into a sum of fractions.  Note it will need to deal with fractions inside fraction situation.
+* ```simplify``` cancelling terms, collecting like terms.
+
+The above methods are also the most challenging to write, I have spent too long writing and rewriting them.  And an effort to refactor these methods is the main reason for all the rewrites.  In my latest attempt (5th? 6th? lost count...), I feel I may have it, but I am looking for improvements still to make it more readable and organize better if possible.
+
+##### Equation class
+
+This does not do too much at the present, apart from holding a left-hand-side expression and a right-hand-side expression.  It may have more responsibilities to solve certain generic equation forms later.
+
+## Latest Progress and Ordered To Do List
+
+Currently, ```expand,latex,expand_to_rsum``` have been rewritten.  To do:
+1. Rewrite ```simplify```.
+2. Amend ```LinearEquation```, ```Fraction``` to adopt to the new ```latex``` method of the expression class.
+3. Amend ```LatexPrinter``` tests.
+4. Complete ```AgeProblem``` topic class.
+ 
