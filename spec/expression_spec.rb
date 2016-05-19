@@ -1655,7 +1655,7 @@ describe Expression do
     it 'combines 3 like terms together' do
       exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]],
         [:add,[[nil,4],[:mtp,'x']]],[:sbt,[[nil,10],[:mtp,'x']]]])
-      expected_exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,-3],[:mtp,'x']]]])
       expect(exp.simplify_a_m_sum).to eq expected_exp
     end
 
@@ -1665,6 +1665,15 @@ describe Expression do
       expected_exp = expression_factory.build([])
       expect(exp.simplify_a_m_sum).to eq expected_exp
     end
+
+    it 'collect 3 like terms amongst other terms' do
+      exp = expression_factory.build([[nil,[[nil,'z']]],[:add,[[nil,3],[:mtp,'x']]],
+        [:add,[[nil,6],[:mtp,'x']]],[:sbt,[[nil,7],[:mtp,'x']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,1],[:mtp,'z']]],[:add,[[nil,2],[:mtp,'x']]]])
+      result = exp.simplify_a_m_sum
+      expect(result).to eq expected_exp
+    end
+
 
     #
     # it 'combines 2 like terms together amongst one other term' do

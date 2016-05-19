@@ -828,14 +828,26 @@ class Expression
 
     result_steps = []
 
-    similar_steps = steps
+    m_form_steps = _wrap_into_mforms(steps)
 
-    combined_step_array = _combine_similar_steps(similar_steps)
+    while m_form_steps.length > 0
+      curr_step = m_form_steps.delete_at(0)
+      similar_steps = _select_similar_steps(m_form_steps,curr_step)
+      combined_step_array = _combine_similar_steps(similar_steps)
+      result_steps = result_steps + combined_step_array
+    end
 
-    result_steps = result_steps + combined_step_array
+    # similar_steps = m_form_steps
+
+    # combined_step_array = _combine_similar_steps(similar_steps)
+
+    # result_steps = result_steps + combined_step_array
 
     self.steps = result_steps
-    self.steps.first.ops = nil if steps.length > 0
+    if steps.length > 0
+      self.steps.first.val.steps.first.val *= -1 if self.steps.first.ops == :sbt
+      self.steps.first.ops = nil
+    end
     self
   end
 
@@ -853,11 +865,7 @@ class Expression
 
   def _select_similar_steps(m_form_steps,curr_step)
     similar_steps = m_form_steps.collect_move do |step|
-      if step.exp_valued?
-        step.val.similar?(curr_step)
-      else
-        false
-      end
+      step.val.similar?(curr_step.val)
     end
     similar_steps << curr_step
     similar_steps
@@ -874,24 +882,18 @@ class Expression
         coefficient -= 1 if step.ops == :sbt
       end
     end
-
     return [] if coefficient == 0
-
     operation = :add if coefficient > 0
     operation = :sbt if coefficient < 0
-
-
     if similar_steps.first.val.steps.first.val.is_a?(integer)
       similar_steps.first.val.steps.first.val = coefficient.abs
     else
       similar_steps.first.val.steps.first.ops = :mtp
-      similar_steps.first.val.steps << step_factory.build([nil,coefficient.abs])
+      coef_step = step_factory.build([nil,coefficient.abs])
+      similar_steps.first.val.steps.insert(0,coef_step)
     end
-
     similar_steps.first.ops = operation
-
     [similar_steps.first]
-
   end
 
 
