@@ -826,6 +826,9 @@ class Expression
       return false if self_copy.steps[i] != exp_copy.steps[i]
     end
     return true
+
+    #REFACTOR CHALLENGE!
+
   end
 
   def simplify_m_sums

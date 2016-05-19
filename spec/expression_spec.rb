@@ -1637,6 +1637,12 @@ describe Expression do
       expression_2 = expression_factory.build([[nil,'x'],[:mtp,'y']])
       expect(expression_1.similar?(expression_2)).to be true
     end
+
+    it 'returns true for two m-forms where both has no num step' do
+      expression_1 = expression_factory.build([[nil,'x'],[:mtp,'y']])
+      expression_2 = expression_factory.build([[nil,'x'],[:mtp,'y']])
+      expect(expression_1.similar?(expression_2)).to be true
+    end
   end
 
 
