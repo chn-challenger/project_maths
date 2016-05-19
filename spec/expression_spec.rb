@@ -1646,15 +1646,32 @@ describe Expression do
 
   describe '#simplify_a_m_sum' do
     it 'combines 2 like terms together' do
-      exp = expression_factory.build([[nil,5], [:sbt,'x'],  [:add,  [[nil,3],[:mtp,'x']]   ],[:add, [[nil,4],[:mtp,'x']] ]])
-      expected_exp = expression_factory.build([[nil,5],[:add,  [[nil,7],[:mtp,'x']]]])
-      # expect(exp.simplify_a_m_sum).to eq expected_exp
-      exp_1 = expression_factory.build([[nil,[ [nil,3],[:mtp,'x'] ]],[:add,  [[nil,5],[:mtp,'x']]   ],[:sbt, [[nil,4],[:mtp,'x']] ]])
-      steps = exp_1.steps
-      p exp._combine_similar_steps(steps)
-      # p exp._wrap_into_mforms(exp.steps)[1]
+      exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]],
+        [:add,[[nil,4],[:mtp,'x']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,7],[:mtp,'x']]]])
+      expect(exp.simplify_a_m_sum).to eq expected_exp
     end
 
+    it 'combines 3 like terms together' do
+      exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]],
+        [:add,[[nil,4],[:mtp,'x']]],[:sbt,[[nil,10],[:mtp,'x']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]]])
+      expect(exp.simplify_a_m_sum).to eq expected_exp
+    end
+
+    it 'cancels 3 like terms if the coeff is zero' do
+      exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]],
+        [:add,[[nil,4],[:mtp,'x']]],[:sbt,[[nil,7],[:mtp,'x']]]])
+      expected_exp = expression_factory.build([])
+      expect(exp.simplify_a_m_sum).to eq expected_exp
+    end
+
+    #
+    # it 'combines 2 like terms together amongst one other term' do
+    #   exp = expression_factory.build([[nil,  [[nil,3],[:mtp,'x']]   ],[:sbt,11],[:add, [[nil,4],[:mtp,'x']] ]])
+    #   expected_exp = expression_factory.build([[nil,  [[nil,7],[:mtp,'x']]], [:sbt,11] ])
+    #   expect(exp.simplify_a_m_sum).to eq expected_exp
+    # end
 
 
   end
