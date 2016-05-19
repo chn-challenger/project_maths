@@ -730,89 +730,11 @@ class Expression
     return true
     #REFACTOR CHALLENGE!
   end
-  #
-  # def simplify_a_m_sum
-  #   result_steps = []
-  #
-  #   m_form_steps = _wrap_into_mforms(steps)
-  #
-  #   while m_form_steps.length > 0
-  #     curr_step = m_form_steps.delete_at(0)
-  #     similar_steps = _select_similar_steps(m_form_steps,curr_step)
-  #     combined_step_array = _combine_similar_steps(similar_steps)
-  #     result_steps = result_steps + combined_step_array
-  #   end
-  #
-  #   self.steps = result_steps
-  #   self.steps.first.ops = nil
-  #   self
-  # end
-  #
-  # def _wrap_into_mforms(steps)
-  #   m_steps = []
-  #   steps.each do |step|
-  #     if step.exp_valued?
-  #       m_steps << step
-  #     else
-  #       m_steps << step_factory.build([step.ops,[[nil,step.val]]])
-  #     end
-  #   end
-  #   m_steps
-  # end
-  #
-  # def _select_similar_steps(m_form_steps,curr_step)
-  #   similar_steps = m_form_steps.collect_move do |step|
-  #     if step.exp_valued?
-  #       step.val.similar?(curr_step)
-  #     else
-  #       false
-  #     end
-  #   end
-  #   similar_steps << curr_step
-  #   similar_steps
-  # end
-  #
-  # def _combine_similar_steps(similar_steps)
-  #   coefficient = 0
-  #   similar_steps.each do |step|
-  #     if step.val.steps.first.val.is_a?(integer)
-  #       coefficient += step.val.steps.first.val if step.ops == nil || step.ops == :add
-  #       coefficient -= step.val.steps.first.val if step.ops == :sbt
-  #     else
-  #       coefficient += 1 if step.ops == nil || step.ops == :add
-  #       coefficient -= 1 if step.ops == :sbt
-  #     end
-  #   end
-  #
-  #   return [] if coefficient == 0
-  #
-  #   operation = :add if coefficient > 0
-  #   operation = :sbt if coefficient < 0
-  #
-  #
-  #   if similar_steps.first.val.steps.first.val.is_a?(integer)
-  #     similar_steps.first.val.steps.first.val = coefficient.abs
-  #   else
-  #     similar_steps.first.val.steps.first.ops = :mtp
-  #     similar_steps.first.val.steps << step_factory.build([nil,coefficient.abs])
-  #   end
-  #
-  #   similar_steps.first.ops = operation
-  #
-  #   [similar_steps.first]
-  #
-  # end
-
-
 
   #There is another type of more generic simplify method where it searchs for
   #consecutive terms that can be simplified such as 2x + mess + 3x which is
   #not an m-sum but never the less is 5x + mess.  For now we complete the more
   #restrictive version, which should shed light on the more generic version
-
-
-
-
 
   def simplify_a_m_sum
     result_steps = []
@@ -832,15 +754,13 @@ class Expression
   end
 
   def _wrap_into_mforms(steps)
-    m_steps = []
-    steps.each do |step|
+    steps.inject([]) do |m_steps,step|
       if step.exp_valued?
         m_steps << step
       else
         m_steps << step_factory.build([step.ops,[[nil,step.val]]])
       end
     end
-    m_steps
   end
 
   def _select_similar_steps(m_form_steps,curr_step)
@@ -874,7 +794,25 @@ class Expression
     end
     similar_steps.first.ops = operation
     [similar_steps.first]
+    #ANOTHER WONDERFUL REFACTORING EXERCISE!
   end
 
+  def simplify_all_m_sums
+    return self.simplify_a_m_sum if is_m_form_sum?
+  # steps.each do |step|
+  #   if step.exp_valued?
+  #     if step.val.is_m_form?
+  #       step.val.simplify_a_m_form
+  #     else
+  #       step.val.simplify_all_m_forms
+  #     end
+  #   end
+  # end
+  # self
+
+
+
+    # self.flatten
+  end
 
 end

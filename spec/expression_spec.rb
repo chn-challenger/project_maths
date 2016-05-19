@@ -1652,6 +1652,15 @@ describe Expression do
       expect(exp.simplify_a_m_sum).to eq expected_exp
     end
 
+    it 'simplify_a_m_sum is a mutator method' do
+      exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]],
+        [:add,[[nil,4],[:mtp,'x']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,7],[:mtp,'x']]]])
+      result = exp.simplify_a_m_sum
+      expect(exp).to eq expected_exp
+      expect(result.object_id).to eq exp.object_id
+    end
+
     it 'combines 3 like terms together' do
       exp = expression_factory.build([[nil,[[nil,3],[:mtp,'x']]],
         [:add,[[nil,4],[:mtp,'x']]],[:sbt,[[nil,10],[:mtp,'x']]]])
@@ -1693,15 +1702,39 @@ describe Expression do
       expect(result).to eq expected_exp
     end
 
-    #
-    # it 'combines 2 like terms together amongst one other term' do
-    #   exp = expression_factory.build([[nil,  [[nil,3],[:mtp,'x']]   ],[:sbt,11],[:add, [[nil,4],[:mtp,'x']] ]])
-    #   expected_exp = expression_factory.build([[nil,  [[nil,7],[:mtp,'x']]], [:sbt,11] ])
-    #   expect(exp.simplify_a_m_sum).to eq expected_exp
-    # end
+    it 'collect 2 sets same numerical valued terms' do
+      exp = expression_factory.build([[nil,'x'],[:add,7],[:sbt,3]])
+      expected_exp = expression_factory.build([[nil,[[nil,1],[:mtp,'x']]],
+        [:add,[[nil,4]]]])
+      result = exp.simplify_a_m_sum
+      expect(result).to eq expected_exp
+    end
+
+    it 'collect 2 similar terms with no num step' do
+      exp = expression_factory.build([[nil,'x'],[:add,[[nil,'a'],[:mtp,'b']]],
+        [:add,[[nil,'a'],[:mtp,'b']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,1],[:mtp,'x']]],
+        [:add,[[nil,2], [:mtp,'a'],[:mtp,'b']]]])
+      result = exp.simplify_a_m_sum
+      expect(result).to eq expected_exp
+    end
+  end
+
+  describe '#simplify_all_m_sums' do
+    it 'simplfies a given m_sum' do
+      exp = expression_factory.build([[nil,'x'],[:add,[[nil,'a'],[:mtp,'b']]],
+        [:add,[[nil,'a'],[:mtp,'b']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,1],[:mtp,'x']]],
+        [:add,[[nil,2], [:mtp,'a'],[:mtp,'b']]]])
+      result = exp.simplify_all_m_sums
+      expect(result).to eq expected_exp
+    end
+
 
 
   end
+
+
 
 
 end
