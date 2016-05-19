@@ -774,13 +774,16 @@ class Expression
     return self if steps.length == 1
     copy = self.copy
     for i in 0..steps.length-2
-      # next if steps[i].val.is_a?(integer)
-      if steps[i+1].val.is_a?(integer) || steps[i].val > steps[i+1].val
+      if _swap_steps?(steps[i],steps[i+1])
         steps[i],steps[i+1] = steps[i+1],steps[i]
-        next
       end
     end
     return self == copy ? self : self._bsort_m_form_steps
+  end
+
+  def _swap_steps?(step_1,step_2)
+    step_1.val.is_a?(integer) == false &&
+    (step_2.val.is_a?(integer) || step_1.val > step_2.val)
   end
 
   def _standardise_m_form_ops

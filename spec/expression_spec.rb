@@ -1566,9 +1566,18 @@ describe Expression do
       expect(exp).to eq expected_exp
     end
 
-    
+    it 'simplifies an m-form of 3 steps containing two numerical steps' do
+      exp = expression_factory.build([[nil,'a'],[:mtp,3],[:mtp,4]])
+      expected_exp = expression_factory.build([[nil,12],[:mtp,'a']])
+      expect(exp.simplify_m_form).to eq expected_exp
+    end
 
-
+    it 'simplifies an m-form of 5 steps containing three numerical steps' do
+      exp = expression_factory.build([[nil,2],[:mtp,'b'],[:mtp,4],
+        [:mtp,'a'],[:mtp,3]])
+      expected_exp = expression_factory.build([[nil,24],[:mtp,'a'],[:mtp,'b']])
+      expect(exp.simplify_m_form).to eq expected_exp
+    end
   end
 
 
