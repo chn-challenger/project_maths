@@ -85,8 +85,7 @@ This does not do too much at the present, apart from holding a left-hand-side ex
 ## Latest Progress and Ordered To Do List
 
 Currently, ```expand,latex,expand_to_rsum``` have been rewritten.  To do:
-1. Rewrite ```simplify```.
-2. Amend ```LinearEquation```, ```Fraction``` to adopt to the new ```latex``` method of the expression class.
-3. Amend ```LatexPrinter``` tests.
-4. Complete ```AgeProblem``` topic class.
- 
+* Rewrite ```simplify```.
+* Amend ```LinearEquation```, ```Fraction``` to adopt to the new ```latex``` method of the expression class.
+* Amend ```LatexPrinter``` tests.
+* Complete ```AgeProblem``` topic class.
