@@ -429,26 +429,6 @@ describe Expression do
     end
   end
 
-  describe '#similar?' do
-    it 'returns true when comparing two m-forms with same string valued steps' do
-      expression_1 = Expression.new([Step.new(nil,2),Step.new(:mtp,'x')])
-      expression_2 = Expression.new([Step.new(nil,3),Step.new(:mtp,'x')])
-      expect(expression_1.similar?(expression_2)).to be true
-    end
-
-    it 'returns false if there is on non-m-form' do
-      expression_1 = Expression.new([Step.new(nil,2),Step.new(:div,'x')])
-      expression_2 = Expression.new([Step.new(nil,3),Step.new(:div,'x')])
-      expect(expression_1.similar?(expression_2)).to be false
-    end
-
-    it 'returns false for two m-form with different string valued steps' do
-      expression_1 = Expression.new([Step.new(nil,2),Step.new(:mtp,'x')])
-      expression_2 = Expression.new([Step.new(nil,3),Step.new(:mtp,'y')])
-      expect(expression_1.similar?(expression_2)).to be false
-    end
-  end
-
   describe '#convert_string_value_steps_to_m_forms?' do
     it 'does nothing and returns self if not a sum' do
       expression = Expression.new([Step.new(nil,'x'),Step.new(:div,'y')])
@@ -1581,6 +1561,14 @@ describe Expression do
   end
 
   describe '#simplify_all_m_forms' do
+    it 'simplifies itself if it is an m-form' do
+      exp = expression_factory.build([[nil,2],[:mtp,'b'],[:mtp,4],
+        [:mtp,'a'],[:mtp,3]])
+      expected_exp = expression_factory.build([[nil,24],[:mtp,'a'],[:mtp,'b']])
+      expect(exp.simplify_all_m_forms).to eq expected_exp
+    end
+
+
     it 'finds an m-form in an expression and simplifies it' do
       exp = expression_factory.build([[nil,6],[:add,[[nil,'a'],[:mtp,3],[:mtp,4]]]])
       expected_exp = expression_factory.build([[nil,6],[:add,[[nil,12],[:mtp,'a']]]])
@@ -1592,7 +1580,7 @@ describe Expression do
       expected_exp = expression_factory.build([[nil,6],[:add,[[nil,12],[:mtp,'a']]]])
       result = exp.simplify_all_m_forms
       expect(result.object_id).to eq exp.object_id
-      expect(exp).to eq expected_exp 
+      expect(exp).to eq expected_exp
     end
 
     it 'finds 2 deeply buried m-forms and simplifies it' do
@@ -1604,15 +1592,66 @@ describe Expression do
         [:mtp,'e']]]]]]]])
       expect(exp.simplify_all_m_forms).to eq expected_exp
     end
+  end
+
+  # describe 'similar?' do
+  #
+  #
+  #
+  #
+  # end
+
+  describe '#similar?' do
+    it 'returns true when comparing two m-forms with same string valued steps' do
+      expression_1 = expression_factory.build([[nil,2],[:mtp,'x'],[:mtp,'y']])
+      expression_2 = expression_factory.build([[nil,3],[:mtp,'x'],[:mtp,'y']])
+      expect(expression_1.similar?(expression_2)).to be true
+    end
+
+    it 'returns false when comparing two m-forms with diff num of steps' do
+      expression_1 = expression_factory.build([[nil,2],[:mtp,'x']])
+      expression_2 = expression_factory.build([[nil,3],[:mtp,'x'],[:mtp,'y']])
+      expect(expression_1.similar?(expression_2)).to be false
+    end
+
+    it 'returns false if there is on non-m-form' do
+      expression_1 = expression_factory.build([[nil,2],[:div,'x']])
+      expression_2 = expression_factory.build([[nil,3],[:div,'x']])
+      expect(expression_1.similar?(expression_2)).to be false
+    end
+
+    it 'returns false for two m-form with different string valued steps' do
+      expression_1 = expression_factory.build([[nil,2],[:mtp,'x']])
+      expression_2 = expression_factory.build([[nil,3],[:mtp,'y']])
+      expect(expression_1.similar?(expression_2)).to be false
+    end
+
+    it 'returns true for two m-forms where first has no num step' do
+      expression_1 = expression_factory.build([[nil,'x'],[:mtp,'y']])
+      expression_2 = expression_factory.build([[nil,3],[:mtp,'x'],[:mtp,'y']])
+      expect(expression_1.similar?(expression_2)).to be true
+    end
+
+    it 'returns true for two m-forms where second has no num step' do
+      expression_1 = expression_factory.build([[nil,3],[:mtp,'x'],[:mtp,'y']])
+      expression_2 = expression_factory.build([[nil,'x'],[:mtp,'y']])
+      expect(expression_1.similar?(expression_2)).to be true
+    end
+  end
 
 
 
+
+  describe '#simplify_m_sums' do
+    # it 'combines 2 like terms together' do
+    #   exp = expression_factory.build([[nil,5],[:add,  [[nil,3],[:mtp,'x']]   ],[:add, [[nil,4],[:mtp,'x']] ]])
+    #   expected_exp = expression_factory.build([[nil,5],[:add,  [[nil,7],[:mtp,'x']]]])
+    #   expect(exp.simplify_m_sums).to eq expected_exp
+    # end
 
 
 
   end
-
-
 
 
 end

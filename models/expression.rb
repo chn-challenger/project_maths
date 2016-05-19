@@ -66,14 +66,14 @@ class Expression
     converted_exp
   end
 
-  def similar?(expression)
-    return false if !self.is_m_form? || !expression.is_m_form?
-    return false if self.steps.length != expression.steps.length
-    for i in 1..steps.length - 1
-      return false if self.steps[i] != expression.steps[i]
-    end
-    return true
-  end
+  # def similar?(expression)
+  #   return false if !self.is_m_form? || !expression.is_m_form?
+  #   return false if self.steps.length != expression.steps.length
+  #   for i in 1..steps.length - 1
+  #     return false if self.steps[i] != expression.steps[i]
+  #   end
+  #   return true
+  # end
 
   def _convert_lft_ops
     self.convert_lft_add_mtp_steps.convert_lft_sbt_div_steps
@@ -794,6 +794,7 @@ class Expression
   end
 
   def simplify_all_m_forms
+    return simplify_a_m_form if is_m_form?
     steps.each do |step|
       if step.exp_valued?
         if step.val.is_m_form?
@@ -805,5 +806,40 @@ class Expression
     end
     self
   end
+
+  def similar?(expression)
+    self_copy = self.copy
+    if self_copy.steps.first.val.is_a?(string)
+      self_copy.steps.first.ops = :mtp
+      self_copy.steps.insert(0,_nil_one_step)
+    end
+
+    exp_copy = expression.copy
+    if exp_copy.steps.first.val.is_a?(string)
+      exp_copy.steps.first.ops = :mtp
+      exp_copy.steps.insert(0,_nil_one_step)
+    end
+
+    return false if !self_copy.is_m_form? || !exp_copy.is_m_form?
+    return false if self_copy.steps.length != exp_copy.steps.length
+    for i in 1..self_copy.steps.length - 1
+      return false if self_copy.steps[i] != exp_copy.steps[i]
+    end
+    return true
+  end
+
+  def simplify_m_sums
+
+  end
+
+  #There is another type of more generic simplify method where it searchs for
+  #consecutive terms that can be simplified such as 2x + mess + 3x which is
+  #not an m-sum but never the less is 5x + mess.  For now we complete the more
+  #restrictive version, which should shed light on the more generic version
+
+
+
+
+
 
 end
