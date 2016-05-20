@@ -392,6 +392,7 @@ class Expression
 
   def _add_sbt_mtp_latex(step,result,curr_exp)
     result = _brackets(result) if _mtp_need_brackets?(step,curr_exp)
+    result += '\times' if _mtp_need_times_sign?(step,curr_exp)
     step_latex = step.exp_valued? ? step.val.latex : step.val.to_s
     step_latex = _brackets(step_latex) if _exp_need_brackets?(step)
     result + _ops_latex[step.ops] + step_latex
@@ -408,6 +409,10 @@ class Expression
 
   def _mtp_need_brackets?(step,curr_exp)
     step.ops == :mtp && curr_exp._need_brackets?
+  end
+
+  def _mtp_need_times_sign?(step,curr_exp)
+     step.ops == :mtp && (curr_exp.steps.last.ops == :mtp || curr_exp.steps.last.ops == nil) && step.val.is_a?(integer) && curr_exp.steps.last.val.is_a?(integer)
   end
 
   def _exp_need_brackets?(step)
