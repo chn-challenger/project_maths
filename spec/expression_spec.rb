@@ -1867,24 +1867,7 @@ describe Expression do
       result = exp.expand_n_simplify
       expect(result).to eq expected_exp
     end
-
-    # it 'expands and simplify eg 1' do
-    #   exp = expression_factory.build([[:mtp,[[nil,4],[:sbt,'x']]],[nil,[[nil,'x'],[:add,3]],:lft]])
-    #   expected_exp = expression_factory.build([[nil,'x'],[:add,12],[:sbt,[[nil,'x'],[:mtp,'x']]]])
-    #   puts exp.latex
-    #   result = exp.expand_n_simplify
-    #   # p result
-    #   puts result.latex
-    #   # expect(result).to eq expected_exp
-    # end
-
-
-
-
-
   end
-
-
 
 
 end

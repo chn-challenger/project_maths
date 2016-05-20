@@ -97,3 +97,7 @@ Currently, ```expand,latex,expand_to_rsum``` have been rewritten.  To do:
 
 ### Example of generated latex string script
 ![](http://i.imgur.com/TTUGbFi.png)
+
+## Ideas for future improvements
+
+*  This one is not needed at least for all the maths upto university, so to remind me of this idea once I am in dreamland!  It would be possible to get expressions to evaluate themselves, in the same way binary operations between elementary value types should be defined, it is feesible that expression valued binary operations (that exist inside a single expression haha) can also be defined.  Thus rather than call simplify on an expression of 2x + 3x, we will evaluate the binary operation.
