@@ -771,4 +771,26 @@ class Expression
     self
   end
 
+  def expand_n_simplify #any exp without :div
+    convert_lft_steps
+    expand
+    simplify_all_m_forms
+    simplify_all_m_sums
+    _remove_m_form_one_coef
+    flatten
+    self.steps.first.ops = nil
+    self
+  end
+
+  def _remove_m_form_one_coef #expects an m-form-sum
+    steps.each do |step|
+      if step.exp_valued? && step.val.steps.first.val == 1
+        step.val.steps.delete_at(0)
+        step.val.steps.first.ops = nil
+      end
+    end
+    self
+  end
+
+
 end

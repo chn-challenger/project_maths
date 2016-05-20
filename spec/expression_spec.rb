@@ -1751,6 +1751,19 @@ describe Expression do
       result = exp.simplify_all_m_sums
       expect(result).to eq expected_exp
     end
+  end
+
+  describe '#expand_n_simplify' do
+    it 'expands and simplify eg 1' do
+      exp = expression_factory.build([[nil,[[nil,'x'],[:add,3]]],[:mtp,[[nil,4],[:sbt,'x']]]])
+      expected_exp = expression_factory.build([[nil,'x'],[:add,12],[:sbt,[[nil,'x'],[:mtp,'x']]]])
+      # puts exp.latex
+      result = exp.expand_n_simplify
+      # p result
+      # puts result.latex
+      expect(result).to eq expected_exp
+    end
+
 
 
   end
