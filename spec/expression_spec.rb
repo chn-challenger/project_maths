@@ -1785,12 +1785,49 @@ describe Expression do
       expect(exp.expand).to eq expected_exp
     end
 
-    it 'expands two brackets which has lft steps' do
+    it 'expands two brackets which has left steps' do
       exp = expression_factory.build([[nil,[[nil,4],[:sbt,'x']]],[:mtp,[[nil,'x'],[:add,3]],:lft]])
       expected_exp = msum_factory.build([[nil,['x',4]],[:add,[3,4]],[:sbt,['x','x']],[:sbt,[3,'x']]])
       result = exp.expand
       expect(exp.expand).to eq expected_exp
     end
+
+    it 'expands ((e - m)m - (e + m))(e - m) with left steps' do
+      step_1 = step_factory.build([nil,[[nil,2],[:sbt,[[nil,3],[:mtp,'x']]]]])
+      step_2 = step_factory.build([:mtp,[[nil,4],[:mtp,'y']]])
+      step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]])
+      step_4 = step_factory.build([:mtp,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])
+      exp = expression_factory.build([step_1,step_2,step_3,step_4])
+      # puts exp.latex
+      expected_exp = msum_factory.build([
+          [nil,[2,4,'y',7]],        [:sbt,[3,'x',4,'y',7]],
+          [:sbt,[5,7]],             [:sbt,[6,'z',7]],
+          [:sbt,[2,4,'y',8,'w']],   [:add,[3,'x',4,'y',8,'w']],
+          [:add,[5,8,'w']],         [:add,[6,'z',8,'w']]
+        ])
+      result = exp.expand
+      expect(exp.expand).to eq expected_exp
+    end
+
+    it 'expands ((e - m)m - (e + m))(e - m) with left steps' do
+      step_4 = step_factory.build([nil,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])      
+      step_1 = step_factory.build([nil,[[nil,2],[:sbt,[[nil,3],[:mtp,'x']]]]])
+      step_2 = step_factory.build([:mtp,[[nil,4],[:mtp,'y']]])
+      step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,6],[:mtp,'z']]]]])
+      lft_exp = expression_factory.build([step_1,step_2,step_3])
+      lft_step = step_factory.build([:mtp,lft_exp,:lft])
+      exp = expression_factory.build([step_4,lft_step])
+      expected_exp = msum_factory.build([
+          [nil,[2,4,'y',7]],        [:sbt,[3,'x',4,'y',7]],
+          [:sbt,[5,7]],             [:sbt,[6,'z',7]],
+          [:sbt,[2,4,'y',8,'w']],   [:add,[3,'x',4,'y',8,'w']],
+          [:add,[5,8,'w']],         [:add,[6,'z',8,'w']]
+        ])
+      result = exp.expand
+      expect(exp.expand).to eq expected_exp
+    end
+
+
 
   end
 
