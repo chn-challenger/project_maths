@@ -381,6 +381,23 @@ class Expression
     result
   end
 
+  def flatex #temporary solution for issue 2
+    f_sign = {nil=>'+',:add => '+',:sbt => '-',:mtp => '\times',:div => '\div'}
+    if steps.length == 2
+      _single_f_latex(steps.first.val) + f_sign[steps.last.ops] +
+        _single_f_latex(steps.last.val)
+    elsif  steps.length == 1
+      _single_f_latex(steps.first.val)
+    end
+  end
+
+  def _single_f_latex(fraction)
+    int_latex = fraction.integer == 0 ? '' : fraction.integer.to_s
+    frac_latex = '\frac{' + fraction.numerator.to_s + '}{' +
+      fraction.denominator.to_s + '}'
+    int_latex + frac_latex
+  end #end of temporary solution for issue 2
+
   def _need_brackets?
     return false if steps.length <= 1
     return (steps.last.ops == :mtp || steps.last.ops == :div) ? false : true

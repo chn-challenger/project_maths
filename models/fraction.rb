@@ -100,8 +100,8 @@ class Fraction
   end
 
   def self.latex(generated_question)
-    question_latex = generated_question[:question].latex
-    solution_latex = question_latex + '=' + generated_question[:solution].latex
+    question_latex = generated_question[:question].flatex
+    solution_latex = question_latex + '=' + generated_question[:solution].flatex
     {question_latex:question_latex,solution_latex:solution_latex}
   end
 
