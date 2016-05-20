@@ -1722,14 +1722,35 @@ describe Expression do
 
   describe '#simplify_all_m_sums' do
     it 'simplfies a given m_sum' do
-      exp = expression_factory.build([[nil,'x'],[:add,[[nil,'a'],[:mtp,'b']]],
-        [:add,[[nil,'a'],[:mtp,'b']]]])
+      exp = expression_factory.build([[nil,'x'],[:add,[[nil,'c'],[:mtp,'d']]],
+        [:add,[[nil,4],[:mtp,'c'],[:mtp,'d']]]])
       expected_exp = expression_factory.build([[nil,[[nil,1],[:mtp,'x']]],
-        [:add,[[nil,2], [:mtp,'a'],[:mtp,'b']]]])
+        [:add,[[nil,5], [:mtp,'c'],[:mtp,'d']]]])
       result = exp.simplify_all_m_sums
       expect(result).to eq expected_exp
     end
 
+    it 'simplfies a m_sum as value of a step' do
+      exp = expression_factory.build([[nil,5],[:div,[[nil,'x'],[:add,[[nil,'a'],
+        [:mtp,'b']]],[:add,[[nil,'a'],[:mtp,'b']]]]]])
+      expected_exp = expression_factory.build([[nil,5],[:div,[[nil,[[nil,1],
+        [:mtp,'x']]],[:add,[[nil,2], [:mtp,'a'],[:mtp,'b']]]]]])
+      result = exp.simplify_all_m_sums
+      expect(result).to eq expected_exp
+    end
+
+    it 'simplifies a m_sum buried 2 layers recursively' do
+      exp = expression_factory.build([[nil,'p'],[:sbt,[[nil,'x'],[:add,
+        [[nil,'c'],[:mtp,'d']]],[:add,[[nil,4],[:mtp,'c'],[:mtp,'d']]]]],
+        [:mtp,[[nil,5],[:div,[[nil,'x'],[:add,[[nil,'a'],[:mtp,'b']]],
+        [:add,[[nil,'a'],[:mtp,'b']]]]]]]])
+      expected_exp = expression_factory.build([[nil,'p'],[:sbt,[[nil,[[nil,1],
+        [:mtp,'x']]],[:add,[[nil,5], [:mtp,'c'],[:mtp,'d']]]]],[:mtp,[[nil,5],
+        [:div,[[nil,[[nil,1],[:mtp,'x']]],[:add,[[nil,2], [:mtp,'a'],[:mtp,'b']
+        ]]]]]]])
+      result = exp.simplify_all_m_sums
+      expect(result).to eq expected_exp
+    end
 
 
   end
