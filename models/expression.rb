@@ -274,6 +274,8 @@ class Expression
 
 
   def expand
+    convert_lft_steps
+    
     expanded_steps = []
     steps.each do |step|
       _expand_nil_or_add_into(expanded_steps,step) if _nil_or_add?(step)

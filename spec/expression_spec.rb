@@ -857,6 +857,13 @@ describe Expression do
       result = exp.expand
       expect(exp.expand).to eq expected_exp
     end
+
+    # it 'expands with left steps by converting them first' do
+    #   exp = expression_factory.build([[nil,2],[:sbt,'x',:lft]])
+    #   expected_exp = expression_factory.build([[nil,'x'],[:sbt,2]])
+    #   result = exp.expand
+    #   expect(exp.expand).to eq expected_exp
+    # end
   end
 
   describe '#rsum_mtp_rsum' do
@@ -1757,13 +1764,26 @@ describe Expression do
     it 'expands and simplify eg 1' do
       exp = expression_factory.build([[nil,[[nil,'x'],[:add,3]]],[:mtp,[[nil,4],[:sbt,'x']]]])
       expected_exp = expression_factory.build([[nil,'x'],[:add,12],[:sbt,[[nil,'x'],[:mtp,'x']]]])
-      # puts exp.latex
       result = exp.expand_n_simplify
-      # p result
-      # puts result.latex
       expect(result).to eq expected_exp
     end
 
+    # it 'expands and simplify eg 1' do
+    #   exp = expression_factory.build([[:mtp,[[nil,4],[:sbt,'x']]],[nil,[[nil,'x'],[:add,3]],:lft]])
+    #   expected_exp = expression_factory.build([[nil,'x'],[:add,12],[:sbt,[[nil,'x'],[:mtp,'x']]]])
+    #   puts exp.latex
+    #   result = exp.expand_n_simplify
+    #   # p result
+    #   puts result.latex
+    #   # expect(result).to eq expected_exp
+    # end
+
+    it 'expands with left steps by converting them first' do
+      exp = expression_factory.build([[nil,2],[:sbt,'x',:lft]])
+      expected_exp = expression_factory.build([[nil,'x'],[:sbt,2]])
+      result = exp.expand
+      expect(exp.expand).to eq expected_exp
+    end
 
 
   end
