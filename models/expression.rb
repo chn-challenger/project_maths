@@ -272,7 +272,6 @@ class Expression
 
 
 
-
   def expand
     convert_lft_steps
     expanded_steps = []
@@ -367,6 +366,7 @@ class Expression
 
   def latex
     return '' if steps.length == 0
+    convert_lft_steps
     copy = self.copy.flatten
     curr_exp = expression_factory.build([copy.steps.first])
     result = copy.steps.first.val.to_s

@@ -1825,6 +1825,33 @@ describe Expression do
     #   # expect(result).to eq expected_exp
     # end
 
+  context 'with left steps' do
+    it 'produce latex for e - e with left step' do
+      exp = expression_factory.build([[nil,5],[:sbt,'y',:lft]])
+       expect(exp.latex).to eq 'y-5'
+    end
+
+    it 'produce latex for (e - e)m with 2 left steps' do
+      exp = expression_factory.build([[nil,'y'],[:sbt,'5',:lft],[:mtp,[[nil,'x'],[:mtp,3,:lft]]]])
+      expect(exp.latex).to eq '\left(5-y\right)3x'
+    end
+
+    it 'produce latex for complex expression with left steps recurisively' do
+      step_1_1 = step_factory.build([nil,2])
+      step_1_2 = step_factory.build([:sbt,[[nil,3],[:mtp,'x']]])
+      step_2 = step_factory.build([:mtp,[[nil,4],[:mtp,'y']]])
+      step_3 = step_factory.build([:sbt,[[nil,5],[:add,[[nil,'z'],[:mtp,6,:lft]]]]])
+      step_4 = step_factory.build([:mtp,[[nil,7],[:sbt,[[nil,8],[:mtp,'w']]]]])
+      step_4 = step_factory.build([:mtp,[[nil,[[nil,8],[:mtp,'w']]],[:sbt,7,:lft]]])
+      exp = expression_factory.build([step_1_1,step_1_2,step_2,step_3,step_4])
+      expected_latex = "\\left(\\left(2-3x\\right)4y-\\left(5+6z\\right)\\righ"\
+        "t)\\left(7-8w\\right)"
+      expect(exp.latex).to eq expected_latex
+    end
+  end
+
+
+
 
 
   end
