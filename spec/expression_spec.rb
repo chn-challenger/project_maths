@@ -1785,6 +1785,12 @@ describe Expression do
       expect(exp.expand).to eq expected_exp
     end
 
+    it 'expands two brackets which has lft steps' do
+      exp = expression_factory.build([[nil,[[nil,4],[:sbt,'x']]],[:mtp,[[nil,'x'],[:add,3]],:lft]])
+      expected_exp = msum_factory.build([[nil,['x',4]],[:add,[3,4]],[:sbt,['x','x']],[:sbt,[3,'x']]])
+      result = exp.expand
+      expect(exp.expand).to eq expected_exp
+    end
 
   end
 
