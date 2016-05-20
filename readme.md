@@ -91,3 +91,9 @@ Currently, ```expand,latex,expand_to_rsum``` have been rewritten.  To do:
 * Amend ```LinearEquation```, ```Fraction``` to adopt to the new ```latex``` method of the expression class.
 * Amend ```LatexPrinter``` tests.
 * Complete ```AgeProblem``` topic class.
+
+### Example of generated worksheet solutions
+![](http://imgur.com/toGzuGM)
+
+### Example of generated latex string script
+![](http://imgur.com/TTUGbFi)
