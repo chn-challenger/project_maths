@@ -93,7 +93,7 @@ Currently, ```expand,latex,expand_to_rsum``` have been rewritten.  To do:
 * Complete ```AgeProblem``` topic class.
 
 ### Example of generated worksheet solutions
-![](http://imgur.com/toGzuGM)
+![](http://i.imgur.com/toGzuGM.png)
 
 ### Example of generated latex string script
-![](http://imgur.com/TTUGbFi)
+![](http://i.imgur.com/TTUGbFi.png)
