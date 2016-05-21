@@ -31,52 +31,12 @@ class Expression
     _is_sum? && _steps_are_at_most_m_form?
   end
 
-  def _is_gen_m_form_sum?
-    _is_gen_sum? && _steps_are_at_most_m_form?
-  end
-
   def is_rational?
     _is_fractional? && steps.first.is_at_most_m_form? && steps.last.is_at_most_m_form_sum?
   end
 
-  def _is_gen_rational?
-    _is_fractional? && steps.first.is_at_most_m_form? &&
-      (steps.last.is_at_most_m_form? || steps.last._is_gen_m_form_sum?)
-  end
-
   def is_rational_sum?
     _is_sum? && _steps_are_rational?
-  end
-
-  def _is_gen_rational_sum?
-    _is_gen_sum? && _steps_are_gen_rational?
-  end
-
-  def convert_lft_sbt_div_steps
-    converted_exp = self.class.new
-    steps.each do |step|
-      step.val = step.val.convert_lft_sbt_div_steps unless step.is_elementary?
-      if step.dir == :lft && (step.ops == :sbt || step.ops == :div)
-        converted_exp = self.class.new([Step.new(nil,step.val),
-          Step.new(step.ops,converted_exp)])
-      else
-        converted_exp.steps << step
-      end
-    end
-    converted_exp
-  end
-
-  # def similar?(expression)
-  #   return false if !self.is_m_form? || !expression.is_m_form?
-  #   return false if self.steps.length != expression.steps.length
-  #   for i in 1..steps.length - 1
-  #     return false if self.steps[i] != expression.steps[i]
-  #   end
-  #   return true
-  # end
-
-  def _convert_lft_ops
-    self.convert_lft_add_mtp_steps.convert_lft_sbt_div_steps
   end
 
   def _is_fractional?
@@ -107,14 +67,6 @@ class Expression
     return true
   end
 
-  def _is_gen_sum?
-    for i in 1..steps.length - 1
-      return false if steps[i].ops == :mtp || steps[i].ops == :div ||
-        steps[i].ops == nil
-    end
-    return true
-  end
-
   def _steps_are_at_most_m_form?
     for i in 0..steps.length - 1
       return false if !steps[i].is_elementary? && !steps[i].val.is_m_form?
@@ -126,14 +78,6 @@ class Expression
     for i in 0..steps.length - 1
       return false if !steps[i].is_elementary? && !steps[i].val.is_m_form? &&
         !steps[i].val.is_rational?
-    end
-    return true
-  end
-
-  def _steps_are_gen_rational?
-    for i in 0..steps.length - 1
-      return false if !steps[i].is_elementary? && !steps[i].val.is_m_form? &&
-        !steps[i].val._is_gen_rational?
     end
     return true
   end

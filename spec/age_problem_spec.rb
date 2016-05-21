@@ -1,42 +1,44 @@
 require './models/age_problem'
 
-# describe AgeProblem do
-#   describe '#initialize/new' do
-#     let(:age_prob_1){described_class.new(:add,10,5,2)}
-#     let(:age_prob_2){described_class.new(:mtp,3,10,2)}
-#
-#     it 'initializes with a time 1 relation' do
-#       expect(age_prob_1.time_1_rel).to eq :add
-#     end
-#
-#     it 'initializes with a time 1 relational value' do
-#       expect(age_prob_1.time_1_val).to eq 10
-#     end
-#
-#     it 'initializes with a time 1 and time 2 difference in time' do
-#       expect(age_prob_1.time_diff).to eq 5
-#     end
-#
-#     it 'initializes with a time 2 relational value' do
-#       expect(age_prob_1.time_2_val).to eq 2
-#     end
-#
-#     it 'initializes with an initial equation with time 1 relation is add' do
-#       left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,15)])
-#       right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,5),Step.new(:mtp,2)])
-#       expected_equation = Equation.new(left_side,right_side)
-#       expect(age_prob_1.equation).to eq expected_equation
-#     end
-#
-#     it 'initializes with an initial equation with time 1 relation is multiply' do
-#       left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,3),Step.new(:add,10)])
-#       right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,10),Step.new(:mtp,2)])
-#       expected_equation = Equation.new(left_side,right_side)
-#       expect(age_prob_2.equation).to eq expected_equation
-#     end
+describe AgeProblem do
+  describe '#initialize/new' do
+    let(:age_prob_1){described_class.new(:add,10,5,2)}
+    let(:age_prob_2){described_class.new(:mtp,3,10,2)}
+
+    it 'initializes with a time 1 relation' do
+      expect(age_prob_1.time_1_rel).to eq :add
+    end
+
+    it 'initializes with a time 1 relational value' do
+      expect(age_prob_1.time_1_val).to eq 10
+    end
+
+    it 'initializes with a time 1 and time 2 difference in time' do
+      expect(age_prob_1.time_diff).to eq 5
+    end
+
+    it 'initializes with a time 2 relational value' do
+      expect(age_prob_1.time_2_val).to eq 2
+    end
+
+    it 'initializes with an initial equation with time 1 relation is add' do
+      left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,15)])
+      right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,5),Step.new(:mtp,2)])
+      expected_equation = Equation.new(left_side,right_side)
+      expect(age_prob_1.equation).to eq expected_equation
+    end
+
+    it 'initializes with an initial equation with time 1 relation is multiply' do
+      left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,3),Step.new(:add,10)])
+      right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,10),Step.new(:mtp,2)])
+      expected_equation = Equation.new(left_side,right_side)
+      expect(age_prob_2.equation).to eq expected_equation
+    end
+  end
+end
 #
 #     describe '#solution/solution_latex' do
-#       let(:age_prob_1){described_class.new(:add,10,5,2)}
+#       let(:ge_prob_1){described_class.new(:add,10,5,2)}
 #       let(:age_prob_2){described_class.new(:mtp,3,10,2)}
 #
 #       it 'generates solution to the first example' do

@@ -36,8 +36,6 @@ describe LatexPrinter do
 
       it 'generates linear equation questions sheet' do
         expected_questions_sheet = "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-YO107620-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5}}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}4\\left(6\\left(x-2\\right)+76\\right)&=496\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}4\\left(2\\left(x+70\\right)-95\\right)&=204\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n3.\\hspace{30pt}5\\left(16-\\frac{x}{3}\\right)-49&=21\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n4.\\hspace{30pt}5\\left(9x-18\\right)+63&=108\n\\end{align*}\n\\end{minipage}\n\\end{document}"
-        # puts @worksheet2[:questions_sheet]
-        # puts @worksheet2[:solutions_sheet]
         expect(@worksheet[:questions_sheet]).to eq expected_questions_sheet
       end
 
