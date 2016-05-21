@@ -82,42 +82,8 @@ class Expression
     return true
   end
 
-  def m_form_latex
-    steps.inject("") do |result,step|
-        result += _consecutive_numerical_steps?(step) ? step.val.to_s + '\times' : step.val.to_s
-    end
-  end
 
-  def _consecutive_numerical_steps?(step)
-    step.val.is_a?(Fixnum) && !steps[(steps.index(step)+1)].nil? &&
-      steps[(steps.index(step)+1)].val.is_a?(Fixnum)
-  end
 
-  def m_form_sum_latex
-    steps.inject("") do |result,step|
-      case step.ops
-        when :add then result += '+'
-        when :sbt then result += '-'
-      end
-      result += _is_elementary?(step) ? step.val.to_s : step.val.m_form_latex
-    end
-  end
-
-  def _is_elementary?(step)
-    step.val.is_a?(String) || step.val.is_a?(Fixnum)
-  end
-
-  def rational_latex
-    numerator = _is_elementary?(steps.first) ? steps.first.val.to_s :
-      steps.first.val.m_form_latex
-    denominator = _is_elementary?(steps.last) ? steps.last.val.to_s :
-      steps.last.val._to_at_most_m_form_sum_latex
-    '\frac{' + numerator + '}{' + denominator + '}'
-  end
-
-  def _to_at_most_m_form_sum_latex
-    is_m_form_sum? ? m_form_sum_latex : m_form_latex
-  end
 
   def _all_steps_numerical?
     steps.each do |step|
@@ -213,6 +179,10 @@ class Expression
     end
     self
   end
+
+
+
+# latest iteration
 
 
 
