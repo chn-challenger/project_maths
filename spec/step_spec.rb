@@ -150,30 +150,6 @@ describe Step do
     end
   end
 
-  describe '#elementary_to_m_form' do
-    it 'converts an elementary into m-form' do
-      e_step = Step.new(:add,5)
-      m_step = Step.new(:add,Expression.new([Step.new(nil,5)]))
-      expect(e_step.elementary_to_m_form).to eq m_step
-    end
-  end
-
-  describe '#at_most_m_form_to_m_form_sum' do
-    it 'converts an elementary into m-form-sum' do
-      e_step = Step.new(:div,5)
-      m_form_sum_step = Step.new(:div,Expression.new([Step.new(nil,5)]))
-      expect(e_step.at_most_m_form_to_m_form_sum).to eq m_form_sum_step
-    end
-
-    it 'converts an m-form into m-form-sum' do
-      m_form = Expression.new([Step.new(nil,3),Step.new(:mtp,'x')])
-      m_form_step = Step.new(:div,m_form)
-      m_form_sum = Expression.new([Step.new(nil,m_form)])
-      expected_step = Step.new(:div,m_form_sum)
-      expect(m_form_step.at_most_m_form_to_m_form_sum).to eq expected_step
-    end
-  end
-
   describe '#reverse_step' do
     it 'returns reverse of a right addition step' do
       step = Step.new(:add,5)

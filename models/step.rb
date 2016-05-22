@@ -39,24 +39,12 @@ class Step
     is_elementary? ? false : val.is_rational?
   end
 
-  def _is_gen_rational?
-    is_elementary? ? false : val._is_gen_rational?
-  end
-
   def is_m_form_sum?
     is_elementary? ? false : val.is_m_form_sum?
   end
 
-  def _is_gen_m_form_sum?
-    is_elementary? ? false : val._is_gen_m_form_sum?
-  end
-
   def is_rational_sum?
     is_elementary? ? false : val.is_rational_sum?
-  end
-
-  def _is_gen_rational_sum?
-    is_elementary? ? false : val._is_gen_rational_sum?
   end
 
   def is_at_most_m_form?
@@ -67,21 +55,8 @@ class Step
     is_elementary? || is_m_form? || is_rational?
   end
 
-  def _is_at_most_gen_rational?
-    is_elementary? || is_m_form? || _is_gen_rational?
-  end
-
   def is_at_most_m_form_sum?
     is_elementary? || is_m_form? || is_m_form_sum?
-  end
-
-  def elementary_to_m_form
-    self.class.new(ops,Expression.new([self.class.new(nil,self.val)]))
-  end
-
-  def at_most_m_form_to_m_form_sum
-    return is_m_form_sum? ?
-      self : self.class.new(ops,Expression.new([self.class.new(nil,val)]))
   end
 
   def reverse_step
