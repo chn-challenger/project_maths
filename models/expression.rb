@@ -726,14 +726,57 @@ class Expression
     self
   end
 
-  def standardise_linear_exp  #exp with a single 'x' in steps 1 or 2
-    flatten
-    steps[0].val, steps[1].val = steps[1].val, steps[0].val
-    steps[1].dir = :lft
+  #assumptions - there is ONE step with 'x' inside it, could just be 'x'
+  #or more likely and expression containing 'x'
+  # - the other steps are numerical elementary
+  # - the 'x' step has to be step_1 or step_2
+  # - there may be many steps after the 'x' step
+  def standardise_linear_exp
+    # flatten
+    # steps[0].val, steps[1].val = steps[1].val, steps[0].val
+    # steps[1].dir = :lft
+    # _convert_mtp_steps_to_lft
+
+
+    fail_safe_counter = 1
+    while steps.first.val.is_a?(string) == false && fail_safe_counter < 100
+      if _str_var_in_step?(steps[0])
+        if steps[0].exp_valued?
+          steps[0].val.standardise_linear_exp
+          flatten
+        else
+          #do nothing as first step must be (nil,'x')
+          #first step is eg  (x2)
+          flatten
+        end
+      end
+      if _str_var_in_step?(steps[1])
+        if steps[1].exp_valued?
+          steps[1].val.standardise_linear_exp
+
+          steps[0].val, steps[1].val = steps[1].val, steps[0].val
+          steps[1].dir = :lft
+
+          flatten
+        else
+          steps[0].val, steps[1].val = steps[1].val, steps[0].val
+          steps[1].dir = :lft
+        end
+      end
+
+      fail_safe_counter += 1
+    end
+
     _convert_mtp_steps_to_lft
 
     #should only have left mtp steps for the moment - convert at the end
   end
+
+  def _str_var_in_step?(step)
+    return true if step.val.is_a?(string)
+    false
+  end
+
 
   def _convert_mtp_steps_to_lft
     steps.each do |step|
