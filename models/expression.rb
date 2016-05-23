@@ -773,8 +773,14 @@ class Expression
   end
 
   def _str_var_in_step?(step)
-    return true if step.val.is_a?(string)
-    false
+    if step.exp_valued?
+      step.val.steps.each do |stp|
+        return true if _str_var_in_step?(stp)
+      end
+    else
+      return true if step.val.is_a?(string)
+    end
+    return false
   end
 
 

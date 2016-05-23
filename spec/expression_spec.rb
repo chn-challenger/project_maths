@@ -1567,11 +1567,11 @@ describe Expression do
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 
-    # it 'standardise 2x - 3 by moving the x term to first term' do
-    #   exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]],[:sbt,3]])
-    #   expected_exp = expression_factory.build([[nil,'x'],[:mtp,2,:lft],[:sbt,3]])
-    #   expect(exp.standardise_linear_exp).to eq expected_exp
-    # end
+    it 'standardise 2x - 3 by moving the x term to first term' do
+      exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]],[:sbt,3]])
+      expected_exp = expression_factory.build([[nil,'x'],[:mtp,2,:lft],[:sbt,3]])
+      expect(exp.standardise_linear_exp).to eq expected_exp
+    end
 
 
 
