@@ -1567,6 +1567,14 @@ describe Expression do
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 
+    it 'is a mutator method that returns self' do
+      exp = expression_factory.build([[nil,3],[:sbt,'x']])
+      expected_exp = expression_factory.build([[nil,'x'],[:sbt,3,:lft]])
+      result = exp.standardise_linear_exp
+      expect(result.object_id).to eq exp.object_id
+      expect(exp).to eq expected_exp
+    end
+
     it 'standardises 2x - 3 by moving the x term to first term' do
       exp = expression_factory.build([[nil,[[nil,2],[:mtp,'x']]],[:sbt,3]])
       expected_exp = expression_factory.build([[nil,'x'],[:mtp,2,:lft],[:sbt,3]])
@@ -1579,12 +1587,23 @@ describe Expression do
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 
-    it 'standardises 4 + (3 - x)' do
-      exp = expression_factory.build([[nil,4],[:add,[[nil,3],[:sbt,'x']]]])
+    it 'standardises (4 + (3 - x) ) div 2 - 5' do
+      exp = expression_factory.build([[nil,4],[:add,[[nil,3],[:sbt,'x']]],[:div,2],[:sbt,5]])
+      expected_exp = expression_factory.build([[nil,'x'],[:sbt,3,:lft],[:add,4,:lft],[:div,2],[:sbt,5]])
+      expect(exp.standardise_linear_exp).to eq expected_exp
+    end
+
+    it 'standardises 4 + (3 - x) [(x),(:sbt,3,:lft)] ' do
+      exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:sbt,3,:lft]]]])
       expected_exp = expression_factory.build([[nil,'x'],[:sbt,3,:lft],[:add,4,:lft]])
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 
+    it 'change any right numerical mtp to left recurisively as standard' do
+      exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,3]]],[:mtp,11]])
+      expected_exp = expression_factory.build([[nil,'x'],[:mtp,3,:lft],[:add,4,:lft],[:mtp,11,:lft]])
+      expect(exp.standardise_linear_exp).to eq expected_exp
+    end
 
 
     # it 'moves x term to first term in a flat expression' do
