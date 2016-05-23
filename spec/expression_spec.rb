@@ -367,81 +367,6 @@ describe Expression do
     end
   end
 
-  describe '#first_two_steps_swap' do
-    it 'swaps first two steps which are both numerical' do
-      expression = Expression.new([Step.new(nil,2),Step.new(:mtp,3)])
-      expected_expression = Expression.new([Step.new(nil,3),Step.new(:mtp,2,:lft)])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-
-    it 'returns self if the expression is empty' do
-      expression = Expression.new([])
-      expected_expression = Expression.new([])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-
-    it 'flattens the first expression if there is only one step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,2),Step.new(:div,5)]))])
-      expected_expression = Expression.new([Step.new(nil,2),Step.new(:div,5)])
-      expect(expression.first_two_steps_swap).to eq expected_expression
-    end
-
-    it 'swaps e step with n step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,3),
-        Step.new(:div,5)])),Step.new(:mtp,3)])
-      expected_expression = Expression.new([Step.new(nil,3),Step.new(:mtp,
-        Expression.new([Step.new(nil,3),Step.new(:div,5)]),:lft)])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-
-    it 'swaps n step with e step and flattens the e step' do
-      expression = Expression.new([Step.new(nil,4),Step.new(:mtp,Expression.new([Step.new(nil,3),
-        Step.new(:div,5)]))])
-      expected_expression = Expression.new([Step.new(nil,3),Step.new(:div,5),Step.new(:mtp,4,:lft)])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-
-    it 'swaps e step with e step and flattens the e step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,22),
-        Step.new(:sbt,11)])),Step.new(:mtp,Expression.new([Step.new(nil,3),
-        Step.new(:div,5)]))])
-      expected_expression = Expression.new([Step.new(nil,3),Step.new(:div,5),
-        Step.new(:mtp,Expression.new([Step.new(nil,22),Step.new(:sbt,11)]),:lft)])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-  end
-
-  describe '#is_elementary?' do
-    it 'returns true when contains only numerical or string valued steps' do
-      expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
-      expect(expression.is_elementary?).to be true
-    end
-
-    it 'returns false when there is at least one expression valued step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
-      expect(expression.is_elementary?).to be false
-    end
-  end
-
-  describe '#standardise_linear_expression' do
-    it 'moves x term to first term in a flat expression' do
-      expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
-      expected_expression = Expression.new([Step.new(nil,'x'),Step.new(:sbt,5,:lft)])
-      expect(expression.standardise_linear_expression).to eq expected_expression
-    end
-
-    # xit 'flattens and moves x term to first term' do
-    #   expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
-    #   expected_expression = Expression.new([Step.new(nil,'x'),Step.new(:sbt,5,:lft)])
-    #   expect(expression.standardise_linear_expression).to eq expected_expression
-    # end
-  end
-
   describe '#expand' do
     context 'with only right steps' do
       it 'is a mutator method which returns the object itself' do
@@ -1573,8 +1498,88 @@ describe Expression do
     end
   end
 
-  describe 'flatex' do
 
+  describe '#first_two_steps_swap' do
+    it 'swaps first two steps which are both numerical' do
+      expression = Expression.new([Step.new(nil,2),Step.new(:mtp,3)])
+      expected_expression = Expression.new([Step.new(nil,3),Step.new(:mtp,2,:lft)])
+      expression.first_two_steps_swap
+      expect(expression).to eq expected_expression
+    end
+
+    it 'returns self if the expression is empty' do
+      expression = Expression.new([])
+      expected_expression = Expression.new([])
+      expression.first_two_steps_swap
+      expect(expression).to eq expected_expression
+    end
+
+    it 'flattens the first expression if there is only one step' do
+      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,2),Step.new(:div,5)]))])
+      expected_expression = Expression.new([Step.new(nil,2),Step.new(:div,5)])
+      expect(expression.first_two_steps_swap).to eq expected_expression
+    end
+
+    it 'swaps e step with n step' do
+      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,3),
+        Step.new(:div,5)])),Step.new(:mtp,3)])
+      expected_expression = Expression.new([Step.new(nil,3),Step.new(:mtp,
+        Expression.new([Step.new(nil,3),Step.new(:div,5)]),:lft)])
+      expression.first_two_steps_swap
+      expect(expression).to eq expected_expression
+    end
+
+    it 'swaps n step with e step and flattens the e step' do
+      expression = Expression.new([Step.new(nil,4),Step.new(:mtp,Expression.new([Step.new(nil,3),
+        Step.new(:div,5)]))])
+      expected_expression = Expression.new([Step.new(nil,3),Step.new(:div,5),Step.new(:mtp,4,:lft)])
+      expression.first_two_steps_swap
+      expect(expression).to eq expected_expression
+    end
+
+    it 'swaps e step with e step and flattens the e step' do
+      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,22),
+        Step.new(:sbt,11)])),Step.new(:mtp,Expression.new([Step.new(nil,3),
+        Step.new(:div,5)]))])
+      expected_expression = Expression.new([Step.new(nil,3),Step.new(:div,5),
+        Step.new(:mtp,Expression.new([Step.new(nil,22),Step.new(:sbt,11)]),:lft)])
+      expression.first_two_steps_swap
+      expect(expression).to eq expected_expression
+    end
   end
+
+  describe '#is_elementary?' do
+    it 'returns true when contains only numerical or string valued steps' do
+      expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
+      expect(expression.is_elementary?).to be true
+    end
+
+    it 'returns false when there is at least one expression valued step' do
+      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
+      expect(expression.is_elementary?).to be false
+    end
+  end
+
+  describe '#standardise_linear_exp' do
+    it 'standardise e - e by moving the x term to first term' do
+      exp = expression_factory.build([[nil,3],[:sbt,'x']])
+      expected_exp = expression_factory.build([[nil,'x'],[:sbt,3,:lft]])
+      expect(exp.standardise_linear_exp).to eq expected_exp
+    end
+
+    # it 'moves x term to first term in a flat expression' do
+    #   expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
+    #   expected_expression = Expression.new([Step.new(nil,'x'),Step.new(:sbt,5,:lft)])
+    #   expect(expression.standardise_linear_expression).to eq expected_expression
+    # end
+
+    # xit 'flattens and moves x term to first term' do
+    #   expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
+    #   expected_expression = Expression.new([Step.new(nil,'x'),Step.new(:sbt,5,:lft)])
+    #   expect(expression.standardise_linear_expression).to eq expected_expression
+    # end
+  end
+
+
 
 end

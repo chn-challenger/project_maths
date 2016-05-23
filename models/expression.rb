@@ -82,9 +82,6 @@ class Expression
     return true
   end
 
-
-
-
   def _all_steps_numerical?
     steps.each do |step|
       return false if !step.val.is_a?(Fixnum) && !step.val.is_a?(Float)
@@ -92,93 +89,47 @@ class Expression
     return true
   end
 
-
-  def simplify_m_forms_in_sum
-    if _is_gen_m_form_sum?
-      steps.each do |step|
-        step.val = step.val.simplify_m_form if step.val.is_a?(self.class)
-      end
-    end
-    self
-  end
-
-  def convert_string_value_steps_to_m_forms
-    return self unless (_is_gen_m_form_sum? || _is_gen_rational_sum?)
-    steps.each do |step|
-      if step.val.is_a?(String)
-        step.val = Expression.new([Step.new(nil,1),Step.new(:mtp,step.val)])
-      end
-    end
-    self
-  end
-
-  def convert_m_form_to_elementary
-    steps.each do |step|
-      if !step.is_a?(Fixnum) && !step.is_a?(String) && step.is_m_form?
-        if step.val.steps.length == 2 && step.val.steps.first.val == 1 && step.val.steps.last.val.is_a?(String)
-          step.val = step.val.steps.last.val
-          next
-        end
-        if step.val.steps.length == 1
-          step.val = step.val.steps.first.val
-          next
-        end
-      end
-    end
-    self
-  end
-
-
-  def first_two_steps_swap
-    return self if steps.length == 0
-    if steps.length == 1
-      if steps.first.val.is_a?(Expression)
-        self.steps = steps[0].val.steps
-        return self
-      else
-        return self
-      end
-    end
-    steps[0].val, steps[1].val = steps[1].val, steps[0].val
-    steps[1].dir = steps[1].dir == :rgt ? :lft : :rgt
-    if steps[0].val.is_a?(Expression)
-      step_0 = steps.delete_at(0)
-      self.steps = step_0.val.steps + steps
-      return self
-    else
-      return self
-    end
-  end
-
   def is_elementary?
     steps.each{|step| return false unless step.is_elementary?}
     return true
   end
 
-
-
-  def standardise_linear_expression
-    continue = true
-    counter = 1
-    while continue && counter < 100
-      if steps[0].val.is_a?(Expression)
-        if steps[0].val.is_flat?
-          steps[0].val.first_two_steps_swap
-        end
-      end
-
-      if steps.length > 1 && steps[1].val.is_a?(String)
-        first_two_steps_swap
-      end
-
-      if steps[0].val.is_a?(String)
-        continue = false
-      end
-
-      counter += 1
-    end
-    self
-  end
+  # def simplify_m_forms_in_sum
+  #   if _is_gen_m_form_sum?
+  #     steps.each do |step|
+  #       step.val = step.val.simplify_m_form if step.val.is_a?(self.class)
+  #     end
+  #   end
+  #   self
+  # end
+  #
+  # def convert_string_value_steps_to_m_forms
+  #   return self unless (_is_gen_m_form_sum? || _is_gen_rational_sum?)
+  #   steps.each do |step|
+  #     if step.val.is_a?(String)
+  #       step.val = Expression.new([Step.new(nil,1),Step.new(:mtp,step.val)])
+  #     end
+  #   end
+  #   self
+  # end
+  #
+  # def convert_m_form_to_elementary
+  #   steps.each do |step|
+  #     if !step.is_a?(Fixnum) && !step.is_a?(String) && step.is_m_form?
+  #       if step.val.steps.length == 2 && step.val.steps.first.val == 1 && step.val.steps.last.val.is_a?(String)
+  #         step.val = step.val.steps.last.val
+  #         next
+  #       end
+  #       if step.val.steps.length == 1
+  #         step.val = step.val.steps.first.val
+  #         next
+  #       end
+  #     end
+  #   end
+  #   self
+  # end
+  #
+  #
 
 
 
@@ -728,6 +679,59 @@ class Expression
     end
     self
   end
+
+
+
+  def first_two_steps_swap
+    return self if steps.length == 0
+    if steps.length == 1
+      if steps.first.val.is_a?(Expression)
+        self.steps = steps[0].val.steps
+        return self
+      else
+        return self
+      end
+    end
+    steps[0].val, steps[1].val = steps[1].val, steps[0].val
+    steps[1].dir = steps[1].dir == :rgt ? :lft : :rgt
+    if steps[0].val.is_a?(Expression)
+      step_0 = steps.delete_at(0)
+      self.steps = step_0.val.steps + steps
+      return self
+    else
+      return self
+    end
+  end
+
+  def standardise_linear_expression
+    continue = true
+    counter = 1
+    while continue && counter < 100
+      if steps[0].val.is_a?(Expression)
+        if steps[0].val.is_flat?
+          steps[0].val.first_two_steps_swap
+        end
+      end
+
+      if steps.length > 1 && steps[1].val.is_a?(String)
+        first_two_steps_swap
+      end
+
+      if steps[0].val.is_a?(String)
+        continue = false
+      end
+
+      counter += 1
+    end
+    self
+  end
+
+  def standardise_linear_exp
+    steps[0].val, steps[1].val = steps[1].val, steps[0].val
+    steps[1].dir = :lft
+    self
+  end
+
 
 
 end
