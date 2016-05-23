@@ -1605,6 +1605,13 @@ describe Expression do
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 
+    it 'standardises a monster example' do
+      crazy_x_exp = expression_factory.build([[nil,3],[:sbt,[ [nil,4],[:div,[ [nil,[  [nil,6],[:mtp,[  [nil,7],[:div,[ [nil,'x'],[:add,8,:lft]       ]]         ]]       ]],[:sbt,5,:lft]     ]]   ]]])
+      exp = expression_factory.build([[nil,11],[:mtp,crazy_x_exp],[:add,9],[:div,10]])
+      puts exp.latex
+      puts exp.standardise_linear_exp.latex
+
+    end
 
     # it 'moves x term to first term in a flat expression' do
     #   expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
