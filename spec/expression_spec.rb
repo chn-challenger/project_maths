@@ -1491,72 +1491,12 @@ describe Expression do
 
   describe '#expand_n_simplify' do
     it 'expands and simplify eg 1' do
-      exp = expression_factory.build([[nil,[[nil,'x'],[:add,3]]],[:mtp,[[nil,4],[:sbt,'x']]]])
-      expected_exp = expression_factory.build([[nil,'x'],[:add,12],[:sbt,[[nil,'x'],[:mtp,'x']]]])
+      exp = expression_factory.build([[nil,[[nil,'x'],[:add,3]]],[:mtp,[[nil,4],
+        [:sbt,'x']]]])
+      expected_exp = expression_factory.build([[nil,'x'],[:add,12],[:sbt,
+        [[nil,'x'],[:mtp,'x']]]])
       result = exp.expand_n_simplify
       expect(result).to eq expected_exp
-    end
-  end
-
-
-  describe '#first_two_steps_swap' do
-    it 'swaps first two steps which are both numerical' do
-      expression = Expression.new([Step.new(nil,2),Step.new(:mtp,3)])
-      expected_expression = Expression.new([Step.new(nil,3),Step.new(:mtp,2,:lft)])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-
-    it 'returns self if the expression is empty' do
-      expression = Expression.new([])
-      expected_expression = Expression.new([])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-
-    it 'flattens the first expression if there is only one step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,2),Step.new(:div,5)]))])
-      expected_expression = Expression.new([Step.new(nil,2),Step.new(:div,5)])
-      expect(expression.first_two_steps_swap).to eq expected_expression
-    end
-
-    it 'swaps e step with n step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,3),
-        Step.new(:div,5)])),Step.new(:mtp,3)])
-      expected_expression = Expression.new([Step.new(nil,3),Step.new(:mtp,
-        Expression.new([Step.new(nil,3),Step.new(:div,5)]),:lft)])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-
-    it 'swaps n step with e step and flattens the e step' do
-      expression = Expression.new([Step.new(nil,4),Step.new(:mtp,Expression.new([Step.new(nil,3),
-        Step.new(:div,5)]))])
-      expected_expression = Expression.new([Step.new(nil,3),Step.new(:div,5),Step.new(:mtp,4,:lft)])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-
-    it 'swaps e step with e step and flattens the e step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,22),
-        Step.new(:sbt,11)])),Step.new(:mtp,Expression.new([Step.new(nil,3),
-        Step.new(:div,5)]))])
-      expected_expression = Expression.new([Step.new(nil,3),Step.new(:div,5),
-        Step.new(:mtp,Expression.new([Step.new(nil,22),Step.new(:sbt,11)]),:lft)])
-      expression.first_two_steps_swap
-      expect(expression).to eq expected_expression
-    end
-  end
-
-  describe '#is_elementary?' do
-    it 'returns true when contains only numerical or string valued steps' do
-      expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
-      expect(expression.is_elementary?).to be true
-    end
-
-    it 'returns false when there is at least one expression valued step' do
-      expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
-      expect(expression.is_elementary?).to be false
     end
   end
 
@@ -1583,25 +1523,31 @@ describe Expression do
 
     it 'standardises 3 - 2x' do
       exp = expression_factory.build([[nil,3],[:sbt,[[nil,2],[:mtp,'x']]]])
-      expected_exp = expression_factory.build([[nil,'x'],[:mtp,2,:lft],[:sbt,3,:lft]])
+      expected_exp = expression_factory.build([[nil,'x'],[:mtp,2,:lft],
+        [:sbt,3,:lft]])
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 
     it 'standardises (4 + (3 - x) ) div 2 - 5' do
-      exp = expression_factory.build([[nil,4],[:add,[[nil,3],[:sbt,'x']]],[:div,2],[:sbt,5]])
-      expected_exp = expression_factory.build([[nil,'x'],[:sbt,3,:lft],[:add,4,:lft],[:div,2],[:sbt,5]])
+      exp = expression_factory.build([[nil,4],[:add,[[nil,3],[:sbt,'x']]],
+        [:div,2],[:sbt,5]])
+      expected_exp = expression_factory.build([[nil,'x'],[:sbt,3,:lft],
+        [:add,4,:lft],[:div,2],[:sbt,5]])
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 
     it 'standardises 4 + (3 - x) [(x),(:sbt,3,:lft)] ' do
       exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:sbt,3,:lft]]]])
-      expected_exp = expression_factory.build([[nil,'x'],[:sbt,3,:lft],[:add,4,:lft]])
+      expected_exp = expression_factory.build([[nil,'x'],[:sbt,3,:lft],
+        [:add,4,:lft]])
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 
     it 'change any right numerical mtp to left recurisively as standard' do
-      exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,3]]],[:mtp,11]])
-      expected_exp = expression_factory.build([[nil,'x'],[:mtp,3,:lft],[:add,4,:lft],[:mtp,11,:lft]])
+      exp = expression_factory.build([[nil,4],[:add,[[nil,'x'],[:mtp,3]]],
+        [:mtp,11]])
+      expected_exp = expression_factory.build([[nil,'x'],[:mtp,3,:lft],
+        [:add,4,:lft],[:mtp,11,:lft]])
       expect(exp.standardise_linear_exp).to eq expected_exp
     end
 

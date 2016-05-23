@@ -680,96 +680,19 @@ class Expression
     self
   end
 
-
-
-  def first_two_steps_swap
-    return self if steps.length == 0
-    if steps.length == 1
-      if steps.first.val.is_a?(Expression)
-        self.steps = steps[0].val.steps
-        return self
-      else
-        return self
-      end
-    end
-    steps[0].val, steps[1].val = steps[1].val, steps[0].val
-    steps[1].dir = steps[1].dir == :rgt ? :lft : :rgt
-    if steps[0].val.is_a?(Expression)
-      step_0 = steps.delete_at(0)
-      self.steps = step_0.val.steps + steps
-      return self
-    else
-      return self
-    end
-  end
-
-  def standardise_linear_expression
-    continue = true
-    counter = 1
-    while continue && counter < 100
-      if steps[0].val.is_a?(Expression)
-        if steps[0].val.is_flat?
-          steps[0].val.first_two_steps_swap
-        end
-      end
-
-      if steps.length > 1 && steps[1].val.is_a?(String)
-        first_two_steps_swap
-      end
-
-      if steps[0].val.is_a?(String)
-        continue = false
-      end
-
-      counter += 1
-    end
-    self
-  end
-
-  #assumptions - there is ONE step with 'x' inside it, could just be 'x'
-  #or more likely and expression containing 'x'
-  # - the other steps are numerical elementary
-  # - the 'x' step has to be step_1 or step_2
-  # - there may be many steps after the 'x' step
   def standardise_linear_exp
-    # flatten
-    # steps[0].val, steps[1].val = steps[1].val, steps[0].val
-    # steps[1].dir = :lft
-    # _convert_mtp_steps_to_lft
-
-
     fail_safe_counter = 1
-    while steps.first.val.is_a?(string) == false && fail_safe_counter < 100
+    while steps.first.val.is_a?(string) == false && fail_safe_counter < 1000
       if _str_var_in_step?(steps[0])
-        if steps[0].exp_valued?
-          steps[0].val.standardise_linear_exp
-          flatten
-        else
-          #do nothing as first step must be (nil,'x')
-          #first step is eg  (x2)
-          flatten
-        end
+        steps[0].val.standardise_linear_exp if steps[0].exp_valued?
+      else
+        steps[1].val.standardise_linear_exp if steps[1].exp_valued?
+        _swap_first_two_steps(steps)
       end
-      if _str_var_in_step?(steps[1])
-        if steps[1].exp_valued?
-          steps[1].val.standardise_linear_exp
-
-          steps[0].val, steps[1].val = steps[1].val, steps[0].val
-          steps[1].dir = :lft
-
-          flatten
-        else
-          steps[0].val, steps[1].val = steps[1].val, steps[0].val
-          steps[1].dir = :lft
-        end
-      end
-
+      flatten
       fail_safe_counter += 1
     end
-
     _convert_mtp_steps_to_lft
-
-    #should only have left mtp steps for the moment - convert at the end
   end
 
   def _str_var_in_step?(step)
@@ -781,6 +704,10 @@ class Expression
     return false
   end
 
+  def _swap_first_two_steps(steps)
+    steps[0].val, steps[1].val = steps[1].val, steps[0].val
+    steps[1].dir = :lft
+  end
 
   def _convert_mtp_steps_to_lft
     steps.each do |step|

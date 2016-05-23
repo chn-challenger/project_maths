@@ -523,3 +523,18 @@
       #   end
       #   self
       # end
+
+      # steps[0].val.standardise_linear_exp if _str_var_in_step?(steps[0]) &&
+      #   steps[0].exp_valued?
+      # if _str_var_in_step?(steps[1])
+      #   if steps[1].exp_valued?
+      #     steps[1].val.standardise_linear_exp
+      #
+      #     steps[0].val, steps[1].val = steps[1].val, steps[0].val
+      #     steps[1].dir = :lft
+      #
+      #   else
+      #     steps[0].val, steps[1].val = steps[1].val, steps[0].val
+      #     steps[1].dir = :lft
+      #   end
+      # end
