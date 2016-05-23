@@ -726,10 +726,13 @@ class Expression
     self
   end
 
-  def standardise_linear_exp
+  def standardise_linear_exp  #exp with a single 'x' in steps 1 or 2
+    flatten
     steps[0].val, steps[1].val = steps[1].val, steps[0].val
     steps[1].dir = :lft
     self
+
+    #should only have left mtp steps for the moment - convert at the end
   end
 
 
