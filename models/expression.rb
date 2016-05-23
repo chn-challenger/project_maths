@@ -730,9 +730,17 @@ class Expression
     flatten
     steps[0].val, steps[1].val = steps[1].val, steps[0].val
     steps[1].dir = :lft
-    self
+    _convert_mtp_steps_to_lft
 
     #should only have left mtp steps for the moment - convert at the end
+  end
+
+  def _convert_mtp_steps_to_lft
+    steps.each do |step|
+      step.val._convert_mtp_steps_to_lft if step.exp_valued?
+      step.dir = :lft if step.dir == :rgt && step.ops == :mtp
+    end
+    self
   end
 
 
