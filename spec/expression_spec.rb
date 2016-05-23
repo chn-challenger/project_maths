@@ -1606,24 +1606,17 @@ describe Expression do
     end
 
     it 'standardises a monster example' do
-      crazy_x_exp = expression_factory.build([[nil,3],[:sbt,[ [nil,4],[:div,[ [nil,[  [nil,6],[:mtp,[  [nil,7],[:div,[ [nil,'x'],[:add,8,:lft]       ]]         ]]       ]],[:sbt,5,:lft]     ]]   ]]])
-      exp = expression_factory.build([[nil,11],[:mtp,crazy_x_exp],[:add,9],[:div,10]])
-      puts exp.latex
-      puts exp.standardise_linear_exp.latex
-
+      crazy_x_exp = expression_factory.build([[nil,3],[:sbt,[[nil,4],[:div,
+        [[nil,[[nil,6],[:mtp,[[nil,7],[:div,[ [nil,'x'],[:add,8,:lft]]]]]]],
+        [:sbt,5,:lft]]]]]])
+      exp = expression_factory.build([[nil,11],[:mtp,crazy_x_exp],[:add,9],
+        [:div,10]])
+      expected_exp = expression_factory.build([[nil,'x'],[:add,8,:lft],
+        [:div,7,:lft],[:mtp,6,:lft],[:sbt,5,:lft],[:div,4,:lft],[:sbt,3,:lft],
+        [:mtp,11,:lft],[:add,9],[:div,10]])
+      result = exp.standardise_linear_exp
+      expect(result).to eq expected_exp
     end
-
-    # it 'moves x term to first term in a flat expression' do
-    #   expression = Expression.new([Step.new(nil,5),Step.new(:sbt,'x')])
-    #   expected_expression = Expression.new([Step.new(nil,'x'),Step.new(:sbt,5,:lft)])
-    #   expect(expression.standardise_linear_expression).to eq expected_expression
-    # end
-
-    # xit 'flattens and moves x term to first term' do
-    #   expression = Expression.new([Step.new(nil,Expression.new([Step.new(nil,5),Step.new(:sbt,'x')]))])
-    #   expected_expression = Expression.new([Step.new(nil,'x'),Step.new(:sbt,5,:lft)])
-    #   expect(expression.standardise_linear_expression).to eq expected_expression
-    # end
   end
 
 
