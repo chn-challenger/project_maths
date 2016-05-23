@@ -33,7 +33,13 @@ class Equation
   def collect_like_terms
     for i in 0..left_side.steps.length-1
       for j in 0..right_side.steps.length-1
-        if (left_side.steps[i].val.is_a?(Expression) && right_side.steps[j].val.is_a?(Expression)) && left_side.steps[i].val.similar?(right_side.steps[j].val)
+        puts 'LEFT LEFT LEFT BELOW'
+        puts "curret i is #{i}"
+        p left_side.steps[i]
+        puts 'RIGHT RIGHT RIGHT BELOW'
+        puts "curret j is #{j}"
+        p right_side.steps[j]
+        if (left_side.steps[i].exp_valued? && right_side.steps[j].exp_valued?) && left_side.steps[i].val.similar?(right_side.steps[j].val)
           left_value = left_side.steps[i].val.steps.first.val
           left_value *= -1 if left_side.steps[i].ops == :sbt
           right_value = right_side.steps[j].val.steps.first.val
