@@ -23,6 +23,21 @@ class AgeProblem
     @equation = Equation.new(left_side,right_side)
   end
 
+  def self.generate_add_type_question
+    #based on the following formula for (:add,a,b,c) question
+    # a/(c - 1) = x + b
+    # a = age_difference, b = time_diff, c = mtp_val
+    age_difference = (4..80).to_a.sample
+    mtp_val_choices = (1..8).to_a.select{|n| age_difference%n == 0 && age_difference + age_difference/n <= 90 && age_difference/n > 1}
+    if mtp_val_choices.length == 0
+      return self.generate_add_type_question
+    else
+      mtp_val = mtp_val_choices.sample
+      time_diff = (1...age_difference / mtp_val).to_a.sample
+      return age_problem.new(:add,age_difference,time_diff,mtp_val+1)
+    end
+  end
+
   def solution
     sol_eqn_array = []
     step_1 = equation

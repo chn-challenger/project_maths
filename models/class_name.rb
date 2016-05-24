@@ -23,6 +23,10 @@ module ClassName
     LinearEquation
   end
 
+  def age_problem
+    AgeProblem
+  end
+
   def step_factory
     StepFactory
   end
