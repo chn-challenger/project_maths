@@ -94,8 +94,16 @@ class AgeProblem
       else
         if persons[0][1] == :m
           question_text += "his #{persons[1][0]}. "
+          text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+          text_part_2 += "his #{persons[1][0]} will be #{time_2_val} times as old as him. "
+          text_part_2 += "How old is #{persons[0][0]} now?"
+          question_text += text_part_2
         else
           question_text += "her #{persons[1][0]}. "
+          text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+          text_part_2 += "her #{persons[1][0]} will be #{time_2_val} times as old as her. "
+          text_part_2 += "How old is #{persons[0][0]} now?"
+          question_text += text_part_2
         end
       end
     end
@@ -119,9 +127,14 @@ class AgeProblem
       question_text = "#{persons[1][0]} is #{time_1_val} years older than "
       if persons[0][2] == :named
         question_text += "#{persons[0][0]}."
+        text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+        text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as #{persons[0][0]}. "
+        text_part_2 += "How old is #{persons[0][0]} now?"
+        question_text += text_part_2
       else
         if persons[1][1] == :m
           question_text += "his #{persons[0][0]}."
+          
         else
           question_text += "her #{persons[0][0]}."
         end
