@@ -88,44 +88,57 @@ describe Equation do
   end
 
   describe '#collect_like_terms' do
-    # it 'collects one set of like terms (similar m-forms) from left to right side' do
-    #   left_side = Expression.new([Step.new(nil,2),Step.new(:add,Expression.new([
-    #     Step.new(nil,3),Step.new(:mtp,'x')]))])
-    #   right_side = Expression.new([Step.new(nil,2),Step.new(:add,Expression.new([
-    #     Step.new(nil,4),Step.new(:mtp,'x')]))])
-    #   equation = Equation.new(left_side,right_side)
-    #   expected_left_side = Expression.new([Step.new(nil,2)])
-    #   expected_right_side = Expression.new([Step.new(nil,2),Step.new(:add,
-    #     Expression.new([Step.new(nil,4),Step.new(:mtp,'x')])),Step.new(:sbt,
-    #     Expression.new([Step.new(nil,3),Step.new(:mtp,'x')]))])
-    #   expected_equation = Equation.new(expected_left_side,expected_right_side)
-    #   expect(equation.collect_like_terms).to eq expected_equation
-    # end
-    #
-    # it 'collects one set to left and one set to right' do
-    #   left_side = Expression.new([Step.new(nil,2),Step.new(:add,Expression.new([Step.new(nil,3),Step.new(:mtp,'y')])),Step.new(:sbt,Expression.new([Step.new(nil,5),Step.new(:mtp,'x')]))])
-    #   right_side = Expression.new([Step.new(nil,2),Step.new(:sbt,Expression.new([Step.new(nil,2),Step.new(:mtp,'x')])),Step.new(:sbt,Expression.new([Step.new(nil,3),Step.new(:mtp,'y')]))])
-    #   equation = Equation.new(left_side,right_side)
-    #   expected_left_side = Expression.new([Step.new(nil,2),Step.new(:add,Expression.new([Step.new(nil,3),Step.new(:mtp,'y')])),Step.new(:add,Expression.new([Step.new(nil,3),Step.new(:mtp,'y')]))])
-    #   expected_right_side = Expression.new([Step.new(nil,2),Step.new(:sbt,Expression.new([Step.new(nil,2),Step.new(:mtp,'x')])),Step.new(:add,Expression.new([Step.new(nil,5),Step.new(:mtp,'x')]))])
-    #   expected_equation = Equation.new(expected_left_side,expected_right_side)
-    #   expect(equation.collect_like_terms).to eq expected_equation
-    # end
-
-    it 'collects 2 sets of like terms' do
-      left_side = msum_factory.build([[nil,[2,'b']],[:add,[6,'x']],[:sbt,[4,'y']]])
-      right_side = msum_factory.build([[nil,[5,'a']],[:add,[2,'x']],[:add,[2,'y']]])
+    it 'collects one set of like terms (similar m-forms) from left to right side' do
+      left_side = Expression.new([Step.new(nil,2),Step.new(:add,Expression.new([
+        Step.new(nil,3),Step.new(:mtp,'x')]))])
+      right_side = Expression.new([Step.new(nil,2),Step.new(:add,Expression.new([
+        Step.new(nil,4),Step.new(:mtp,'x')]))])
       equation = Equation.new(left_side,right_side)
-      new_left_side = msum_factory.build([[nil,[2,'b']],[:add,[6,'x']],[:sbt,[2,'x']]])
-      new_right_side = msum_factory.build([[nil,[5,'a']],[:add,[2,'y']],[:add,[4,'y']]])
-      expected_equation = Equation.new(new_left_side,new_right_side)
+      expected_left_side = Expression.new([Step.new(nil,2)])
+      expected_right_side = Expression.new([Step.new(nil,2),Step.new(:add,
+        Expression.new([Step.new(nil,4),Step.new(:mtp,'x')])),Step.new(:sbt,
+        Expression.new([Step.new(nil,3),Step.new(:mtp,'x')]))])
+      expected_equation = Equation.new(expected_left_side,expected_right_side)
       expect(equation.collect_like_terms).to eq expected_equation
-
-      #once a term has been moved or added, the number of terms on both sides
-      #change causing the iterations to fail
-
     end
 
+    it 'collects one set to left and one set to right' do
+      left_side = Expression.new([Step.new(nil,2),Step.new(:add,Expression.new([Step.new(nil,3),Step.new(:mtp,'y')])),Step.new(:sbt,Expression.new([Step.new(nil,5),Step.new(:mtp,'x')]))])
+      right_side = Expression.new([Step.new(nil,2),Step.new(:sbt,Expression.new([Step.new(nil,2),Step.new(:mtp,'x')])),Step.new(:sbt,Expression.new([Step.new(nil,3),Step.new(:mtp,'y')]))])
+      equation = Equation.new(left_side,right_side)
+      expected_left_side = Expression.new([Step.new(nil,2),Step.new(:add,Expression.new([Step.new(nil,3),Step.new(:mtp,'y')])),Step.new(:add,Expression.new([Step.new(nil,3),Step.new(:mtp,'y')]))])
+      expected_right_side = Expression.new([Step.new(nil,2),Step.new(:sbt,Expression.new([Step.new(nil,2),Step.new(:mtp,'x')])),Step.new(:add,Expression.new([Step.new(nil,5),Step.new(:mtp,'x')]))])
+      expected_equation = Equation.new(expected_left_side,expected_right_side)
+      expect(equation.collect_like_terms).to eq expected_equation
+    end
+
+    it 'collects 2 sets of like terms' do
+      left_side = msum_factory.build([[nil,[2,'b']],[:add,[6,'x']],[:sbt,
+        [4,'y']]])
+      right_side = msum_factory.build([[nil,[5,'a']],[:add,[2,'x']],[:add,
+        [2,'y']]])
+      equation = equation_class.new(left_side,right_side)
+      new_left_side = msum_factory.build([[nil,[2,'b']],[:add,[6,'x']],[:sbt,
+        [2,'x']]])
+      new_right_side = msum_factory.build([[nil,[5,'a']],[:add,[2,'y']],[:add,
+        [4,'y']]])
+      expected_equation = equation_class.new(new_left_side,new_right_side)
+      expect(equation.collect_like_terms).to eq expected_equation
+    end
+
+    it 'collects 3 sets of like terms' do
+      left_side = msum_factory.build([[nil,[2,'b']],[:add,[6,'x']],[:sbt,
+        [6,'z']],[:sbt,[4,'y']]])
+      right_side = msum_factory.build([[nil,[5,'a']],[:add,[4,'z']],[:add,
+        [2,'x']],[:add,[2,'y']]])
+      equation = equation_class.new(left_side,right_side)
+      new_left_side = msum_factory.build([[nil,[2,'b']],[:add,[6,'x']],[:sbt,
+        [2,'x']]])
+      new_right_side = msum_factory.build([[nil,[5,'a']],[:add,[4,'z']],[:add,
+        [2,'y']],[:add,[6,'z']],[:add,[4,'y']]])
+      expected_equation = equation_class.new(new_left_side,new_right_side)
+      expect(equation.collect_like_terms).to eq expected_equation
+    end
   end
 
 

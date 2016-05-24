@@ -15,6 +15,10 @@ module ClassName
     Step
   end
 
+  def equation_class
+    Equation
+  end
+
   def step_factory
     StepFactory
   end
