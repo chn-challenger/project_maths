@@ -19,6 +19,10 @@ module ClassName
     Equation
   end
 
+  def linear_equation
+    LinearEquation
+  end
+
   def step_factory
     StepFactory
   end

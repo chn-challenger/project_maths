@@ -30,40 +30,12 @@ class AgeProblem
     step_3 = step_2.copy.collect_like_terms
     sol_eqn_array << step_3
     step_4 = step_3.copy._age_problem_simplify_m_sums.standardise_linear_equation
-    sol_eqn_array << step_4
-    return step_4
-    # solution steps
-# 1. expand both sides
-# 2. collect like terms
-# 3. standardise the expression side
-# 4. linear equation . solution
-
-
-    # result = []
-    # stage_1 = equation
-    # result << stage_1
-    # stage_2 = stage_1.copy
-    # stage_2.left_side = stage_2.left_side.convert_to_rational_sum.simplify
-    # stage_2.right_side = stage_2.right_side.convert_to_rational_sum.simplify
-    # stage_2.left_side.convert_if_m_form_to_elementary
-    # stage_2.right_side.convert_if_m_form_to_elementary
-    # result << stage_2
-    # # #this should be replaced by a more permenant solution work on logic
-    # stage_3 = stage_2.copy
-    # reverse_step = stage_3.left_side.steps.delete_at(0)
-    # stage_3.left_side.steps.first.ops = nil
-    # reverse_step.ops = :sbt
-    # stage_3.right_side.steps << reverse_step
-    # result << stage_3
-    # stage_4 = stage_3.copy
-    # stage_4.right_side = stage_4.right_side.simplify
-    # stage_4.right_side.convert_if_m_form_to_elementary
-    # result << stage_4
-    # stage_5 = stage_4.copy
-    # linear_equation = LinearEquation.new(stage_5.right_side,stage_5.left_side)
-    # linear_equation_solution = linear_equation._generate_solution
-    # result = result + linear_equation_solution
-    # result
+    # sol_eqn_array << step_4
+    return equation
+    # l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
+    # l_eqn_soln = l_eqn._generate_solution
+    # sol_eqn_array = sol_eqn_array + l_eqn_soln
+    # return sol_eqn_array
   end
 
   def self._solution_latex(solutions_array)
