@@ -44,8 +44,8 @@ describe AgeProblem do
     it 'generates solution to the first example' do
       latex = AgeProblem._solution_latex(age_prob_1.solution)
       puts latex
-      p AgeProblem.generate_add_type_question
-      p AgeProblem.generate_add_type_question
+      # p AgeProblem.generate_add_type_question
+      p AgeProblem.generate_add_type_question.generate_add_question_text
       # expected_latex = "x+15&=2\\left(x+5\\right)\\\\\nx+15&=2x+10\\\\\n15&=2x+10-x\\\\\n15&=x+10\\\\\nx+10&=15\\\\\nx&=15-10\\\\\nx&=5"
       # expect(latex).to eq expected_latex
     end

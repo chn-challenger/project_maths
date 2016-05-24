@@ -39,25 +39,30 @@ class AgeProblem
   end
 
   def generate_add_question_text
-    named_person = [['Adam',:m],['Beth',:f,['John',:m],['Julie',:f]].sample
-    if [0,1].sample == 0
+    named_person = [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f]].sample
+    rand_choice = [0,1].sample
+    p rand_choice
+    puts time_1_val
+    if rand_choice == 0
       younger = named_person
-      if 20 <= time_1_val && time_1_val < 50
+      if 1 <= time_1_val && time_1_val < 20
+        older = [['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]].sample
+      elsif 20 <= time_1_val && time_1_val < 50
         older = [['father',:m],['mother',:f]].sample
       elsif  50 <= time_1_val && time_1_val < 80
         older = [['grandfather',:m],['grandmother',:f]].sample
       end
     else
       older = named_person
-      if 20 <= time_1_val && time_1_val < 50
+      if 1 <= time_1_val && time_1_val < 20
+        younger = [['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]].sample
+      elsif 20 <= time_1_val && time_1_val < 50
         younger = [['son',:m],['daughter',:f]].sample
       elsif  50 <= time_1_val && time_1_val < 80
         younger = [['grandson',:m],['granddaughter',:f]].sample
       end
     end
-
-
-
+    [younger,older]
   end
 
   def solution
