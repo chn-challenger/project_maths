@@ -39,18 +39,18 @@ class AgeProblem
   end
 
   def generate_add_question_text
-    named_person = [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f]].sample
+    named_person = [['Adam',:m,:named],['Beth',:f,:named],['John',:m,:named],['Julie',:f,:named]].sample
     rand_choice = [0,1].sample
-    p rand_choice
-    puts time_1_val
+    # p rand_choice
+    # puts time_1_val
     if rand_choice == 0
       younger = named_person
       if 1 <= time_1_val && time_1_val < 20
-        older = [['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]].sample
+        older = [['Ken',:m,:named],['Davina',:f,:named],['Henry',:m,:named],['Sarah',:f,:named]].sample
       elsif 20 <= time_1_val && time_1_val < 50
-        older = [['father',:m],['mother',:f]].sample
+        older = [['father',:m,:rel],['mother',:f,:rel]].sample
       elsif  50 <= time_1_val && time_1_val < 80
-        older = [['grandfather',:m],['grandmother',:f]].sample
+        older = [['grandfather',:m,:rel],['grandmother',:f,:rel]].sample
       end
     else
       older = named_person
@@ -62,7 +62,71 @@ class AgeProblem
         younger = [['grandson',:m],['granddaughter',:f]].sample
       end
     end
-    [younger,older]
+    persons = [younger,older]
+    #pick first timeline
+
+    younger_age = time_1_val / (time_2_val - 1) - time_diff
+
+    #
+    fail_safe_counter = 1
+    time_line_1 = (-10..5).to_a.sample
+    while younger_age + time_line_1 <= 0 && fail_safe_counter < 100
+      fail_safe_counter += 1
+      time_line_1 = (-10..5).to_a.sample
+    end
+
+    who_first = [0,1].sample
+
+    if who_first == 0 && persons[0][2] == :named
+      #younger first
+      if time_line_1 < 0
+        question_text = "#{time_line_1.abs} years ago, #{persons[0][0]} was #{time_1_val} years younger than "
+        if 1 <= time_1_val && time_1_val < 20
+          question_text += "#{persons[1][0]}."
+        else
+          if persons[0][0][1] == :m
+            question_text += "his #{persons[1][0]}."
+          else
+            question_text += "her #{persons[1][0]}."
+          end
+        end
+      elsif time_line_1 == 0
+        question_text = "#{persons[0][0]} is #{time_1_val} years younger than "
+        if 1 <= time_1_val && time_1_val < 20
+          question_text += "#{persons[1][0]}."
+        else
+          if persons[0][0][1] == :m
+            question_text += "his #{persons[1][0]}."
+          else
+            question_text += "her #{persons[1][0]}."
+          end
+        end
+      elsif time_line_1 > 0
+        question_text = "#{time_line_1.abs} years from now, #{persons[0][0]} was #{time_1_val} years younger than "
+        if 1 <= time_1_val && time_1_val < 20
+          question_text += "#{persons[1][0]}."
+        else
+          if persons[0][0][1] == :m
+            question_text += "his #{persons[1][0]}."
+          else
+            question_text += "her #{persons[1][0]}."
+          end
+        end
+
+      end
+    else
+      #older first
+
+    end
+
+    # [younger_age,t]
+    #
+    # if [0..1].sample == 0
+    #   question_str =
+    # else
+    #
+    # end
+
   end
 
   def solution
@@ -108,3 +172,53 @@ class AgeProblem
 
 
 end
+
+
+
+
+
+
+    # 
+    # who_first = [0,1].sample
+    #
+    # if who_first == 0 && persons[0][2] == :named
+    #   #younger first
+    #   if time_line_1 < 0
+    #     question_text = "#{time_line_1.abs} years ago, #{persons[0][0]} was #{time_1_val} years younger than "
+    #     if 1 <= time_1_val && time_1_val < 20
+    #       question_text += "#{persons[1][0]}."
+    #     else
+    #       if persons[0][0][1] == :m
+    #         question_text += "his #{persons[1][0]}."
+    #       else
+    #         question_text += "her #{persons[1][0]}."
+    #       end
+    #     end
+    #   elsif time_line_1 == 0
+    #     question_text = "#{persons[0][0]} is #{time_1_val} years younger than "
+    #     if 1 <= time_1_val && time_1_val < 20
+    #       question_text += "#{persons[1][0]}."
+    #     else
+    #       if persons[0][0][1] == :m
+    #         question_text += "his #{persons[1][0]}."
+    #       else
+    #         question_text += "her #{persons[1][0]}."
+    #       end
+    #     end
+    #   elsif time_line_1 > 0
+    #     question_text = "#{time_line_1.abs} years from now, #{persons[0][0]} was #{time_1_val} years younger than "
+    #     if 1 <= time_1_val && time_1_val < 20
+    #       question_text += "#{persons[1][0]}."
+    #     else
+    #       if persons[0][0][1] == :m
+    #         question_text += "his #{persons[1][0]}."
+    #       else
+    #         question_text += "her #{persons[1][0]}."
+    #       end
+    #     end
+    #
+    #   end
+    # else
+    #   #older first
+    #
+    # end
