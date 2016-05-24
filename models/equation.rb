@@ -71,8 +71,11 @@ class Equation
   end
 
   def _age_problem_simplify_m_sums
-    left_side.simplify_all_m_sums._remove_m_form_one_coef
-    right_side.simplify_all_m_sums._remove_m_form_one_coef
+    # left_side.simplify_all_m_sums._remove_m_form_one_coef
+    # right_side.simplify_all_m_sums._remove_m_form_one_coef
+    left_side.simplify_all_m_sums
+    right_side.simplify_all_m_sums
+
     self
   end
 

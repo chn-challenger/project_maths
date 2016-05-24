@@ -140,8 +140,9 @@ describe Equation do
       expect(equation.collect_like_terms).to eq expected_equation
     end
 
-    it 'collects like terms which are first terms' do
-      left_side = msum_factory.build([[nil,[2,'x']],[:add,[6,'a']]])
+    xit 'collects like terms which are first terms' do
+      left_side = expression_factory.build([[nil,'x'],[:add,[[nil,6],[:mtp,'a']]]])
+      # left_side = msum_factory.build([[nil,[2,'x']],[:add,[6,'a']]])
       right_side = msum_factory.build([[nil,[5,'x']],[:add,[4,'b']]])
       equation = equation_class.new(left_side,right_side)
       new_left_side = msum_factory.build([[:add,[6,'a']]])

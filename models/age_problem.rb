@@ -31,7 +31,7 @@ class AgeProblem
     sol_eqn_array << step_3
     step_4 = step_3.copy._age_problem_simplify_m_sums.standardise_linear_equation
     # sol_eqn_array << step_4
-    return equation
+    return step_4
     # l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
     # l_eqn_soln = l_eqn._generate_solution
     # sol_eqn_array = sol_eqn_array + l_eqn_soln
