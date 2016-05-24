@@ -87,6 +87,7 @@ __Help sought!: I am still looking for improvements to make these methods more r
 ## Latest Progress and Ordered To Do List
 
 To do:
+* Write a more generic linear_equation solver for those with x on both sides.
 * Complete ```AgeProblem``` topic class.
 * Create Ratio & Percentage topic class.
 
