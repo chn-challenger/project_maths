@@ -38,6 +38,28 @@ class AgeProblem
     end
   end
 
+  def generate_add_question_text
+    named_person = [['Adam',:m],['Beth',:f,['John',:m],['Julie',:f]].sample
+    if [0,1].sample == 0
+      younger = named_person
+      if 20 <= time_1_val && time_1_val < 50
+        older = [['father',:m],['mother',:f]].sample
+      elsif  50 <= time_1_val && time_1_val < 80
+        older = [['grandfather',:m],['grandmother',:f]].sample
+      end
+    else
+      older = named_person
+      if 20 <= time_1_val && time_1_val < 50
+        younger = [['son',:m],['daughter',:f]].sample
+      elsif  50 <= time_1_val && time_1_val < 80
+        younger = [['grandson',:m],['granddaughter',:f]].sample
+      end
+    end
+
+
+
+  end
+
   def solution
     sol_eqn_array = []
     step_1 = equation
