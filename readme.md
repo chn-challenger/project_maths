@@ -89,6 +89,7 @@ __Help sought!: I am still looking for improvements to make these methods more r
 To do:
 * Write a more generic linear_equation solver for those with x on both sides.
 * Complete ```AgeProblem``` topic class.
+* Make generic linear equation solvers.
 * Create Ratio & Percentage topic class.
 
 ### Example of generated worksheet solutions
