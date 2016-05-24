@@ -38,19 +38,12 @@ describe AgeProblem do
   end
 
   describe '#solution/solution_latex' do
-    let(:age_prob_1){described_class.new(:add,10,5,2)}
-    let(:age_prob_2){described_class.new(:mtp,3,10,2)}
+    let(:age_prob_1){described_class.new(:add,20,5,3)}
+    let(:age_prob_2){described_class.new(:mtp,4,10,2)}
 
     it 'generates solution to the first example' do
-      # solution = age_prob_2.solution
-      # p solution.left_side
-      # p solution.right_side
-      p age_prob_1.solution
-      # p solution.is_a?(Array)
-      # p solution.length
-
-      # latex = AgeProblem._solution_latex(age_prob_2.solution)
-      # puts latex
+      latex = AgeProblem._solution_latex(age_prob_1.solution)
+      puts latex
 
       # expected_latex = "x+15&=2\\left(x+5\\right)\\\\\nx+15&=2x+10\\\\\n15&=2x+10-x\\\\\n15&=x+10\\\\\nx+10&=15\\\\\nx&=15-10\\\\\nx&=5"
       # expect(latex).to eq expected_latex

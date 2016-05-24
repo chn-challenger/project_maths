@@ -24,18 +24,17 @@ class AgeProblem
   end
 
   def solution
-    sol_eqn_array = [equation]
+    sol_eqn_array = []
+    step_1 = equation
     step_2 = equation.copy._age_problem_expand
     sol_eqn_array << step_2
-    step_3 = step_2.copy.collect_like_terms
+    step_3 = step_2.copy._standardise_m_sums.collect_like_terms._remove_m_form_one_coef
     sol_eqn_array << step_3
-    step_4 = step_3.copy._age_problem_simplify_m_sums.standardise_linear_equation
-    # sol_eqn_array << step_4
-    return step_4
-    # l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
-    # l_eqn_soln = l_eqn._generate_solution
-    # sol_eqn_array = sol_eqn_array + l_eqn_soln
-    # return sol_eqn_array
+    step_4 = step_3.copy._age_problem_simplify_m_sums._remove_m_form_one_coef.standardise_linear_equation
+    l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
+    l_eqn_soln = l_eqn._generate_solution
+    sol_eqn_array = sol_eqn_array + l_eqn_soln
+    return sol_eqn_array
   end
 
   def self._solution_latex(solutions_array)

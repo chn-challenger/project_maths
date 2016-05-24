@@ -1306,8 +1306,8 @@ describe Expression do
 
 
     it 'finds an m-form in an expression and simplifies it' do
-      exp = expression_factory.build([[nil,6],[:add,[[nil,'a'],[:mtp,3],[:mtp,4]]]])
-      expected_exp = expression_factory.build([[nil,6],[:add,[[nil,12],[:mtp,'a']]]])
+      exp = expression_factory.build([[nil,6],[:add,[[nil,'a'],[:mtp,3],[:mtp,4]]],[:div,11]])
+      expected_exp = expression_factory.build([[nil,6],[:add,[[nil,12],[:mtp,'a']]],[:div,11]])
       expect(exp.simplify_all_m_forms).to eq expected_exp
     end
 
@@ -1414,7 +1414,8 @@ describe Expression do
     it 'collect 3 like terms amongst other terms' do
       exp = expression_factory.build([[nil,[[nil,'z']]],[:add,[[nil,3],[:mtp,'x']]],
         [:add,[[nil,6],[:mtp,'x']]],[:sbt,[[nil,7],[:mtp,'x']]]])
-      expected_exp = expression_factory.build([[nil,[[nil,1],[:mtp,'z']]],[:add,[[nil,2],[:mtp,'x']]]])
+      expected_exp = expression_factory.build([[nil,[[nil,1],[:mtp,'z']]],
+        [:add,[[nil,2],[:mtp,'x']]]])
       result = exp.simplify_a_m_sum
       expect(result).to eq expected_exp
     end

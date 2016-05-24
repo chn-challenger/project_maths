@@ -64,9 +64,21 @@ class Equation
     #And refactoring OUT recurssion will for large equations improve performance
   end
 
+  def _standardise_m_sums
+    left_side.simplify_all_m_sums
+    right_side.simplify_all_m_sums
+    self
+  end
+
   def _age_problem_expand
     left_side.expand.simplify_all_m_forms
     right_side.expand.simplify_all_m_forms
+    self
+  end
+
+  def _remove_m_form_one_coef
+    left_side._remove_m_form_one_coef
+    right_side._remove_m_form_one_coef
     self
   end
 
