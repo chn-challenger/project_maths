@@ -1561,8 +1561,17 @@ describe Expression do
       expected_exp = expression_factory.build([[nil,'x'],[:add,8,:lft],
         [:div,7,:lft],[:mtp,6,:lft],[:sbt,5,:lft],[:div,4,:lft],[:sbt,3,:lft],
         [:mtp,11,:lft],[:add,9],[:div,10]])
+      # p exp
+      # puts expected_exp.latex
       result = exp.standardise_linear_exp
       expect(result).to eq expected_exp
+    end
+
+    it 'is a mutator method which returns the object itself' do
+      exp = expression_factory.build([[nil,5],[:add,'x']])
+      # p exp.latex
+      expected_exp = expression_factory.build([[nil,5],[:add,'x']])
+      expect(exp.expand.object_id).to eq exp.object_id
     end
   end
 

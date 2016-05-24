@@ -64,9 +64,6 @@ class AgeProblem
     end
     persons = [younger,older]
 
-
-
-
     p persons
     #pick first timeline
 
@@ -83,25 +80,35 @@ class AgeProblem
 
     who_first = [0,1].sample
 
-    puts 'who first is ' + who_first.to_s
+    # puts 'who first is ' + who_first.to_s
 
     if who_first == 0 && persons[0][2] == :named
       #younger first && younger is named
       question_text = "#{persons[0][0]} is #{time_1_val} years younger than "
       if persons[1][2] == :named
-        question_text += "#{persons[1][0]}."
+        question_text += "#{persons[1][0]}. "
+        # text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
       else
         if persons[0][1] == :m
-          question_text += "his #{persons[1][0]}."
+          question_text += "his #{persons[1][0]}. "
         else
-          question_text += "her #{persons[1][0]}."
+          question_text += "her #{persons[1][0]}. "
         end
       end
     end
 
     if who_first == 0 && persons[0][2] == :rel
       #younger first && younger is relation
-      question_text = "#{persons[1][0]}'s #{persons[0][0]} is #{time_1_val} years younger than #{persons[1][0]}."
+      question_text = "#{persons[1][0]}'s #{persons[0][0]} is #{time_1_val} years younger than #{persons[1][0]}. "
+      text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+      if persons[1][1] == :m
+        text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as his #{persons[0][0]}. "
+      else
+        text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as her #{persons[0][0]}. "
+      end
+      text_part_2 += "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
+      question_text += text_part_2
+      #John's grandson is 50 years younger than John,
     end
 
     if who_first == 1 && persons[1][2] == :named
@@ -124,6 +131,10 @@ class AgeProblem
     end
 
     question_text
+
+    text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+
+
     # [younger_age,t]
     #
     # if [0..1].sample == 0
@@ -131,7 +142,7 @@ class AgeProblem
     # else
     #
     # end
-
+    question_text
   end
 
   def solution
