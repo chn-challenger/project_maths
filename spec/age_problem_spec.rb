@@ -23,41 +23,70 @@ describe AgeProblem do
 
     it 'initializes with an initial equation with time 1 relation is add' do
       left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,15)])
-      right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,5),Step.new(:mtp,2)])
+      right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,5),Step.new(:mtp,2,:lft)])
       expected_equation = Equation.new(left_side,right_side)
       expect(age_prob_1.equation).to eq expected_equation
     end
 
     it 'initializes with an initial equation with time 1 relation is multiply' do
-      left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,3),Step.new(:add,10)])
-      right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,10),Step.new(:mtp,2)])
+      left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,3,:lft),Step.new(:add,10)])
+      right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,10),Step.new(:mtp,2,:lft)])
       expected_equation = Equation.new(left_side,right_side)
+      # puts age_prob_2.equation.latex
       expect(age_prob_2.equation).to eq expected_equation
     end
   end
+
+  describe '#solution/solution_latex' do
+    let(:age_prob_1){described_class.new(:add,10,5,2)}
+    let(:age_prob_2){described_class.new(:mtp,3,10,2)}
+
+    it 'generates solution to the first example' do
+      solution = age_prob_2.solution
+      # p solution.left_side
+      # p solution.right_side
+      puts age_prob_2.solution.latex
+      p solution
+      # latex = AgeProblem._solution_latex(age_prob_1.solution)
+      # expected_latex = "x+15&=2\\left(x+5\\right)\\\\\nx+15&=2x+10\\\\\n15&=2x+10-x\\\\\n15&=x+10\\\\\nx+10&=15\\\\\nx&=15-10\\\\\nx&=5"
+      # expect(latex).to eq expected_latex
+    end
+
+    # it 'generates solution to the second example' do
+    #   latex = AgeProblem._solution_latex(age_prob_2.solution)
+    #   puts latex
+    #   expected_latex = "x3+10&=2\\left(x+10\\right)\\\\\n3x+10&=2x+20\\\\\n10&=2x+20-3x\\\\\n10&=-1x+20\\\\\n-1x+20&=10\\\\\n-1x&=10-20\\\\\n-1x&=-10"
+    #   expect(latex).to eq expected_latex
+    # end
+
+  end
+
+
+
 end
-#
-#     describe '#solution/solution_latex' do
-#       let(:ge_prob_1){described_class.new(:add,10,5,2)}
-#       let(:age_prob_2){described_class.new(:mtp,3,10,2)}
-#
-#       it 'generates solution to the first example' do
-#         latex = AgeProblem._solution_latex(age_prob_1.solution)
-#         expected_latex = "x+15&=2\\left(x+5\\right)\\\\\nx+15&=2x+10\\\\\n15&=2x+10-x\\\\\n15&=x+10\\\\\nx+10&=15\\\\\nx&=15-10\\\\\nx&=5"
-#         expect(latex).to eq expected_latex
-#       end
-#
-#       it 'generates solution to the second example' do
-#         latex = AgeProblem._solution_latex(age_prob_2.solution)
-#         puts latex
-#         expected_latex = "x3+10&=2\\left(x+10\\right)\\\\\n3x+10&=2x+20\\\\\n10&=2x+20-3x\\\\\n10&=-1x+20\\\\\n-1x+20&=10\\\\\n-1x&=10-20\\\\\n-1x&=-10"
-#         expect(latex).to eq expected_latex
-#       end
-#
-#     end
-#
-#
-#   end
+
+    # describe '#solution/solution_latex' do
+    #   let(:age_prob_1){described_class.new(:add,10,5,2)}
+    #   let(:age_prob_2){described_class.new(:mtp,3,10,2)}
+    #
+    #   it 'generates solution to the first example' do
+    #     puts age_prob_1.equation.latex
+        # latex = AgeProblem._solution_latex(age_prob_1.solution)
+        # expected_latex = "x+15&=2\\left(x+5\\right)\\\\\nx+15&=2x+10\\\\\n15&=2x+10-x\\\\\n15&=x+10\\\\\nx+10&=15\\\\\nx&=15-10\\\\\nx&=5"
+        # expect(latex).to eq expected_latex
+      # end
+      #
+      # it 'generates solution to the second example' do
+      #   latex = AgeProblem._solution_latex(age_prob_2.solution)
+      #   puts latex
+      #   expected_latex = "x3+10&=2\\left(x+10\\right)\\\\\n3x+10&=2x+20\\\\\n10&=2x+20-3x\\\\\n10&=-1x+20\\\\\n-1x+20&=10\\\\\n-1x&=10-20\\\\\n-1x&=-10"
+      #   expect(latex).to eq expected_latex
+      # end
+
+    # end
+
+
+  # end
 
 
   #

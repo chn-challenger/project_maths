@@ -17,13 +17,21 @@ class AgeProblem
       total_time_diff = time_1_val + time_diff
       left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,total_time_diff)])
     elsif time_1_rel == :mtp
-      left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val),Step.new(:add,time_diff)])
+      left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
     end
-    right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val)])
+    right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
     @equation = Equation.new(left_side,right_side)
   end
 
   def solution
+    sol_eqn_array = [equation]
+    step_2 = equation.copy._age_problem_expand
+    sol_eqn_array << step_2
+    step_3 = step_2.copy.collect_like_terms
+    sol_eqn_array << step_3
+    step_4 = step_3.copy._age_problem_simplify_m_sums.standardise_linear_equation
+    sol_eqn_array << step_4
+    return step_4
     # solution steps
 # 1. expand both sides
 # 2. collect like terms

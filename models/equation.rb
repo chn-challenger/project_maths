@@ -60,6 +60,28 @@ class Equation
       end
     end
     self
+    #A side from the obvious refactors, this method does not NEED recursion
+    #And refactoring OUT recurssion will for large equations improve performance
+  end
+
+  def _age_problem_expand
+    left_side.expand.simplify_all_m_forms
+    right_side.expand.simplify_all_m_forms
+    self
+  end
+
+  def _age_problem_simplify_m_sums
+    left_side.simplify_all_m_sums._remove_m_form_one_coef
+    right_side.simplify_all_m_sums._remove_m_form_one_coef
+    self
+  end
+
+  def standardise_linear_equation
+    left_side.flatten
+    right_side.flatten
+    left_side.standardise_linear_exp if left_side.steps.length > 1
+    right_side.standardise_linear_exp if right_side.steps.length > 1
+    self
   end
 
 end
