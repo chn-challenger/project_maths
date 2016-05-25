@@ -41,27 +41,6 @@ class AgeProblem
     end
   end
 
-  def self.generate_mtp_type_question
-    # based on the following formula for (:mtp,a,b,c) question
-    # b(c - 1) = x(a - c)
-
-    x = rand(2..10)
-    a_sbt_c = rand(1..[6,100/x].min)
-    a_c_choices = []
-    for c in 2..7
-      a = c + a_sbt_c
-      if a * x > 100 || a_sbt_c * x % (c-1) != 0 || a * x + a_sbt_c * x / (c-1) > 100
-        puts x
-        puts 'here here '
-      else
-        b = a_sbt_c * x / (c-1)
-        a_c_choices << [x, a , b , c]
-      end
-    end
-    a_c_choices
-  end
-
-
   def generate_add_question_text(people)
     age_diff = english_years(time_1_val)
     tme_diff = english_years(time_diff)
@@ -158,6 +137,34 @@ class AgeProblem
     end
 
     text_part_1 + text_part_2 + text_part_3 + text_part_4
+  end
+
+  def self.generate_mtp_type_question
+    # based on the following formula for (:mtp,a,b,c) question
+    # b(c - 1) = x(a - c)
+    x = rand(2..30)
+    a_sbt_c = rand(1..[6,100/x].min)
+    _gen_mtp_back_track_recursion(x,a_sbt_c)
+  end
+
+  def self._gen_mtp_back_track_recursion(x,a_sbt_c)
+    a_c_choices = []
+    for c in 2..7
+      a = c + a_sbt_c
+      unless a * x > 100 || a_sbt_c * x % (c-1) != 0 || a * x + a_sbt_c * x / (c-1) > 100 #|| x == a_sbt_c * x / (c-1)
+        b = a_sbt_c * x / (c-1)
+        a_c_choices << [x, a , b , c]
+      end
+    end
+    if a_c_choices.length == 0
+      if a_sbt_c > 1
+        return _gen_mtp_back_track_recursion(x,a_sbt_c-1)
+      else
+        return generate_mtp_type_question
+      end
+    else
+      return a_c_choices
+    end
   end
 
   def solution

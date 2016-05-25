@@ -37,67 +37,66 @@ describe AgeProblem do
     end
   end
 
-  describe '#generate_add_question_text/generate_add_question' do
-    let(:people){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
-      ['Davina',:f],['Henry',:m],['Sarah',:f]]}
-    let(:question){described_class.generate_add_type_question}
-    let(:question_text){question.generate_add_question_text(people)}
-
-    it 'generates a type 1 add question' do
-      srand(100)
-      expected_text = "Adam is twelve years younger than Sarah. In four years time, Sarah will be twice as old as Adam. How old is Adam now?"
-      expect(question_text).to eq expected_text
-    end
-
-    it 'generates a type 2 add question' do
-      srand(111)
-      expected_text = "John is twenty three years younger than his father. Ten years from now, his father will be twice as old as him. How old is John now?"
-      expect(question_text).to eq expected_text
-    end
-
-    it 'generates a type 3 add question' do
-      srand(141)
-      expected_text = "Julie is twenty nine years younger than her father. Eight years from now, her father will be twice as old as her. How old is Julie now?"
-      expect(question_text).to eq expected_text
-    end
-
-    it 'generates a type 4 add question' do
-      srand(117)
-      expected_text = "Davina's daughter is twenty three years younger than Davina. In two years time, Davina will be twice as old as her daughter. How old is Davina's daughter now?"
-      expect(question_text).to eq expected_text
-    end
-
-    it 'generates a type 5 add question' do
-      srand(101)
-      expected_text = "Sarah is fifteen years older than Davina. Three years from now, Sarah will be four times as old as Davina. How old is Davina now?"
-      expect(question_text).to eq expected_text
-    end
-
-    it 'generates a type 6 add question' do
-      srand(1337)
-      expected_text = "Adam is twenty seven years older than his daughter. In five years time, Adam will be four times as old as his daughter. How old is his daughter now?"
-      expect(question_text).to eq expected_text
-    end
-
-    it 'generates a type 7 add question' do
-      srand(52220)
-      expected_text = "Davina is sixty six years older than her granddaughter. Thirteen years from now, Davina will be four times as old as her granddaughter. How old is her granddaughter now?"
-      expect(question_text).to eq expected_text
-    end
-
-    it 'generates a type 8 add question' do
-      srand(115)
-      expected_text = "John's father is twenty two years older than John. In sixteen years time, John's father will be twice as old as John. How old is John now?"
-      expect(question_text).to eq expected_text
-    end
-
-    it 'generates a type 9 add question' do
-      srand(120)
-      expected_text = "Henry's son is forty three years younger than Henry. One year from now, Henry will be twice as old as his son. How old is Henry's son now?"
-      expect(question_text).to eq expected_text
-    end
-
-  end
+  # describe '#generate_add_question_text/generate_add_question' do
+  #   let(:people){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
+  #     ['Davina',:f],['Henry',:m],['Sarah',:f]]}
+  #   let(:question){described_class.generate_add_type_question}
+  #   let(:question_text){question.generate_add_question_text(people)}
+  #
+  #   it 'generates a type 1 add question' do
+  #     srand(100)
+  #     expected_text = "Adam is twelve years younger than Sarah. In four years time, Sarah will be twice as old as Adam. How old is Adam now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  #
+  #   it 'generates a type 2 add question' do
+  #     srand(111)
+  #     expected_text = "John is twenty three years younger than his father. Ten years from now, his father will be twice as old as him. How old is John now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  #
+  #   it 'generates a type 3 add question' do
+  #     srand(141)
+  #     expected_text = "Julie is twenty nine years younger than her father. Eight years from now, her father will be twice as old as her. How old is Julie now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  #
+  #   it 'generates a type 4 add question' do
+  #     srand(117)
+  #     expected_text = "Davina's daughter is twenty three years younger than Davina. In two years time, Davina will be twice as old as her daughter. How old is Davina's daughter now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  #
+  #   it 'generates a type 5 add question' do
+  #     srand(101)
+  #     expected_text = "Sarah is fifteen years older than Davina. Three years from now, Sarah will be four times as old as Davina. How old is Davina now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  #
+  #   it 'generates a type 6 add question' do
+  #     srand(1337)
+  #     expected_text = "Adam is twenty seven years older than his daughter. In five years time, Adam will be four times as old as his daughter. How old is his daughter now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  #
+  #   it 'generates a type 7 add question' do
+  #     srand(52220)
+  #     expected_text = "Davina is sixty six years older than her granddaughter. Thirteen years from now, Davina will be four times as old as her granddaughter. How old is her granddaughter now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  #
+  #   it 'generates a type 8 add question' do
+  #     srand(115)
+  #     expected_text = "John's father is twenty two years older than John. In sixteen years time, John's father will be twice as old as John. How old is John now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  #
+  #   it 'generates a type 9 add question' do
+  #     srand(120)
+  #     expected_text = "Henry's son is forty three years younger than Henry. One year from now, Henry will be twice as old as his son. How old is Henry's son now?"
+  #     expect(question_text).to eq expected_text
+  #   end
+  # end
 
   describe '#solution/solution_latex' do
     let(:age_prob_1){described_class.new(:add,20,5,3)}
