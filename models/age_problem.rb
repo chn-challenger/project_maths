@@ -235,13 +235,30 @@ class AgeProblem
       elsif time_2 == 0
         text_part_2 = "#{persons[1][0]} is #{age_mtp_2} as old as #{persons[0][0]}. "
       else
-        text_part_2 = "#{persons[1][0]} is #{age_mtp_2} as old as #{persons[0][0]}. "
+        text_part_2 = "#{persons[1][0]} will be #{age_mtp_2} as old as #{persons[0][0]}. "
       end
     end
 
     if persons[1][2] == nil && persons[0][2] == :rel #both named
+      older_s = persons[0][1] == :m ? 'his' : 'her'
       if time_1 < 0
-        # older_s = persons[0][1] == :m ? 'his' : 'her'
+        text_part_1 = "#{persons[1][0]} was #{age_mtp_1} as old as #{older_s} #{persons[0][0]}. "
+      elsif time_1 == 0
+        text_part_1 = "#{persons[1][0]} is #{age_mtp_1} as old as #{older_s} #{persons[0][0]}. "
+      else
+        text_part_1 = "#{persons[1][0]} will be #{age_mtp_1} as old as #{older_s} #{persons[0][0]}. "
+      end
+      if time_2 < 0
+        text_part_2 = "#{persons[1][0]} was #{age_mtp_2} as old as #{older_s} #{persons[0][0]}. "
+      elsif time_2 == 0
+        text_part_2 = "#{persons[1][0]} is #{age_mtp_2} as old as #{older_s} #{persons[0][0]}. "
+      else
+        text_part_2 = "#{persons[1][0]} will be #{age_mtp_2} as old as #{older_s} #{persons[0][0]}. "
+      end
+    end
+
+    if persons[1][2] == :rel && persons[0][2] == nil #both named
+      if time_1 < 0
         text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} was #{age_mtp_1} as old as #{persons[0][0]}. "
       elsif time_1 == 0
         text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_mtp_1} as old as #{persons[0][0]}. "
@@ -249,7 +266,6 @@ class AgeProblem
         text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} will be #{age_mtp_1} as old as #{persons[0][0]}. "
       end
       if time_2 < 0
-        # older_s = persons[0][1] == :m ? 'his' : 'her'
         text_part_2 = "#{persons[0][0]}'s #{persons[1][0]} was #{age_mtp_2} as old as #{persons[0][0]}. "
       elsif time_2 == 0
         text_part_2 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_mtp_2} as old as #{persons[0][0]}. "
@@ -258,75 +274,12 @@ class AgeProblem
       end
     end
 
-    who_first = [:younger,:older].sample
-
-    text_part_2 = ["in #{tme_diff} time, ","#{tme_diff} from now, "].sample.capitalize
-    text_part_3 = "#{persons[1][0]} will be #{age_mtp}as old as"
-
-    if who_first == :younger && persons[0][2] == nil #1st person is named
-      text_part_1 = "#{persons[0][0]} is #{age_diff} younger than "
-      if persons[1][2] == nil #2nd person is named
-        text_part_1 += "#{persons[1][0]}. "
-        text_part_3 = "#{text_part_3} #{persons[0][0]}. "
-        text_part_4 = "How old is #{persons[0][0]} now?"
-        # puts 'case 1'
-      else
-        if persons[0][1] == :m
-          text_part_1 += "his #{persons[1][0]}. "
-          text_part_3 = "his #{text_part_3} him. "
-          text_part_4 = "How old is #{persons[0][0]} now?"
-          # puts 'case 2'
-        else
-          text_part_1 += "her #{persons[1][0]}. "
-          text_part_3 = "her #{text_part_3} her. "
-          text_part_4 = "How old is #{persons[0][0]} now?"
-          # puts 'case 3'
-        end
-      end
+    if persons[0][2] == nil
+      text_part_3 = "How old is #{persons[0][0]} now?"
+    else
+      text_part_3 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
     end
 
-    if who_first == :older && persons[1][2] == nil #second person is named
-      text_part_1 = "#{persons[1][0]} is #{age_diff} older than "
-      if persons[0][2] == nil
-        text_part_1 += "#{persons[0][0]}. "
-        text_part_3 = "#{text_part_3} #{persons[0][0]}. "
-        text_part_4 = "How old is #{persons[0][0]} now?"
-        # puts 'case 5'
-      else
-        if persons[1][1] == :m
-          text_part_1 += "his #{persons[0][0]}. "
-          text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
-          text_part_4 = "How old is his #{persons[0][0]} now?"
-          # puts 'case 6'
-        else
-          text_part_1 += "her #{persons[0][0]}. "
-          text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
-          text_part_4 = "How old is her #{persons[0][0]} now?"
-          # puts 'case 7'
-        end
-      end
-    end
-
-    if who_first == :younger && persons[0][2] == :rel #first person is relative
-      text_part_1 = "#{persons[1][0]}'s #{persons[0][0]} is #{age_diff} younger than #{persons[1][0]}. "
-      if persons[1][1] == :m
-        text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
-        # puts 'case 9'
-      else
-        text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
-        # puts 'case 4'
-      end
-      text_part_4 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
-    end
-
-    if who_first == :older && persons[1][2] == :rel #second person is relative
-      text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_diff} older than #{persons[0][0]}. "
-      text_part_3 = "#{persons[0][0]}'s #{text_part_3} #{persons[0][0]}. "
-      text_part_4 = "How old is #{persons[0][0]} now?"
-      # puts 'case 8'
-    end
-
-    text_part_1 + text_part_2 + text_part_3 + text_part_4
   end
 
 
