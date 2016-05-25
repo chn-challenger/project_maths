@@ -66,13 +66,3 @@ module EnglishNumber
   end
 
 end
-
-# include EnglishNumber
-#
-# arr = (1..100).to_a
-# arr.each do |n|
-#   p english_years(n)
-#
-# end
-#
-# p 20.small_english_number
