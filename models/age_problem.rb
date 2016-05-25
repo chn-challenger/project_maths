@@ -200,6 +200,38 @@ class AgeProblem
     end
 
     persons = [younger,older]
+
+    #choose two time lines
+    min_time = -1*younger_age + 1
+    time_1 = rand(min_time..min_time.abs)
+    time_2 = time_1 + time_diff
+
+    if time_1 < 0
+      time_1_text = "#{english_years(time_1.abs)} ago, ".capitalize
+    elsif time_1 == 0
+      time_1_text = 'This year, '
+    else
+      time_1_text = ["In #{english_years(time_1)} time, ", "#{english_years(time_1)} from now, "].sample.capitalize
+    end
+
+    if time_2 < 0
+      time_2_text = "#{english_years(time_2.abs)} ago, ".capitalize
+    elsif time_2 == 0
+      time_2_text = 'This year, '
+    else
+      time_2_text = ["In #{english_years(time_2)} time, ", "#{english_years(time_2)} from now, "].sample.capitalize
+    end
+
+
+
+
+
+
+
+
+
+
+
     who_first = [:younger,:older].sample
 
     text_part_2 = ["in #{tme_diff} time, ","#{tme_diff} from now, "].sample.capitalize
