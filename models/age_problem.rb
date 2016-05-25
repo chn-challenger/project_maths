@@ -222,14 +222,22 @@ class AgeProblem
       time_2_text = ["In #{english_years(time_2)} time, ", "#{english_years(time_2)} from now, "].sample.capitalize
     end
 
-
-
-
-
-
-
-
-
+    if persons[1][2] == nil && persons[0][2] == nil #both named
+      if time_1 < 0
+        text_part_1 = "#{persons[1][0]} was #{age_mtp_1} as old as #{persons[0][0]}. "
+      elsif time_1 == 0
+        text_part_1 = "#{persons[1][0]} is #{age_mtp_1} as old as #{persons[0][0]}. "
+      else
+        text_part_1 = "#{persons[1][0]} will be #{age_mtp_1} as old as #{persons[0][0]}. "
+      end
+      if time_2 < 0
+        text_part_2 = "#{persons[1][0]} was #{age_mtp_2} as old as #{persons[0][0]}. "
+      elsif time_2 == 0
+        text_part_2 = "#{persons[1][0]} is #{age_mtp_2} as old as #{persons[0][0]}. "
+      else
+        text_part_2 = "#{persons[1][0]} is #{age_mtp_2} as old as #{persons[0][0]}. "
+      end
+    end
 
 
     who_first = [:younger,:older].sample
