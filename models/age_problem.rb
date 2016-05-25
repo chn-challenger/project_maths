@@ -7,7 +7,7 @@ include EnglishNumber
 
 class AgeProblem
 
-  attr_accessor :time_1_rel, :time_1_val, :time_diff, :time_2_val, :equation
+  attr_accessor :time_1_rel, :time_1_val, :time_diff, :time_2_val, :equation, :time_diff_2
 
   def initialize(time_1_rel,time_1_val,time_diff,time_2_val)
     @time_1_rel = time_1_rel
@@ -201,6 +201,7 @@ class AgeProblem
     #choose two time lines
     min_time = -1*younger_age + 1
     time_1 = rand(min_time..min_time.abs)
+    @time_diff_2 = time_1
     time_2 = time_1 + time_diff
 
     if time_1 < 0
