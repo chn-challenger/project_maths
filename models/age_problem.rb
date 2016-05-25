@@ -1,8 +1,9 @@
 require './models/evaluate'
 require './models/equation'
 require './models/linear_equation'
-require './models/integer_extension'
+require './models/english_number'
 
+include EnglishNumber
 
 class AgeProblem
 
@@ -40,7 +41,11 @@ class AgeProblem
   end
 
   def generate_add_question_text
-    people = [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]
+    age_diff = english_years(time_1_val)
+    tme_diff = english_years(time_diff)
+    age_mtp = english_times(time_2_val)
+    people = [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
+      ['Davina',:f],['Henry',:m],['Sarah',:f]]
     named_person = people.sample
     rand_choice = [0,1].sample
     if rand_choice == 0
@@ -62,27 +67,16 @@ class AgeProblem
         younger = [['grandson',:m,:rel],['granddaughter',:f,:rel]].sample
       end
     end
+
     persons = [younger,older]
-
-    # persons = {younger:younger,older:older}
-    # p persons
     who_first = [:younger,:older].sample
-
-    # self.time_1_val = time_1_val.english_years
-
-    age_diff = time_1_val.english_years
-    tme_diff = time_diff.english_years
-    age_mtp = time_2_val.english_times
-
-    # p time_1_val.small_english_number
 
     text_part_2 = ["in #{tme_diff} time, ","#{tme_diff} from now, "].sample.capitalize
     text_part_3 = "#{persons[1][0]} will be #{age_mtp}as old as"
 
-    if who_first == :younger && persons[0][2] == nil
-      #younger first && younger is named
+    if who_first == :younger && persons[0][2] == nil #1st person is named
       text_part_1 = "#{persons[0][0]} is #{age_diff} younger than "
-      if persons[1][2] == nil
+      if persons[1][2] == nil #2nd person is named
         text_part_1 += "#{persons[1][0]}. "
         text_part_3 = "#{text_part_3} #{persons[0][0]}. "
         text_part_4 = "How old is #{persons[0][0]} now?"
@@ -102,20 +96,7 @@ class AgeProblem
       end
     end
 
-    if who_first == :younger && persons[0][2] == :rel
-      #younger first && younger is relation
-      text_part_1 = "#{persons[1][0]}'s #{persons[0][0]} is #{age_diff} younger than #{persons[1][0]}. "
-      if persons[1][1] == :m
-        text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
-      else
-        text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
-      end
-      text_part_4 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
-      puts 'case 4'
-    end
-
-    if who_first == :older && persons[1][2] == nil
-      #older first && older is named
+    if who_first == :older && persons[1][2] == nil #second person is named
       text_part_1 = "#{persons[1][0]} is #{age_diff} older than "
       if persons[0][2] == nil
         text_part_1 += "#{persons[0][0]}. "
@@ -137,8 +118,18 @@ class AgeProblem
       end
     end
 
-    if who_first == :older && persons[1][2] == :rel
-      #older first && older is rel
+    if who_first == :younger && persons[0][2] == :rel #first person is relative
+      text_part_1 = "#{persons[1][0]}'s #{persons[0][0]} is #{age_diff} younger than #{persons[1][0]}. "
+      if persons[1][1] == :m
+        text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
+      else
+        text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
+      end
+      text_part_4 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
+      puts 'case 4'
+    end
+
+    if who_first == :older && persons[1][2] == :rel #second person is relative
       text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_diff} older than #{persons[0][0]}. "
       text_part_3 = "#{persons[0][0]}'s #{text_part_3} #{persons[0][0]}. "
       text_part_4 = "How old is #{persons[0][0]} now?"
