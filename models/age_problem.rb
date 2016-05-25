@@ -204,21 +204,8 @@ class AgeProblem
     @time_diff_2 = time_1
     time_2 = time_1 + time_diff
 
-    if time_1 < 0
-      time_1_text = "#{english_years(time_1.abs)} ago, ".capitalize
-    elsif time_1 == 0
-      time_1_text = 'This year, '
-    else
-      time_1_text = ["In #{english_years(time_1)} time, ", "#{english_years(time_1)} from now, "].sample.capitalize
-    end
-
-    if time_2 < 0
-      time_2_text = "#{english_years(time_2.abs)} ago, ".capitalize
-    elsif time_2 == 0
-      time_2_text = 'This year, '
-    else
-      time_2_text = ["In #{english_years(time_2)} time, ", "#{english_years(time_2)} from now, "].sample.capitalize
-    end
+    time_1_text = _time_text(time_1)
+    time_2_text = _time_text(time_2)
 
     if persons[1][2] == nil && persons[0][2] == nil #both named
       if time_1 < 0
@@ -282,7 +269,15 @@ class AgeProblem
 
   end
 
-
+  def _time_text(time)
+    if time < 0
+      "#{english_years(time.abs)} ago, ".capitalize
+    elsif time == 0
+      'This year, '
+    else
+      ["In #{english_years(time)} time, ", "#{english_years(time)} from now, "].sample.capitalize
+    end
+  end
 
 
 
