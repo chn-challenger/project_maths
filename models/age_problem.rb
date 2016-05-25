@@ -30,7 +30,8 @@ class AgeProblem
     # a/(c - 1) = x + b
     # a = age_difference, b = time_diff, c = mtp_val
     age_difference = (4..80).to_a.sample
-    mtp_val_choices = (1..8).to_a.select{|n| age_difference%n == 0 && age_difference + age_difference/n <= 90 && age_difference/n > 1}
+    mtp_val_choices = (1..8).to_a.select{|n| age_difference%n == 0 &&
+      age_difference + age_difference/n <= 90 && age_difference/n > 1}
     if mtp_val_choices.length == 0
       return self.generate_add_type_question
     else
@@ -40,12 +41,12 @@ class AgeProblem
     end
   end
 
-  def generate_add_question_text
+  def generate_add_question_text(people)
     age_diff = english_years(time_1_val)
     tme_diff = english_years(time_diff)
     age_mtp = english_times(time_2_val)
-    people = [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
-      ['Davina',:f],['Henry',:m],['Sarah',:f]]
+    # people = [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
+    #   ['Davina',:f],['Henry',:m],['Sarah',:f]]
     named_person = people.sample
     rand_choice = [0,1].sample
     if rand_choice == 0
@@ -122,11 +123,12 @@ class AgeProblem
       text_part_1 = "#{persons[1][0]}'s #{persons[0][0]} is #{age_diff} younger than #{persons[1][0]}. "
       if persons[1][1] == :m
         text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
+        puts 'case 9'
       else
         text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
+        puts 'case 4'
       end
       text_part_4 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
-      puts 'case 4'
     end
 
     if who_first == :older && persons[1][2] == :rel #second person is relative
@@ -135,9 +137,6 @@ class AgeProblem
       text_part_4 = "How old is #{persons[0][0]} now?"
       puts 'case 8'
     end
-
-
-    # text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
 
     text_part_1 + text_part_2 + text_part_3 + text_part_4
   end
@@ -155,6 +154,8 @@ class AgeProblem
     sol_eqn_array = sol_eqn_array + l_eqn_soln
     return sol_eqn_array
   end
+
+
 
   def self._solution_latex(solutions_array)
     result = ''
