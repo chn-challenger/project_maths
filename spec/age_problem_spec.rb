@@ -168,6 +168,25 @@ describe AgeProblem do
 # &x + 2 = 5 + 2 = 7 =  \text{age of J}\\
 # &\text{John's son is now 7 years old.}
 
+
+#better model solution
+
+# \begin{minipage}[t]{1.0000\textwidth}
+# 	\color{blue}
+# 		\begin{align*}
+# &\text{Two years ago}&            	&&			 		 &\text{Three years from now}&\\
+# &\text{Son}\hspace{10pt}x&		&&					&\text{Son}\hspace{10pt}x+5&\\
+# &\text{John}\hspace{10pt}5x& &&			 		 &\text{John}\hspace{10pt}5x+5&\\
+# 		&&       \text{John} &= \text{three} \times \text{Son}&\\
+# 		&&             5x + 5 &= 3\left(x+5\right)&\\
+# 		&&                       x&= 5&\\
+# &&  \text{son now} &= \text{son 2 years ago} + 2 \\
+# &&\text{son now} &= 5 + 2\\
+# &Answer:&\text{age of son now} &= 7
+# 		\end{align*}
+# 	\end{minipage}
+
+
   end
 
 
