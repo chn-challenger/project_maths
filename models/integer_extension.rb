@@ -60,3 +60,6 @@ class Integer
   end
 
 end
+
+# arr = (1..100).to_a
+# arr.each

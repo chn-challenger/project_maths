@@ -68,7 +68,7 @@ class AgeProblem
     # p persons
     who_first = [:younger,:older].sample
 
-    self.time_1_val = time_1_val.english_years
+    # self.time_1_val = time_1_val.english_years
 
     age_diff = time_1_val.english_years
     tme_diff = time_diff.english_years
@@ -76,30 +76,27 @@ class AgeProblem
 
     # p time_1_val.small_english_number
 
+    text_part_2 = ["in #{tme_diff} time, ","#{tme_diff} from now, "].sample.capitalize
+    text_part_3 = "#{persons[1][0]} will be #{age_mtp}as old as"
+
     if who_first == :younger && persons[0][2] == nil
       #younger first && younger is named
-      question_text = "#{persons[0][0]} is #{time_1_val} years younger than "
+      text_part_1 = "#{persons[0][0]} is #{age_diff} younger than "
       if persons[1][2] == nil
-        question_text += "#{persons[1][0]}. "
-        text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
-        text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as #{persons[0][0]}. "
-        text_part_2 += "How old is #{persons[0][0]} now?"
-        question_text += text_part_2
+        text_part_1 += "#{persons[1][0]}. "
+        text_part_3 = "#{text_part_3} #{persons[0][0]}. "
+        text_part_4 = "How old is #{persons[0][0]} now?"
         puts 'case 1'
       else
         if persons[0][1] == :m
-          question_text += "his #{persons[1][0]}. "
-          text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
-          text_part_2 += "his #{persons[1][0]} will be #{time_2_val} times as old as him. "
-          text_part_2 += "How old is #{persons[0][0]} now?"
-          question_text += text_part_2
+          text_part_1 += "his #{persons[1][0]}. "
+          text_part_3 = "his #{text_part_3} him. "
+          text_part_4 = "How old is #{persons[0][0]} now?"
           puts 'case 2'
         else
-          question_text += "her #{persons[1][0]}. "
-          text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
-          text_part_2 += "her #{persons[1][0]} will be #{time_2_val} times as old as her. "
-          text_part_2 += "How old is #{persons[0][0]} now?"
-          question_text += text_part_2
+          text_part_1 += "her #{persons[1][0]}. "
+          text_part_3 = "her #{text_part_3} her. "
+          text_part_4 = "How old is #{persons[0][0]} now?"
           puts 'case 3'
         end
       end
@@ -107,43 +104,34 @@ class AgeProblem
 
     if who_first == :younger && persons[0][2] == :rel
       #younger first && younger is relation
-      question_text = "#{persons[1][0]}'s #{persons[0][0]} is #{time_1_val} years younger than #{persons[1][0]}. "
-      text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+      text_part_1 = "#{persons[1][0]}'s #{persons[0][0]} is #{age_diff} younger than #{persons[1][0]}. "
       if persons[1][1] == :m
-        text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as his #{persons[0][0]}. "
+        text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
       else
-        text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as her #{persons[0][0]}. "
+        text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
       end
-      text_part_2 += "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
-      question_text += text_part_2
+      text_part_4 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
       puts 'case 4'
-      #John's grandson is 50 years younger than John,
     end
 
     if who_first == :older && persons[1][2] == nil
       #older first && older is named
-      question_text = "#{persons[1][0]} is #{time_1_val} years older than "
+      text_part_1 = "#{persons[1][0]} is #{age_diff} older than "
       if persons[0][2] == nil
-        question_text += "#{persons[0][0]}. "
-        text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
-        text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as #{persons[0][0]}. "
-        text_part_2 += "How old is #{persons[0][0]} now?"
-        question_text += text_part_2
+        text_part_1 += "#{persons[0][0]}. "
+        text_part_3 = "#{text_part_3} #{persons[0][0]}. "
+        text_part_4 = "How old is #{persons[0][0]} now?"
         puts 'case 5'
       else
         if persons[1][1] == :m
-          question_text += "his #{persons[0][0]}. "
-          text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
-          text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as his #{persons[0][0]}. "
-          text_part_2 += "How old is his #{persons[0][0]} now?"
-          question_text += text_part_2
+          text_part_1 += "his #{persons[0][0]}. "
+          text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
+          text_part_4 = "How old is his #{persons[0][0]} now?"
           puts 'case 6'
         else
-          question_text += "her #{persons[0][0]}. "
-          text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
-          text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as her #{persons[0][0]}. "
-          text_part_2 += "How old is her #{persons[0][0]} now?"
-          question_text += text_part_2
+          text_part_1 += "her #{persons[0][0]}. "
+          text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
+          text_part_4 = "How old is her #{persons[0][0]} now?"
           puts 'case 7'
         end
       end
@@ -151,18 +139,16 @@ class AgeProblem
 
     if who_first == :older && persons[1][2] == :rel
       #older first && older is rel
-      question_text = "#{persons[0][0]}'s #{persons[1][0]} is #{time_1_val} years older than #{persons[0][0]}."
-      text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
-      text_part_2 += "#{persons[0][0]}'s #{persons[1][0]} will be #{time_2_val} times as #{persons[0][0]}. "
-      text_part_2 += "How old is #{persons[0][0]} now?"
-      question_text += text_part_2
+      text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_diff} older than #{persons[0][0]}. "
+      text_part_3 = "#{persons[0][0]}'s #{text_part_3} #{persons[0][0]}. "
+      text_part_4 = "How old is #{persons[0][0]} now?"
       puts 'case 8'
     end
 
 
     # text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
 
-    question_text
+    text_part_1 + text_part_2 + text_part_3 + text_part_4
   end
 
   def solution
