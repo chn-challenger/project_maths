@@ -1,6 +1,7 @@
 require './models/evaluate'
 require './models/equation'
 require './models/linear_equation'
+require './models/integer_extension'
 
 
 class AgeProblem
@@ -66,6 +67,14 @@ class AgeProblem
     # persons = {younger:younger,older:older}
     # p persons
     who_first = [:younger,:older].sample
+
+    self.time_1_val = time_1_val.english_years
+
+    age_diff = time_1_val.english_years
+    tme_diff = time_diff.english_years
+    age_mtp = time_2_val.english_times
+
+    # p time_1_val.small_english_number
 
     if who_first == :younger && persons[0][2] == nil
       #younger first && younger is named
