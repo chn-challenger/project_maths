@@ -41,6 +41,27 @@ class AgeProblem
     end
   end
 
+  def self.generate_mtp_type_question
+    # based on the following formula for (:mtp,a,b,c) question
+    # b(c - 1) = x(a - c)
+
+    x = rand(2..10)
+    a_sbt_c = rand(1..[6,100/x].min)
+    a_c_choices = []
+    for c in 2..7
+      a = c + a_sbt_c
+      if a * x > 100 || a_sbt_c * x % (c-1) != 0 || a * x + a_sbt_c * x / (c-1) > 100
+        puts x
+        puts 'here here '
+      else
+        b = a_sbt_c * x / (c-1)
+        a_c_choices << [x, a , b , c]
+      end
+    end
+    a_c_choices
+  end
+
+
   def generate_add_question_text(people)
     age_diff = english_years(time_1_val)
     tme_diff = english_years(time_diff)
@@ -142,6 +163,7 @@ class AgeProblem
   def solution
     sol_eqn_array = []
     step_1 = equation
+    sol_eqn_array << step_1
     step_2 = equation.copy._age_problem_expand
     sol_eqn_array << step_2
     step_3 = step_2.copy._standardise_m_sums.collect_like_terms._remove_m_form_one_coef

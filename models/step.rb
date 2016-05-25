@@ -143,3 +143,18 @@ class Step
   end
 
 end
+
+# 12 - x
+#
+# Expression.new([Step.new(nil,12,:rgt) ,  Step.new(:sbt,'x',:rgt)   ])
+#
+# Expression.new([Step.new(nil,'x',:rgt) ,  Step.new(:sbt,12,:lft)   ])
+#
+# (x-2)(x+3)
+#
+#
+# Expression.new([Step.new(nil,Expression.new([Step.new(nil,'x'),Step.new(:sbt,2)])),
+#   Step.new(:mtp,Expression.new([Step.new(nil,'x'),Step.new(:add,2)]))])
+#
+# expression_factory.build([[nil, [[nil,'x'],[:sbt,2]]  ],
+#                           [:mtp, [[nil,'x'],[:add,3]]  ]])

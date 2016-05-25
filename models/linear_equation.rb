@@ -133,6 +133,43 @@ class LinearEquation < Equation
     end
   end
 
-
-
 end
+# 
+#
+# 11-x
+#
+# (nil,11,:rgt), (:sbt,'x',:rgt)
+#
+# 11-x
+#
+# (nil,'x',:rgt),(:sbt,11,:lft)
+
+# 11-2x = 3
+# 11-3 = 2x
+# (11-2x)3
+# 3(11-2x)
+
+
+#
+# x = 9
+#
+# LHS = (nil,'x') (:add,5) (:mtp,3) (:sbt,10) (:div,64,:lft)          RHS = (nil,2)
+#
+#
+# # 64/(3(x+5)-10)=2
+#
+# LHS = (nil,'x') (:add,5) (:mtp,3) (:sbt,10) (:div,64,:lft)          RHS = (nil,2)
+# LHS = (nil,'x') (:add,5) (:mtp,3) (:sbt,10)                         RHS = (nil,2) (:div,64,:lft)
+# LHS = (nil,'x') (:add,5) (:mtp,3) (:sbt,10)                         RHS = (nil,32)
+# LHS = (nil,'x') (:add,5) (:mtp,3)                                   RHS = (nil,32) (:add,10)
+# LHS = (nil,'x') (:add,5)                                            RHS = (nil,42) (:div,3)
+# LHS = (nil,'x') (:add,5)                                            RHS = (nil,14)
+# LHS = (nil,'x')                                                     RHS = (nil,14) (:sbt,5)
+# LHS = (nil,'x')                                                     RHS = (nil,9)
+#
+# ((x-3)(a+4)(b-5)-10)(11-c)
+#
+# 2x + 3y = 11
+# 3x - 3y = 30
+#
+# (x-y)3 = 3x-3y

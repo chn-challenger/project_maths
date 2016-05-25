@@ -37,7 +37,7 @@ describe AgeProblem do
     end
   end
 
-  describe '#generate_add_question' do
+  describe '#generate_add_question_text/generate_add_question' do
     let(:people){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
       ['Davina',:f],['Henry',:m],['Sarah',:f]]}
     let(:question){described_class.generate_add_type_question}
@@ -104,8 +104,9 @@ describe AgeProblem do
     let(:age_prob_2){described_class.new(:mtp,4,10,2)}
 
     it 'generates solution to the first example' do
-      # latex = AgeProblem._solution_latex(age_prob_1.solution)
+      # latex = AgeProblem._solution_latex(age_prob_2.solution)
       # puts latex
+      p AgeProblem.generate_mtp_type_question
       # p AgeProblem.generate_add_type_question
       # problem = AgeProblem.generate_add_type_question
       # p problem

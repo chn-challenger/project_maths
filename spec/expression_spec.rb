@@ -1573,6 +1573,11 @@ describe Expression do
       expected_exp = expression_factory.build([[nil,5],[:add,'x']])
       expect(exp.expand.object_id).to eq exp.object_id
     end
+
+
+
+
+
   end
 
 
