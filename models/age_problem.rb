@@ -239,6 +239,24 @@ class AgeProblem
       end
     end
 
+    if persons[1][2] == nil && persons[0][2] == :rel #both named
+      if time_1 < 0
+        # older_s = persons[0][1] == :m ? 'his' : 'her'
+        text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} was #{age_mtp_1} as old as #{persons[0][0]}. "
+      elsif time_1 == 0
+        text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_mtp_1} as old as #{persons[0][0]}. "
+      else
+        text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} will be #{age_mtp_1} as old as #{persons[0][0]}. "
+      end
+      if time_2 < 0
+        # older_s = persons[0][1] == :m ? 'his' : 'her'
+        text_part_2 = "#{persons[0][0]}'s #{persons[1][0]} was #{age_mtp_2} as old as #{persons[0][0]}. "
+      elsif time_2 == 0
+        text_part_2 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_mtp_2} as old as #{persons[0][0]}. "
+      else
+        text_part_2 = "#{persons[0][0]}'s #{persons[1][0]} will be #{age_mtp_2} as old as #{persons[0][0]}. "
+      end
+    end
 
     who_first = [:younger,:older].sample
 
