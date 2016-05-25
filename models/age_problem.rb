@@ -45,8 +45,6 @@ class AgeProblem
     age_diff = english_years(time_1_val)
     tme_diff = english_years(time_diff)
     age_mtp = english_times(time_2_val)
-    # people = [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
-    #   ['Davina',:f],['Henry',:m],['Sarah',:f]]
     named_person = people.sample
     rand_choice = [0,1].sample
     if rand_choice == 0
@@ -81,18 +79,18 @@ class AgeProblem
         text_part_1 += "#{persons[1][0]}. "
         text_part_3 = "#{text_part_3} #{persons[0][0]}. "
         text_part_4 = "How old is #{persons[0][0]} now?"
-        puts 'case 1'
+        # puts 'case 1'
       else
         if persons[0][1] == :m
           text_part_1 += "his #{persons[1][0]}. "
           text_part_3 = "his #{text_part_3} him. "
           text_part_4 = "How old is #{persons[0][0]} now?"
-          puts 'case 2'
+          # puts 'case 2'
         else
           text_part_1 += "her #{persons[1][0]}. "
           text_part_3 = "her #{text_part_3} her. "
           text_part_4 = "How old is #{persons[0][0]} now?"
-          puts 'case 3'
+          # puts 'case 3'
         end
       end
     end
@@ -103,18 +101,18 @@ class AgeProblem
         text_part_1 += "#{persons[0][0]}. "
         text_part_3 = "#{text_part_3} #{persons[0][0]}. "
         text_part_4 = "How old is #{persons[0][0]} now?"
-        puts 'case 5'
+        # puts 'case 5'
       else
         if persons[1][1] == :m
           text_part_1 += "his #{persons[0][0]}. "
           text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
           text_part_4 = "How old is his #{persons[0][0]} now?"
-          puts 'case 6'
+          # puts 'case 6'
         else
           text_part_1 += "her #{persons[0][0]}. "
           text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
           text_part_4 = "How old is her #{persons[0][0]} now?"
-          puts 'case 7'
+          # puts 'case 7'
         end
       end
     end
@@ -123,10 +121,10 @@ class AgeProblem
       text_part_1 = "#{persons[1][0]}'s #{persons[0][0]} is #{age_diff} younger than #{persons[1][0]}. "
       if persons[1][1] == :m
         text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
-        puts 'case 9'
+        # puts 'case 9'
       else
         text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
-        puts 'case 4'
+        # puts 'case 4'
       end
       text_part_4 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
     end
@@ -135,7 +133,7 @@ class AgeProblem
       text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_diff} older than #{persons[0][0]}. "
       text_part_3 = "#{persons[0][0]}'s #{text_part_3} #{persons[0][0]}. "
       text_part_4 = "How old is #{persons[0][0]} now?"
-      puts 'case 8'
+      # puts 'case 8'
     end
 
     text_part_1 + text_part_2 + text_part_3 + text_part_4
