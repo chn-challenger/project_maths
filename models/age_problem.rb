@@ -39,58 +39,44 @@ class AgeProblem
   end
 
   def generate_add_question_text
-    named_person = [['Adam',:m,:named],['Beth',:f,:named],['John',:m,:named],['Julie',:f,:named]].sample
+    people = [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]
+    named_person = people.sample
     rand_choice = [0,1].sample
-    # p rand_choice
-    # puts time_1_val
     if rand_choice == 0
       younger = named_person
       if 1 <= time_1_val && time_1_val < 20
-        older = [['Ken',:m,:named],['Davina',:f,:named],['Henry',:m,:named],['Sarah',:f,:named]].sample
-      elsif 20 <= time_1_val && time_1_val < 50
+        older = people.select{|name| name != named_person}.sample
+      elsif 20 <= time_1_val && time_1_val < 45
         older = [['father',:m,:rel],['mother',:f,:rel]].sample
-      elsif  50 <= time_1_val && time_1_val <= 80
+      elsif  45 <= time_1_val && time_1_val <= 80
         older = [['grandfather',:m,:rel],['grandmother',:f,:rel]].sample
       end
     else
       older = named_person
       if 1 <= time_1_val && time_1_val < 20
-        younger = [['Ken',:m,:named],['Davina',:f,:named],['Henry',:m,:named],['Sarah',:f,:named]].sample
-      elsif 20 <= time_1_val && time_1_val < 50
+        younger = people.select{|name| name != named_person}.sample
+      elsif 20 <= time_1_val && time_1_val < 45
         younger = [['son',:m,:rel],['daughter',:f,:rel]].sample
-      elsif  50 <= time_1_val && time_1_val <= 80
+      elsif  45 <= time_1_val && time_1_val <= 80
         younger = [['grandson',:m,:rel],['granddaughter',:f,:rel]].sample
       end
     end
     persons = [younger,older]
 
-    p persons
-    #pick first timeline
+    # persons = {younger:younger,older:older}
+    # p persons
+    who_first = [:younger,:older].sample
 
-
-
-    #NOT NEEDED FOR ADD
-    # younger_age = time_1_val / (time_2_val - 1) - time_diff
-    # fail_safe_counter = 1
-    # time_line_1 = (-10..5).to_a.sample
-    # while younger_age + time_line_1 <= 0 && fail_safe_counter < 100
-    #   fail_safe_counter += 1
-    #   time_line_1 = (-10..5).to_a.sample
-    # end
-
-    who_first = [0,1].sample
-
-    # puts 'who first is ' + who_first.to_s
-
-    if who_first == 0 && persons[0][2] == :named
+    if who_first == :younger && persons[0][2] == nil
       #younger first && younger is named
       question_text = "#{persons[0][0]} is #{time_1_val} years younger than "
-      if persons[1][2] == :named
+      if persons[1][2] == nil
         question_text += "#{persons[1][0]}. "
         text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
         text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as #{persons[0][0]}. "
         text_part_2 += "How old is #{persons[0][0]} now?"
         question_text += text_part_2
+        puts 'case 1'
       else
         if persons[0][1] == :m
           question_text += "his #{persons[1][0]}. "
@@ -98,17 +84,19 @@ class AgeProblem
           text_part_2 += "his #{persons[1][0]} will be #{time_2_val} times as old as him. "
           text_part_2 += "How old is #{persons[0][0]} now?"
           question_text += text_part_2
+          puts 'case 2'
         else
           question_text += "her #{persons[1][0]}. "
           text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
           text_part_2 += "her #{persons[1][0]} will be #{time_2_val} times as old as her. "
           text_part_2 += "How old is #{persons[0][0]} now?"
           question_text += text_part_2
+          puts 'case 3'
         end
       end
     end
 
-    if who_first == 0 && persons[0][2] == :rel
+    if who_first == :younger && persons[0][2] == :rel
       #younger first && younger is relation
       question_text = "#{persons[1][0]}'s #{persons[0][0]} is #{time_1_val} years younger than #{persons[1][0]}. "
       text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
@@ -119,45 +107,52 @@ class AgeProblem
       end
       text_part_2 += "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
       question_text += text_part_2
+      puts 'case 4'
       #John's grandson is 50 years younger than John,
     end
 
-    if who_first == 1 && persons[1][2] == :named
+    if who_first == :older && persons[1][2] == nil
       #older first && older is named
       question_text = "#{persons[1][0]} is #{time_1_val} years older than "
-      if persons[0][2] == :named
-        question_text += "#{persons[0][0]}."
+      if persons[0][2] == nil
+        question_text += "#{persons[0][0]}. "
         text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
         text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as #{persons[0][0]}. "
         text_part_2 += "How old is #{persons[0][0]} now?"
         question_text += text_part_2
+        puts 'case 5'
       else
         if persons[1][1] == :m
-          question_text += "his #{persons[0][0]}."
-          
+          question_text += "his #{persons[0][0]}. "
+          text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+          text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as his #{persons[0][0]}. "
+          text_part_2 += "How old is his #{persons[0][0]} now?"
+          question_text += text_part_2
+          puts 'case 6'
         else
-          question_text += "her #{persons[0][0]}."
+          question_text += "her #{persons[0][0]}. "
+          text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+          text_part_2 += "#{persons[1][0]} will be #{time_2_val} times as old as her #{persons[0][0]}. "
+          text_part_2 += "How old is her #{persons[0][0]} now?"
+          question_text += text_part_2
+          puts 'case 7'
         end
       end
     end
 
-    if who_first == 1 && persons[1][2] == :rel
+    if who_first == :older && persons[1][2] == :rel
       #older first && older is rel
       question_text = "#{persons[0][0]}'s #{persons[1][0]} is #{time_1_val} years older than #{persons[0][0]}."
+      text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+      text_part_2 += "#{persons[0][0]}'s #{persons[1][0]} will be #{time_2_val} times as #{persons[0][0]}. "
+      text_part_2 += "How old is #{persons[0][0]} now?"
+      question_text += text_part_2
+      puts 'case 8'
     end
 
-    question_text
 
-    text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
+    # text_part_2 = ["In #{time_diff} years time, ","#{time_diff} years from now, "].sample
 
-
-    # [younger_age,t]
-    #
-    # if [0..1].sample == 0
-    #   question_str =
-    # else
-    #
-    # end
     question_text
   end
 
