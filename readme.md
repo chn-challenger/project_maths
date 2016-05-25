@@ -77,7 +77,7 @@ This system allows most maths expressions to be expressed flexibly in many diffe
 Some of the critical methods that ```Expression``` need to implement are:
 * ```expand``` to expand something like *(x+2)(y-3)* into a sum *xy+2y-3x-6*, and any such expressions such as *((x+2)(y-3)+4)(a-b+5)*.
 * ```latex``` return latex string representation of any expression.
-* ```expand_to_rsum``` short for expand to a sum of rationals.  This is a more general way to expand, it will expand an expression involving fractions/division into a sum of fractions.  Note it will need to deal with fractions inside fraction situation.
+* ```expand_to_rsum``` short for expand to a sum of rationals.  This is a more general way to expand, it will expand an expression involving fractions/division into a sum of fractions.  Note it will need to deal with fractions inside fraction situation - however many layers.
 * ```simplify``` cancelling terms, collecting like terms.
 
 The above methods are also the most challenging to write, I have spent too long writing and rewriting them.  And an effort to refactor these methods is the main reason for all the rewrites.  In my latest attempt (5th? 6th? lost count...), I feel I may have it.
@@ -91,6 +91,12 @@ To do:
 * Complete ```AgeProblem``` topic class.
 * Make generic linear equation solvers.
 * Create Ratio & Percentage topic class.
+
+## Latest Macro Ideas
+
+* A class such as ```LinearEquation```, ```AgeProblem```, ```Ratio``` which produce questions for those topic, should only have class methods, and should never need to instantiate any instance of itself, as such they are better served as ruby modules.  Whose end goal is to ```self.generate(options={})``` with return value of a hash of question latex and solution latex.
+* A module for a topic such as ```AgeProblem```, ```Ratio``` will make use of classes instances from things like ```Expression```, ```Equation```.
+* Therefore ```Fraction``` class should be split responsibility in two classes in two parts, one part deals with the basics of ```Fraction``` whose instances are used as values of Expressions and can be used in any other topic module.  Whilst the question generators into its own ```FractionQuestion``` module.  
 
 ### Example of generated worksheet solutions
 ![](http://i.imgur.com/toGzuGM.png)
