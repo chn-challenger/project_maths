@@ -43,9 +43,22 @@ class LatexPrinter
       "\\end{minipage}\n"
 
 
+  def self._begin_align(topic)
+    TOPICS[topic][:skip_align] ? '' : "\\begin{align*}\n"
+  end
+
+  def self._end_align(topic)
+    TOPICS[topic][:skip_align] ? '' : "\\end{align*}\n"
+  end
+
   def self._begin_minipage(layout)
     minipage_width = '%.4f' % (1.to_f / layout[:questions_per_row])
-    "\\begin{minipage}[t]{#{minipage_width}\\textwidth}\n\\begin{align*}\n"
+    # "\\begin{minipage}[t]{#{minipage_width}\\textwidth}\n\\begin{align*}\n"
+    "\\begin{minipage}[t]{#{minipage_width}\\textwidth}\n"
+  end
+
+  def self._end_minipage
+    "\\end{minipage}\n"
   end
 
   def self._begin_minipage_flalign(layout)
@@ -67,10 +80,10 @@ class LatexPrinter
       end
       current_question = questions[current_question_number-1]
       current_question_latex = topic_class.latex(current_question)
-      result_latex[:question_content] += self._begin_minipage(layout) + current_question_number.to_s +
-        ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + END_MINIPAGE_ALIGN
-      result_latex[:solution_content] += self._begin_minipage(layout) + current_question_number.to_s +
-        ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + END_MINIPAGE_ALIGN
+      result_latex[:question_content] += self._begin_minipage(layout) + self._begin_align(topic) + current_question_number.to_s +
+        ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + self._end_align(topic) + self._end_minipage
+      result_latex[:solution_content] += self._begin_minipage(layout) + self._begin_align(topic) + current_question_number.to_s +
+        ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + self._end_align(topic) + self._end_minipage
       current_question_number += 1
     end
     result_latex
@@ -97,7 +110,7 @@ class LatexPrinter
         ".\\hspace{30pt}"  + current_question_latex[:question_latex] +
         "\\\\[#{work_space}pt]\n" + '&'*5 + "\\text{Answer\\quad" + "."*30 + "}\n" + END_MINIPAGE_FLALIGN
       result_latex[:solution_content] += self._begin_minipage(layout) + current_question_number.to_s +
-        ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + END_MINIPAGE_ALIGN
+        ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + self._end_minipage
       current_question_number += 1
     end
     result_latex
