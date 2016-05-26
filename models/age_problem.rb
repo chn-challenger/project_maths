@@ -174,6 +174,15 @@ class AgeProblem
     end
   end
 
+
+  def _mtp_question_texts(person_1,person_2,time,age_mtp)
+    be = 'was' if time < 0
+    be = 'is' if time == 0
+    be = 'will be' if time > 0
+    "#{person_2} #{be} #{age_mtp}as old as #{person_1}. "
+  end
+
+
   def generate_mtp_question_text(people)
     age_mtp_1 = english_times(time_1_val)
     tme_diff = english_years(time_diff)
@@ -192,56 +201,23 @@ class AgeProblem
     time_2_text = _time_text(time_2)
 
     if persons[1][2] == nil && persons[0][2] == nil #both named
-      if time_1 < 0
-        text_part_1 = "#{persons[1][0]} was #{age_mtp_1}as old as #{persons[0][0]}. "
-      elsif time_1 == 0
-        text_part_1 = "#{persons[1][0]} is #{age_mtp_1}as old as #{persons[0][0]}. "
-      else
-        text_part_1 = "#{persons[1][0]} will be #{age_mtp_1}as old as #{persons[0][0]}. "
-      end
-      if time_2 < 0
-        text_part_2 = "#{persons[1][0]} was #{age_mtp_2}as old as #{persons[0][0]}. "
-      elsif time_2 == 0
-        text_part_2 = "#{persons[1][0]} is #{age_mtp_2}as old as #{persons[0][0]}. "
-      else
-        text_part_2 = "#{persons[1][0]} will be #{age_mtp_2}as old as #{persons[0][0]}. "
-      end
+      person_1 = "#{persons[0][0]}"
+      person_2 = "#{persons[1][0]}"
     end
 
     if persons[1][2] == nil && persons[0][2] == :rel #older named
       older_s = persons[0][1] == :m ? 'his' : 'her'
-      if time_1 < 0
-        text_part_1 = "#{persons[1][0]} was #{age_mtp_1}as old as #{older_s} #{persons[0][0]}. "
-      elsif time_1 == 0
-        text_part_1 = "#{persons[1][0]} is #{age_mtp_1}as old as #{older_s} #{persons[0][0]}. "
-      else
-        text_part_1 = "#{persons[1][0]} will be #{age_mtp_1}as old as #{older_s} #{persons[0][0]}. "
-      end
-      if time_2 < 0
-        text_part_2 = "#{persons[1][0]} was #{age_mtp_2}as old as #{older_s} #{persons[0][0]}. "
-      elsif time_2 == 0
-        text_part_2 = "#{persons[1][0]} is #{age_mtp_2}as old as #{older_s} #{persons[0][0]}. "
-      else
-        text_part_2 = "#{persons[1][0]} will be #{age_mtp_2}as old as #{older_s} #{persons[0][0]}. "
-      end
+      person_1 = "#{older_s} #{persons[0][0]}"
+      person_2 = "#{persons[1][0]}"
     end
 
     if persons[1][2] == :rel && persons[0][2] == nil #younger named
-      if time_1 < 0
-        text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} was #{age_mtp_1}as old as #{persons[0][0]}. "
-      elsif time_1 == 0
-        text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_mtp_1}as old as #{persons[0][0]}. "
-      else
-        text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} will be #{age_mtp_1}as old as #{persons[0][0]}. "
-      end
-      if time_2 < 0
-        text_part_2 = "#{persons[0][0]}'s #{persons[1][0]} was #{age_mtp_2}as old as #{persons[0][0]}. "
-      elsif time_2 == 0
-        text_part_2 = "#{persons[0][0]}'s #{persons[1][0]} is #{age_mtp_2}as old as #{persons[0][0]}. "
-      else
-        text_part_2 = "#{persons[0][0]}'s #{persons[1][0]} will be #{age_mtp_2}as old as #{persons[0][0]}. "
-      end
+      person_1 = "#{persons[0][0]}"
+      person_2 = "#{persons[0][0]}'s #{persons[1][0]}"
     end
+
+    text_part_1 = _mtp_question_texts(person_1,person_2,time_1,age_mtp_1)
+    text_part_2 = _mtp_question_texts(person_1,person_2,time_2,age_mtp_2)
 
     if persons[0][2] == nil
       text_part_3 = "How old is #{persons[0][0]} now?"
