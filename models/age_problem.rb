@@ -277,31 +277,14 @@ class AgeProblem
     time_line_text + younger_line + older_line + word_eqn
   end
 
-  def _add_type_soln_part_2
-    total_time_diff = time_1_val + time_diff
-    left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,total_time_diff)])
-    right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
-    equation = Equation.new(left_side,right_side)
-    sol_eqn_array = []
-    step_1 = equation
-    sol_eqn_array << step_1
-    step_2 = equation.copy._age_problem_expand
-    sol_eqn_array << step_2
-    step_3 = step_2.copy._standardise_m_sums.collect_like_terms._remove_m_form_one_coef
-    sol_eqn_array << step_3
-    step_4 = step_3.copy._age_problem_simplify_m_sums._remove_m_form_one_coef.standardise_linear_equation
-    l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
-    l_eqn_soln = l_eqn._generate_solution
-    sol_eqn_array = sol_eqn_array + l_eqn_soln
-    result = ''
-    sol_eqn_array.each do |solution_equation|
-      result += '&&' + solution_equation.latex + '&\\\\' + "\n"
+  def _both_type_soln_part_2
+    if time_1_rel == :add
+      total_time_diff = time_1_val + time_diff
+      left_side = expression_factory.build([[nil,'x'],[:add,total_time_diff]])
     end
-    result
-  end
-
-  def _mtp_type_soln_part_2
-    left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
+    if time_1_rel == :mtp
+      left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
+    end
     right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
     equation = Equation.new(left_side,right_side)
     sol_eqn_array = []
@@ -339,17 +322,16 @@ class AgeProblem
     time_1 = _time_soln_text(time_line_1)
     part_3 = "&&\\text{#{persons[0][0]} now} &= \\text{#{persons[0][0]} #{time_1}} " + reverse_time_line_1 + "\\\\\n"
     part_3 += "&&\\text{#{persons[0][0]} now} &= #{answer} " + reverse_time_line_1 + "\\\\\n"
-    # part_3 += "&&\\text{#{persons[0][0]} now} &= #{answer - time_line_1}" + "\\\\\n"
     part_3 += "&Answer:&\\text{#{persons[0][0]} now} &= #{answer - time_line_1}"
     part_3
   end
 
   def mtp_type_soln
-    _mtp_type_soln_part_1 + _mtp_type_soln_part_2 + _mtp_type_soln_part_3
+    _mtp_type_soln_part_1 + _both_type_soln_part_2 + _mtp_type_soln_part_3
   end
 
   def add_type_soln
-    _add_type_soln_part_1 + _add_type_soln_part_2 + _add_type_soln_part_3
+    _add_type_soln_part_1 + _both_type_soln_part_2 + _add_type_soln_part_3
   end
 
   def self.named_persons

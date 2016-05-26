@@ -331,5 +331,4 @@ describe AgeProblem do
       expect(latex[:solution_latex]).to eq "In ten years time, John's grandfather will be seven times as old as John. Twenty two years from now, John's grandfather will be four times as old as John. How old is John now?\n\\begin{align*}\n&\\text{10 years from now}&&&&\\text{22 years from now}&\\\\\n&\\text{John}\\hspace{10pt}x&&&&\\text{John}\\hspace{10pt}x+12&\\\\\n&\\text{grandfather}\\hspace{10pt}7x&&&&\\text{grandfather}\\hspace{10pt}7x+12&\\\\\n&&\\text{grandfather} &= \\text{4} \\times \\text{John}&\\\\\n&&7x+12&=4\\left(x+12\\right)&\\\\\n&&7x+12&=4x+48&\\\\\n&&7x-4x&=48-12&\\\\\n&&3x&=36&\\\\\n&&x&=\\frac{36}{3}&\\\\\n&&x&=12&\\\\\n&&\\text{John now} &= \\text{John 10 years from now} - 10\\\\\n&&\\text{John now} &= 12 - 10\\\\\n&Answer:&\\text{John now} &= 2\n\\end{align*}\n"
     end
   end
-
 end
