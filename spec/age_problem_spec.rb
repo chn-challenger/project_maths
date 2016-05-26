@@ -160,37 +160,48 @@ describe AgeProblem do
       rhs = question.time_1_val * question.answer + question.time_diff
       expect(lhs).to eq rhs
     end
-      # it 'with a time 1 value' do
-      #   expect(question.time_1_val).to eq 30
-      # end
-      #
-      # it 'with a time 1 time 2 difference' do
-      #   expect(question.time_diff).to eq 1
-      # end
-      #
-      # it 'with a time 2 value' do
-      #   expect(question.time_2_val).to eq 3
-      # end
-      #
-      # it 'with a answer' do
-      #   expect(question.answer).to eq 14
-      # end
-      #
-      # it 'with a time line 1' do
-      #   expect(question.time_line_1).to eq 0
-      # end
-      #
-      # it 'with a time line 2' do
-      #   expect(question.time_line_2).to eq 1
-      # end
-      #
-      # it 'with a time line 3' do
-      #   expect(question.time_line_3).to eq 0
-      # end
-      #
-      # it 'with two people' do
-      #   expect(question.persons).to eq [["Ken",:m],["mother",:f,:rel]]
-      # end
+
+    context 'generates a mtp type question' do
+      it 'with a time 1 value' do
+        srand(100)
+        expect(question.time_1_val).to eq 3
+      end
+
+      it 'with a time 1 time 2 difference' do
+        srand(100)
+        expect(question.time_diff).to eq 10
+      end
+
+      it 'with a time 2 value' do
+        srand(100)
+        expect(question.time_2_val).to eq 2
+      end
+
+      it 'with a answer' do
+        srand(100)
+        expect(question.answer).to eq 10
+      end
+
+      it 'with a time line 1' do
+        srand(100)
+        expect(question.time_line_1).to eq 1
+      end
+
+      it 'with a time line 2' do
+        srand(100)
+        expect(question.time_line_2).to eq 11
+      end
+
+      it 'with a time line 3' do
+        srand(100)
+        expect(question.time_line_3).to eq 0
+      end
+
+      it 'with two people' do
+        srand(100)
+        expect(question.persons).to eq [["Henry",:m],["father",:m,:rel]]
+      end
+    end
   end
 
 
