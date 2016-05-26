@@ -277,7 +277,6 @@ describe AgeProblem do
     end
   end
 
-
   describe '#generate_mtp_question_text' do
     let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
       ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
@@ -295,8 +294,14 @@ describe AgeProblem do
 
     it 'generates solution latex for mtp type question eg 2' do
       srand(410)
-      p question.generate_mtp_question_text
       expect(solution_latex).to eq "&\\text{10 years ago}&&&&\\text{22 years from now}&\\\\\n&\\text{Adam}\\hspace{10pt}x&&&&\\text{Adam}\\hspace{10pt}x+32&\\\\\n&\\text{grandmother}\\hspace{10pt}4x&&&&\\text{grandmother}\\hspace{10pt}4x+32&\\\\\n&&\\text{grandmother} &= \\text{2} \\times \\text{Adam}&\\\\\n&&4x+32&=2\\left(x+32\\right)&\\\\\n&&4x+32&=2x+64&\\\\\n&&4x-2x&=64-32&\\\\\n&&2x&=32&\\\\\n&&x&=\\frac{32}{2}&\\\\\n&&x&=16&\\\\\n&&\\text{Adam now} &= \\text{Adam 10 years ago} + 10\\\\\n&&\\text{Adam now} &= 16 + 10\\\\\n&Answer:&\\text{Adam now} &= 26"
+    end
+
+    it 'does some wierd stuff' do
+      question = AgeProblem.generate_question
+      p question
+      latex = AgeProblem.latex(question)
+      puts latex[:solution_latex]
     end
   end
 

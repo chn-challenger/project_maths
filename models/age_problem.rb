@@ -333,23 +333,46 @@ class AgeProblem
   #   end
   #   result
   # end
-
-
-
-
-  def self._generate_solution_basics(question)
-    #[equations to get to the solution]
+  def self.named_persons
+    [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],['Davina',:f],
+      ['Henry',:m],['Sarah',:f]]
   end
 
-  def self._generate_question_basics()
-    generated_question
-    solution = generated_question._generate_solution_basics
-    if solution.is_not_integer?
-      return self_generate_question_basics
-    else
-      return {question:generate_question,solution:solution}
-    end
+  def self.older_rels
+    {gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
+      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}
   end
+
+  def self.younger_rels
+    {gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
+      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}
+  end
+
+  def self.generate_question(parameters={})
+    generate_mtp_type_question(named_persons,younger_rels,older_rels)
+  end
+
+  def self.latex(question)
+    question_latex = question.generate_mtp_question_text
+    solution_latex = question_latex + "\n\\begin{align*}\n" + question.mtp_type_soln + "\n\\end{align*}\n"
+    {question_latex:question_latex,solution_latex:solution_latex}
+  end
+
+
+
+  # def self._generate_solution_basics(question)
+  #   #[equations to get to the solution]
+  # end
+  #
+  # def self._generate_question_basics()
+  #   generated_question
+  #   solution = generated_question._generate_solution_basics
+  #   if solution.is_not_integer?
+  #     return self_generate_question_basics
+  #   else
+  #     return {question:generate_question,solution:solution}
+  #   end
+  # end
 
 
 
