@@ -170,40 +170,15 @@ class AgeProblem
     text_part_1 + text_part_2 + text_part_3 + text_part_4
   end
 
-  def self.generate_mtp_type_question(named_persons,younger_rels,older_rels)
+  def self._generate_mtp_type_question_part_1
     # based on the following formula for (:mtp,a,b,c) question
     # b(c - 1) = x(a - c)
     x = rand(2..30)
     a_sbt_c = rand(1..[6,100/x].min)
-    a_c_choices = _gen_mtp_back_track_recursion(x,a_sbt_c,named_persons,younger_rels,older_rels)
-    choosen = a_c_choices.sample
-
-
-    #x is the same as answer!!!!!!!!!!!!
-
-    # younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
-    # min_time = -1*younger_age + 1
-    # @time_line_1 = rand(min_time..min_time.abs)
-    # @time_line_2 = @time_line_1 + time_diff
-
-    time_1_val = choosen[1]
-    time_diff = choosen[2]
-    time_2_val = choosen[3]
-
-    min_time = -1*x + 1
-    time_line_1 = rand(min_time..min_time.abs)
-    time_line_2 = time_line_1 + time_diff
-    time_line_3 = 0
-
-    age_diff = x * (time_1_val - 1)
-    persons = _generate_people(named_persons,younger_rels,older_rels,
-      age_diff)
-
-    return age_problem.new(:mtp,time_1_val,time_diff,time_2_val,x,
-      time_line_1,time_line_2,time_line_3,persons)
+    _gen_mtp_back_track_recursion(x,a_sbt_c)
   end
 
-  def self._gen_mtp_back_track_recursion(x,a_sbt_c,named_persons,younger_rels,older_rels)
+  def self._gen_mtp_back_track_recursion(x,a_sbt_c)
     a_c_choices = []
     for c in 2..7
       a = c + a_sbt_c
@@ -214,15 +189,30 @@ class AgeProblem
     end
     if a_c_choices.length == 0
       if a_sbt_c > 1
-        return _gen_mtp_back_track_recursion(x,a_sbt_c-1,named_persons,younger_rels,older_rels)
+        return _gen_mtp_back_track_recursion(x,a_sbt_c-1)
       else
-        return generate_mtp_type_question(named_persons,younger_rels,older_rels)
+        return _generate_mtp_type_question_part_1
       end
     else
-      return a_c_choices
-      # result = a_c_choices.sample
-      # return age_problem.new(:mtp,result[1],result[2],result[3])
+      return a_c_choices.sample
     end
+  end
+
+  def self.generate_mtp_type_question(named_persons,younger_rels,older_rels)
+    choosen = _generate_mtp_type_question_part_1
+    answer = choosen[0]
+    time_1_val = choosen[1]
+    time_diff = choosen[2]
+    time_2_val = choosen[3]
+    min_time = -1*answer + 1
+    time_line_1 = rand(min_time..min_time.abs)
+    time_line_2 = time_line_1 + time_diff
+    time_line_3 = 0
+    age_diff = answer * (time_1_val - 1)
+    persons = _generate_people(named_persons,younger_rels,older_rels,
+      age_diff)
+    return age_problem.new(:mtp,time_1_val,time_diff,time_2_val,answer,
+      time_line_1,time_line_2,time_line_3,persons)
   end
 
   def _mtp_question_texts(person_1,person_2,time,age_mtp)

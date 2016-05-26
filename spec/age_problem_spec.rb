@@ -37,7 +37,7 @@ describe AgeProblem do
   #   end
   # end
 
-  describe '#generate_add_question_text/generate_add_question' do
+  describe '#generate_add_type_question' do
     let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
       ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
     let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
@@ -45,7 +45,7 @@ describe AgeProblem do
     let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
       [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
     let(:question){described_class.generate_add_type_question(named_persons,younger_rels,older_rels)}
-    context 'generates add type question' do
+    context 'generates an add type question' do
       before(:each) do
         srand(200)
       end
@@ -88,7 +88,7 @@ describe AgeProblem do
     end
   end
 
-  describe '#generate_add_question_text/generate_add_question' do
+  describe '#generate_add_question_text' do
     let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
       ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
     let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
@@ -103,28 +103,28 @@ describe AgeProblem do
       expect(question_text).to eq "Beth is twenty five years older than her daughter. In eleven years time, Beth will be twice as old as her daughter. How old is her daughter now?"
     end
 
-    it 'generates question text for add type question eg 1' do
+    it 'generates question text for add type question eg 2' do
       srand(400)
       expect(question_text).to eq "Sarah is sixty six years younger than her grandmother. Four years from now, her grandmother will be seven times as old as her. How old is Sarah now?"
     end
 
-    it 'generates question text for add type question eg 1' do
+    it 'generates question text for add type question eg 3' do
       srand(500)
       expect(question_text).to eq "Sarah's mother is twenty one years older than Sarah. Two years from now, Sarah's mother will be eight times as old as Sarah. How old is Sarah now?"
     end
 
-    it 'generates question text for add type question eg 1' do
+    it 'generates question text for add type question eg 4' do
       srand(600)
       expect(question_text).to eq "Sarah is seventy two years younger than her grandfather. Four years from now, her grandfather will be nine times as old as her. How old is Sarah now?"
     end
 
-    it 'generates question text for add type question eg 1' do
+    it 'generates question text for add type question eg 5' do
       srand(700)
       expect(question_text).to eq "Davina is eleven years younger than Julie. Two years from now, Julie will be twice as old as Davina. How old is Davina now?"
     end
   end
 
-  describe '#generate_add_question_text/generate_add_question' do
+  describe '#generate_mtp_type_question' do
     let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
       ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
     let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
@@ -132,16 +132,34 @@ describe AgeProblem do
     let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
       [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
     let(:question){described_class.generate_mtp_type_question(named_persons,younger_rels,older_rels)}
-    context 'generates add type question' do
-      before(:each) do
-        srand(200)
-      end
 
-      it 'with a time 1 relation' do
-        p question
-        # expect(question.time_1_rel).to eq :mtp
-      end
+    it 'generate mtp type questions that are consistent eg 1' do
+      srand(100)
+      lhs = question.time_2_val * (question.answer + question.time_diff)
+      rhs = question.time_1_val * question.answer + question.time_diff
+      expect(lhs).to eq rhs
+    end
 
+    it 'generate mtp type questions that are consistent eg 2' do
+      srand(110)
+      lhs = question.time_2_val * (question.answer + question.time_diff)
+      rhs = question.time_1_val * question.answer + question.time_diff
+      expect(lhs).to eq rhs
+    end
+
+    it 'generate mtp type questions that are consistent eg 3' do
+      srand(120)
+      lhs = question.time_2_val * (question.answer + question.time_diff)
+      rhs = question.time_1_val * question.answer + question.time_diff
+      expect(lhs).to eq rhs
+    end
+
+    it 'generate mtp type questions that are consistent eg 4' do
+      srand(130)
+      lhs = question.time_2_val * (question.answer + question.time_diff)
+      rhs = question.time_1_val * question.answer + question.time_diff
+      expect(lhs).to eq rhs
+    end
       # it 'with a time 1 value' do
       #   expect(question.time_1_val).to eq 30
       # end
@@ -173,7 +191,6 @@ describe AgeProblem do
       # it 'with two people' do
       #   expect(question.persons).to eq [["Ken",:m],["mother",:f,:rel]]
       # end
-    end
   end
 
 
