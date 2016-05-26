@@ -292,7 +292,7 @@ describe AgeProblem do
     it 'generates question text for mtp type question eg 1' do
       srand(300)
       # puts solution_text
-      p soln_eqns
+      puts AgeProblem._solution_latex(soln_eqns)
       # expect(solution_text).to eq "Three years from now, John's mother will be three times as old as John. Twenty two years from now, John's mother will be twice as old as John. How old is John now?"
     end
   end

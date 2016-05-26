@@ -231,8 +231,7 @@ class Expression
 
   def latex
     return '' if steps.length == 0
-    convert_lft_steps
-    copy = self.copy.flatten
+    copy = self.copy.convert_lft_steps.flatten
     curr_exp = expression_factory.build([copy.steps.first])
     result = copy.steps.first.val.to_s
     for i in 1...copy.steps.length
@@ -245,6 +244,23 @@ class Expression
     end
     result
   end
+
+  # def latex
+  #   return '' if steps.length == 0
+  #   convert_lft_steps
+  #   copy = self.copy.flatten
+  #   curr_exp = expression_factory.build([copy.steps.first])
+  #   result = copy.steps.first.val.to_s
+  #   for i in 1...copy.steps.length
+  #     step = copy.steps[i]
+  #     result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :add
+  #     result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :sbt
+  #     result = _add_sbt_mtp_latex(step,result,curr_exp) if step.ops == :mtp
+  #     result = _div_latex(step,result) if step.ops == :div
+  #     curr_exp.steps << copy.steps[i]
+  #   end
+  #   result
+  # end
 
   def flatex #temporary solution for issue 2
     f_sign = {nil=>'+',:add => '+',:sbt => '-',:mtp => '\times',:div => '\div'}

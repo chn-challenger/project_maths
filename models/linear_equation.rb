@@ -41,6 +41,7 @@ class LinearEquation < Equation
   def _generate_solution
     equation = self.copy
     solution_equations = [equation]
+    return solution_equations if equation.left_side.steps.count == 1 && equation.right_side.steps.count == 1
     while true
       equation = equation._solution_next_equation
       solution_equations << equation

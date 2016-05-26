@@ -537,7 +537,7 @@ describe Expression do
             [:add,[5,8,'w']],         [:add,[6,'z',8,'w']]
           ])
         result = exp.expand
-        expect(exp.expand).to eq expected_exp
+        expect(result).to eq expected_exp
       end
     end
   end
