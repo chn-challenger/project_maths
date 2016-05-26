@@ -7,39 +7,58 @@ include EnglishNumber
 
 class AgeProblem
 
-  attr_accessor :time_1_rel, :time_1_val, :time_diff, :time_2_val, :equation, :time_line_1, :time_line_2
+  attr_accessor :time_1_rel, :time_1_val, :time_diff, :time_2_val, :solution, :time_line_1, :time_line_2, :time_line_3, :person_1, :person_2
 
-  def initialize(time_1_rel,time_1_val,time_diff,time_2_val)
+  def initialize(time_1_rel,time_1_val,time_diff,time_2_val,solution,time_line_1,
+    time_line_2,time_line_3,person_1,person_2)
+
     @time_1_rel = time_1_rel
     @time_1_val = time_1_val
     @time_diff = time_diff
     @time_2_val = time_2_val
-
-    if time_1_rel == :mtp
-      younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
-      min_time = -1*younger_age + 1
-      @time_line_1 = rand(min_time..min_time.abs)
-      @time_line_2 = @time_line_1 + time_diff
-    else
-      @time_line_1 = 0
-      @time_line_2 = time_diff
-    end
-
-    @equation = Equation.new()
-    if time_1_rel == :add
-      total_time_diff = time_1_val + time_diff
-      left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,total_time_diff)])
-    elsif time_1_rel == :mtp
-      left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
-    end
-    right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
-    @equation = Equation.new(left_side,right_side)
+    @solution = solution
+    @time_line_1 = time_line_1
+    @time_line_2 = time_line_2
+    @time_line_3 = time_line_3
+    @person_1 = person_1
+    @person_2 = person_2
+    #
+    # if time_1_rel == :mtp
+    #   younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
+    #   min_time = -1*younger_age + 1
+    #   @time_line_1 = rand(min_time..min_time.abs)
+    #   @time_line_2 = @time_line_1 + time_diff
+    # else
+    #   @time_line_1 = 0
+    #   @time_line_2 = time_diff
+    # end
+    #
+    # @equation = Equation.new()
+    # if time_1_rel == :add
+    #   total_time_diff = time_1_val + time_diff
+    #   left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,total_time_diff)])
+    # elsif time_1_rel == :mtp
+    #   left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
+    # end
+    # right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
+    # @equation = Equation.new(left_side,right_side)
   end
 
-  def self.generate_add_type_question
+  def self.generate_add_type_question(named_persons,younger_rels,older_rels)
     #based on the following formula for (:add,a,b,c) question
     # a/(c - 1) = x + b
     # a = age_difference, b = time_diff, c = mtp_val
+
+    # if time_1_rel == :mtp
+    #   younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
+    #   min_time = -1*younger_age + 1
+    #   @time_line_1 = rand(min_time..min_time.abs)
+    #   @time_line_2 = @time_line_1 + time_diff
+    # else
+    #   @time_line_1 = 0
+    #   @time_line_2 = time_diff
+    # end
+
     age_difference = (4..80).to_a.sample
     mtp_val_choices = (1..8).to_a.select{|n| age_difference%n == 0 &&
       age_difference + age_difference/n <= 90 && age_difference/n > 1}
@@ -48,33 +67,65 @@ class AgeProblem
     else
       mtp_val = mtp_val_choices.sample
       time_diff = (1...age_difference / mtp_val).to_a.sample
-      return age_problem.new(:add,age_difference,time_diff,mtp_val+1)
+      answer = age_difference / mtp_val - time_diff
+      time_line_1 = 0
+      time_line_2 = time_diff
+      time_line_3 = 0
+
+      persons = _generate_people(named_persons,younger_rels,older_rels,age_difference)
+
+      return age_problem.new(:add,age_difference,time_diff,mtp_val+1,answer,time_line_1,time_line_2,time_line_3,persons[0],persons[1])
     end
   end
 
-  def _generate_people(people,diff_in_age)
-    named_person = people.sample
+  # def _generate_people(people,diff_in_age)
+  #   named_person = people.sample
+  #   if rand(0..1) == 0
+  #     younger = named_person
+  #     if 1 <= diff_in_age && diff_in_age < 20
+  #       older = people.select{|name| name != named_person}.sample
+  #     elsif 20 <= diff_in_age && diff_in_age < 45
+  #       older = [['father',:m,:rel],['mother',:f,:rel]].sample
+  #     elsif  45 <= diff_in_age && diff_in_age <= 80
+  #       older = [['grandfather',:m,:rel],['grandmother',:f,:rel]].sample
+  #     end
+  #   else
+  #     older = named_person
+  #     if 1 <= diff_in_age && diff_in_age < 20
+  #       younger = people.select{|name| name != named_person}.sample
+  #     elsif 20 <= diff_in_age && diff_in_age < 45
+  #       younger = [['son',:m,:rel],['daughter',:f,:rel]].sample
+  #     elsif  45 <= diff_in_age && diff_in_age <= 80
+  #       younger = [['grandson',:m,:rel],['granddaughter',:f,:rel]].sample
+  #     end
+  #   end
+  #   [younger,older]
+  # end
+
+  def self._generate_people(named_persons,younger_rels,older_rels,diff_in_age)
+    named_person = named_persons.sample
     if rand(0..1) == 0
       younger = named_person
       if 1 <= diff_in_age && diff_in_age < 20
-        older = people.select{|name| name != named_person}.sample
+        older = named_persons.select{|name| name != named_person}.sample
       elsif 20 <= diff_in_age && diff_in_age < 45
-        older = [['father',:m,:rel],['mother',:f,:rel]].sample
+        older = older_rels[:gen1].sample
       elsif  45 <= diff_in_age && diff_in_age <= 80
-        older = [['grandfather',:m,:rel],['grandmother',:f,:rel]].sample
+        older = older_rels[:gen2].sample
       end
     else
       older = named_person
       if 1 <= diff_in_age && diff_in_age < 20
-        younger = people.select{|name| name != named_person}.sample
+        younger = named_persons.select{|name| name != named_person}.sample
       elsif 20 <= diff_in_age && diff_in_age < 45
-        younger = [['son',:m,:rel],['daughter',:f,:rel]].sample
+        younger = younger_rels[:gen1].sample
       elsif  45 <= diff_in_age && diff_in_age <= 80
-        younger = [['grandson',:m,:rel],['granddaughter',:f,:rel]].sample
+        younger = younger_rels[:gen2].sample
       end
     end
     [younger,older]
   end
+
 
 
   def generate_add_question_text(people)
@@ -183,14 +234,12 @@ class AgeProblem
     end
   end
 
-
   def _mtp_question_texts(person_1,person_2,time,age_mtp)
     be = 'was' if time < 0
     be = 'is' if time == 0
     be = 'will be' if time > 0
     "#{person_2} #{be} #{age_mtp}as old as #{person_1}. "
   end
-
 
   def generate_mtp_question_text(people)
     age_mtp_1 = english_times(time_1_val)
@@ -234,13 +283,10 @@ class AgeProblem
     end
   end
 
+  def mtp_type_soln_part_1
 
 
-
-
-
-
-
+  end
 
   def solution
     sol_eqn_array = []
