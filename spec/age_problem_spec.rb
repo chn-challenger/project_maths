@@ -286,74 +286,17 @@ describe AgeProblem do
     let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
       [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
     let(:question){described_class.generate_mtp_type_question(named_persons,younger_rels,older_rels)}
-    let(:solution_latex_1){question.mtp_type_soln_part_1}
-    let(:solution_latex_2){question.mtp_type_soln_part_2}
+    let(:solution_latex){question.mtp_type_soln}
 
-    it 'generates question text for mtp type question eg 1' do
-      srand(300)
-      puts solution_latex_2
-      # puts AgeProblem._solu/tion_latex(soln_eqns)
-      # expect(solution_text).to eq "Three years from now, John's mother will be three times as old as John. Twenty two years from now, John's mother will be twice as old as John. How old is John now?"
-    end
-  end
-
-
-
-  describe '#solution/solution_latex' do
-    # let(:age_prob_1){described_class.new(:add,20,5,3)}
-    # let(:age_prob_2){described_class.new(:mtp,4,10,2)}
-    let(:people){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
-      ['Davina',:f],['Henry',:m],['Sarah',:f]]}
-
-
-    it 'generates solution to the first example' do
-
-      # srand(123)
-      #
-      # problem = AgeProblem.generate_mtp_type_question
-      #
-      # text = problem.generate_mtp_question_text(people)
-      # p text
-      # p problem
-      #
+    it 'generates solution latex for mtp type question eg 1' do
+      srand(400)
+      expect(solution_latex).to eq "&\\text{14 years ago}&&&&\\text{7 years from now}&\\\\\n&\\text{Davina}\\hspace{10pt}x&&&&\\text{Davina}\\hspace{10pt}x+21&\\\\\n&\\text{mother}\\hspace{10pt}3x&&&&\\text{mother}\\hspace{10pt}3x+21&\\\\\n&&\\text{mother} &= \\text{2} \\times \\text{Davina}&\\\\\n&&3x+21&=2\\left(x+21\\right)&\\\\\n&&3x+21&=2x+42&\\\\\n&&3x-2x&=42-21&\\\\\n&&x&=21&\\\\\n&&\\text{Davina now} &= \\text{Davina 14 years ago} + 14\\\\\n&&\\text{Davina now} &= 21 + 14\\\\\n&Answer:&\\text{Davina now} &= 35"
     end
 
-    # it 'generates solution to the second example' do
-    #   latex = AgeProblem._solution_latex(age_prob_2.solution)
-    #   puts latex
-    #   expected_latex = "x3+10&=2\\left(x+10\\right)\\\\\n3x+10&=2x+20\\\\\n10&=2x+20-3x\\\\\n10&=-1x+20\\\\\n-1x+20&=10\\\\\n-1x&=10-20\\\\\n-1x&=-10"
-    #   expect(latex).to eq expected_latex
-    # end
-
-#     &\text{Two years ago}&&&&\text{Three years from now}\\
-# &\text{Son}\hspace{10pt}x&&&&\text{Son}\hspace{10pt}x+5\\
-# &\text{John}\hspace{10pt}5x&&&&\text{John}\hspace{10pt}5x+5\\
-# 		&&\text{John} &= \text{three} \times \text{Son}\\
-# 		&&5x + 5 &= 3\left(x+5\right)\\
-# 		&&x&= 5\\
-# &x = 5 = \text{age of John's son two}\\
-# &x + 2 = 5 + 2 = 7 =  \text{age of J}\\
-# &\text{John's son is now 7 years old.}
-
-
-#better model solution
-
-# \begin{minipage}[t]{1.0000\textwidth}
-# 	\color{blue}
-# 		\begin{align*}
-# &\text{Two years ago}&            	&&			 		 &\text{Three years from now}&\\
-# &\text{Son}\hspace{10pt}x&		&&					&\text{Son}\hspace{10pt}x+5&\\
-# &\text{John}\hspace{10pt}5x& &&			 		 &\text{John}\hspace{10pt}5x+5&\\
-# 		&&       \text{John} &= \text{three} \times \text{Son}&\\
-# 		&&             5x + 5 &= 3\left(x+5\right)&\\
-# 		&&                       x&= 5&\\
-# &&  \text{son now} &= \text{son 2 years ago} + 2 \\
-# &&\text{son now} &= 5 + 2\\
-# &Answer:&\text{age of son now} &= 7
-# 		\end{align*}
-# 	\end{minipage}
-
-
+    it 'generates solution latex for mtp type question eg 2' do
+      srand(410)
+      expect(solution_latex).to eq "&\\text{10 years ago}&&&&\\text{22 years from now}&\\\\\n&\\text{Adam}\\hspace{10pt}x&&&&\\text{Adam}\\hspace{10pt}x+32&\\\\\n&\\text{grandmother}\\hspace{10pt}4x&&&&\\text{grandmother}\\hspace{10pt}4x+32&\\\\\n&&\\text{grandmother} &= \\text{2} \\times \\text{Adam}&\\\\\n&&4x+32&=2\\left(x+32\\right)&\\\\\n&&4x+32&=2x+64&\\\\\n&&4x-2x&=64-32&\\\\\n&&2x&=32&\\\\\n&&x&=\\frac{32}{2}&\\\\\n&&x&=16&\\\\\n&&\\text{Adam now} &= \\text{Adam 10 years ago} + 10\\\\\n&&\\text{Adam now} &= 16 + 10\\\\\n&Answer:&\\text{Adam now} &= 26"
+    end
   end
 
 

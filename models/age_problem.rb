@@ -272,19 +272,19 @@ class AgeProblem
     end
   end
 
-  def mtp_type_soln_part_1
+  def _mtp_type_soln_part_1
     time_1 = _time_soln_text(time_line_1)
     time_2 = _time_soln_text(time_line_2)
     time_line_text = "&\\text{#{time_1}}&&&&\\text{#{time_2}}&\\\\\n"
     younger_line = "&\\text{#{persons[0][0]}}\\hspace{10pt}x&&&&\\text{#{persons[0][0]}}\\hspace{10pt}x+#{time_diff}&\\\\\n"
     older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x&&&&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x+#{time_diff}&\\\\\n"
     #  	 	&&       \text{John} &= \text{three} \times \text{Son}&\\
-    word_eqn = "&&\\text{#{persons[1][0]}} &= \\text{#{english(time_2_val)}} \\times \\text{#{persons[0][0]}}&\\\\\n"
+    word_eqn = "&&\\text{#{persons[1][0]}} &= \\text{#{time_2_val}} \\times \\text{#{persons[0][0]}}&\\\\\n"
 
     time_line_text + younger_line + older_line + word_eqn
   end
 
-  def mtp_type_soln_part_2
+  def _mtp_type_soln_part_2
     left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
     right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
     equation = Equation.new(left_side,right_side)
@@ -307,17 +307,32 @@ class AgeProblem
     result
   end
 
-    
-
-
-  def self._solution_latex(solutions_array)
-    result = ''
-    solutions_array.each do |solution_equation|
-      result += solution_equation.latex + '\\\\' + "\n"
+  def _mtp_type_soln_part_3
+    if time_line_1 < 0
+      reverse_time_line_1 = "+ #{time_line_1.abs}"
     end
-    result.slice!(-3.
-    result
+    if time_line_1 > 0
+      reverse_time_line_1 = "- #{time_line_1}"
+    end
+    time_1 = _time_soln_text(time_line_1)
+    part_3 = "&&\\text{#{persons[0][0]} now} &= \\text{#{persons[0][0]} #{time_1}} " + reverse_time_line_1 + "\\\\\n"
+    part_3 += "&&\\text{#{persons[0][0]} now} &= #{answer} " + reverse_time_line_1 + "\\\\\n"
+    # part_3 += "&&\\text{#{persons[0][0]} now} &= #{answer - time_line_1}" + "\\\\\n"
+    part_3 += "&Answer:&\\text{#{persons[0][0]} now} &= #{answer - time_line_1}"
+    part_3
   end
+
+  def mtp_type_soln
+    _mtp_type_soln_part_1 + _mtp_type_soln_part_2 + _mtp_type_soln_part_3
+  end
+
+  # def self._solution_latex(solutions_array)
+  #   result = ''
+  #   solutions_array.each do |solution_equation|
+  #     result += solution_equation.latex + '\\\\' + "\n"
+  #   end
+  #   result
+  # end
 
 
 
