@@ -298,6 +298,8 @@ describe AgeProblem do
     end
 
     it 'does some wierd stuff' do
+      question = AgeProblem.generate_add_type_question(named_persons,younger_rels,older_rels)
+      puts question._add_type_soln_part_2
       # question = AgeProblem.generate_question
       # p question
       # latex = AgeProblem.latex(question)

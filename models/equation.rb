@@ -76,6 +76,12 @@ class Equation
     self
   end
 
+  def flatten
+    left_side.flatten
+    right_side.flatten
+    self
+  end
+
   def _remove_m_form_one_coef
     left_side._remove_m_form_one_coef
     right_side._remove_m_form_one_coef

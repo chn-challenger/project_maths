@@ -263,14 +263,26 @@ class AgeProblem
   end
 
   def _time_soln_text(time)
+    plural = time.abs == 1 ? '' : 's'
     if time < 0
-      "#{time.abs} years ago"
+      "#{time.abs} year#{plural} ago"
     elsif time == 0
       "Now"
     else
-      "#{time} years from now"
+      "#{time} year#{plural} from now"
     end
   end
+
+  def _add_type_soln_part_1
+    time_1 = _time_soln_text(time_line_1)
+    time_2 = _time_soln_text(time_line_2)
+    time_line_text = "&\\text{#{time_1}}&&&&\\text{#{time_2}}&\\\\\n"
+    younger_line = "&\\text{#{persons[0][0]}}\\hspace{10pt}x&&&&\\text{#{persons[0][0]}}\\hspace{10pt}x+#{time_diff}&\\\\\n"
+    older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}x + #{time_1_val}&&&&\\text{#{persons[1][0]}}\\hspace{10pt}x + #{time_1_val} + #{time_diff}&\\\\\n"
+    word_eqn = "&&\\text{#{persons[1][0]}} &= \\text{#{time_2_val}} \\times \\text{#{persons[0][0]}}&\\\\\n"
+    time_line_text + younger_line + older_line + word_eqn
+  end
+
 
   def _mtp_type_soln_part_1
     time_1 = _time_soln_text(time_line_1)
@@ -278,10 +290,31 @@ class AgeProblem
     time_line_text = "&\\text{#{time_1}}&&&&\\text{#{time_2}}&\\\\\n"
     younger_line = "&\\text{#{persons[0][0]}}\\hspace{10pt}x&&&&\\text{#{persons[0][0]}}\\hspace{10pt}x+#{time_diff}&\\\\\n"
     older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x&&&&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x+#{time_diff}&\\\\\n"
-    #  	 	&&       \text{John} &= \text{three} \times \text{Son}&\\
     word_eqn = "&&\\text{#{persons[1][0]}} &= \\text{#{time_2_val}} \\times \\text{#{persons[0][0]}}&\\\\\n"
-
     time_line_text + younger_line + older_line + word_eqn
+  end
+
+  def _add_type_soln_part_2
+    total_time_diff = time_1_val + time_diff
+    left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,total_time_diff)])
+    right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
+    equation = Equation.new(left_side,right_side)
+    sol_eqn_array = []
+    step_1 = equation
+    sol_eqn_array << step_1
+    step_2 = equation.copy._age_problem_expand
+    sol_eqn_array << step_2
+    step_3 = step_2.copy._standardise_m_sums.collect_like_terms._remove_m_form_one_coef
+    sol_eqn_array << step_3
+    step_4 = step_3.copy._age_problem_simplify_m_sums._remove_m_form_one_coef.standardise_linear_equation
+    l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
+    l_eqn_soln = l_eqn._generate_solution
+    sol_eqn_array = sol_eqn_array + l_eqn_soln
+    result = ''
+    sol_eqn_array.each do |solution_equation|
+      result += '&&' + solution_equation.latex + '&\\\\' + "\n"
+    end
+    result
   end
 
   def _mtp_type_soln_part_2
@@ -299,12 +332,29 @@ class AgeProblem
     l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
     l_eqn_soln = l_eqn._generate_solution
     sol_eqn_array = sol_eqn_array + l_eqn_soln
-    # return sol_eqn_array
     result = ''
     sol_eqn_array.each do |solution_equation|
       result += '&&' + solution_equation.latex + '&\\\\' + "\n"
     end
     result
+  end
+
+  def _add_type_soln_part_3
+    if time_line_1 == 0
+      return "&Answer:&\\text{#{persons[0][0]} now} &= #{answer}"
+    end
+    if time_line_1 < 0
+      reverse_time_line_1 = "+ #{time_line_1.abs}"
+    end
+    if time_line_1 > 0
+      reverse_time_line_1 = "- #{time_line_1}"
+    end
+    time_1 = _time_soln_text(time_line_1)
+    part_3 = "&&\\text{#{persons[0][0]} now} &= \\text{#{persons[0][0]} #{time_1}} " + reverse_time_line_1 + "\\\\\n"
+    part_3 += "&&\\text{#{persons[0][0]} now} &= #{answer} " + reverse_time_line_1 + "\\\\\n"
+    # part_3 += "&&\\text{#{persons[0][0]} now} &= #{answer - time_line_1}" + "\\\\\n"
+    part_3 += "&Answer:&\\text{#{persons[0][0]} now} &= #{answer - time_line_1}"
+    part_3
   end
 
   def _mtp_type_soln_part_3

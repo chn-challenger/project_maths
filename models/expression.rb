@@ -688,7 +688,7 @@ class Expression
 
   def _remove_m_form_one_coef #expects an m-form-sum
     steps.each do |step|
-      if step.exp_valued? && step.val.steps.first.val == 1
+      if step.exp_valued? && step.val.steps.first.val == 1 && step.val.steps.length > 1
         step.val.steps.delete_at(0)
         step.val.steps.first.ops = nil
       end
