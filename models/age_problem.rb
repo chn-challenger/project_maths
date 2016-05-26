@@ -41,33 +41,37 @@ class AgeProblem
     end
   end
 
-  def generate_add_question_text(people)
-    age_diff = english_years(time_1_val)
-    tme_diff = english_years(time_diff)
-    age_mtp = english_times(time_2_val)
+  def _generate_people(people,diff_in_age)
     named_person = people.sample
-    rand_choice = [0,1].sample
-    if rand_choice == 0
+    if rand(0..1) == 0
       younger = named_person
-      if 1 <= time_1_val && time_1_val < 20
+      if 1 <= diff_in_age && diff_in_age < 20
         older = people.select{|name| name != named_person}.sample
-      elsif 20 <= time_1_val && time_1_val < 45
+      elsif 20 <= diff_in_age && diff_in_age < 45
         older = [['father',:m,:rel],['mother',:f,:rel]].sample
-      elsif  45 <= time_1_val && time_1_val <= 80
+      elsif  45 <= diff_in_age && diff_in_age <= 80
         older = [['grandfather',:m,:rel],['grandmother',:f,:rel]].sample
       end
     else
       older = named_person
-      if 1 <= time_1_val && time_1_val < 20
+      if 1 <= diff_in_age && diff_in_age < 20
         younger = people.select{|name| name != named_person}.sample
-      elsif 20 <= time_1_val && time_1_val < 45
+      elsif 20 <= diff_in_age && diff_in_age < 45
         younger = [['son',:m,:rel],['daughter',:f,:rel]].sample
-      elsif  45 <= time_1_val && time_1_val <= 80
+      elsif  45 <= diff_in_age && diff_in_age <= 80
         younger = [['grandson',:m,:rel],['granddaughter',:f,:rel]].sample
       end
     end
+    [younger,older]
+  end
 
-    persons = [younger,older]
+
+  def generate_add_question_text(people)
+    age_diff = english_years(time_1_val)
+    tme_diff = english_years(time_diff)
+    age_mtp = english_times(time_2_val)
+    persons = _generate_people(people,time_1_val)
+
     who_first = [:younger,:older].sample
 
     text_part_2 = ["in #{tme_diff} time, ","#{tme_diff} from now, "].sample.capitalize
@@ -174,30 +178,7 @@ class AgeProblem
     age_mtp_2 = english_times(time_2_val)
     younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
     age_diff = younger_age * (time_1_val - 1)
-
-    named_person = people.sample
-    if rand(0..1) == 0
-      younger = named_person
-      if 1 <= age_diff && age_diff < 20
-        older = people.select{|name| name != named_person}.sample
-      elsif 20 <= age_diff && age_diff < 45
-        older = [['father',:m,:rel],['mother',:f,:rel]].sample
-      elsif  45 <= age_diff && age_diff <= 80
-        older = [['grandfather',:m,:rel],['grandmother',:f,:rel]].sample
-      end
-    else
-      older = named_person
-      if 1 <= age_diff && age_diff < 20
-        younger = people.select{|name| name != named_person}.sample
-      elsif 20 <= age_diff && age_diff < 45
-        younger = [['son',:m,:rel],['daughter',:f,:rel]].sample
-      elsif  45 <= age_diff && age_diff <= 80
-        younger = [['grandson',:m,:rel],['granddaughter',:f,:rel]].sample
-      end
-    end
-
-    persons = [younger,older]
-
+    persons = _generate_people(people,age_diff)
     #choose two time lines
     min_time = -1*younger_age + 1
     time_1 = rand(min_time..min_time.abs)
