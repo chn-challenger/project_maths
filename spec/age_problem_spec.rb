@@ -147,7 +147,7 @@ describe AgeProblem do
 
     it 'generates question text for add type question eg 3' do
       srand(500)
-      expect(question_text).to eq "Sarah's mother is twenty one years older than Sarah. Two years from now, Sarah's mother will be eight times as old as Sarah. How old is Sarah now?"
+      expect(question_text).to eq "Sarah is thirty five years older than her daughter. Eight years from now, Sarah will be twice as old as her daughter. How old is her daughter now?"
     end
 
     it 'generates question text for add type question eg 4' do
@@ -298,8 +298,9 @@ describe AgeProblem do
     end
 
     it 'does some wierd stuff' do
-      question = AgeProblem.generate_add_type_question(named_persons,younger_rels,older_rels)
-      puts question._add_type_soln_part_2
+      question = AgeProblem.generate_question
+      latex = AgeProblem.latex(question)
+      puts latex[:solution_latex]
       # question = AgeProblem.generate_question
       # p question
       # latex = AgeProblem.latex(question)

@@ -58,6 +58,9 @@ class AgeProblem
       mtp_val = mtp_val_choices.sample
       time_diff = (1...age_difference / mtp_val).to_a.sample
       answer = age_difference / mtp_val - time_diff
+      if answer == 1
+        return self.generate_add_type_question(named_persons,younger_rels,older_rels)
+      end
       time_line_1 = 0
       time_line_2 = time_diff
       time_line_3 = 0
@@ -340,21 +343,7 @@ class AgeProblem
   end
 
   def _add_type_soln_part_3
-    if time_line_1 == 0
-      return "&Answer:&\\text{#{persons[0][0]} now} &= #{answer}"
-    end
-    if time_line_1 < 0
-      reverse_time_line_1 = "+ #{time_line_1.abs}"
-    end
-    if time_line_1 > 0
-      reverse_time_line_1 = "- #{time_line_1}"
-    end
-    time_1 = _time_soln_text(time_line_1)
-    part_3 = "&&\\text{#{persons[0][0]} now} &= \\text{#{persons[0][0]} #{time_1}} " + reverse_time_line_1 + "\\\\\n"
-    part_3 += "&&\\text{#{persons[0][0]} now} &= #{answer} " + reverse_time_line_1 + "\\\\\n"
-    # part_3 += "&&\\text{#{persons[0][0]} now} &= #{answer - time_line_1}" + "\\\\\n"
-    part_3 += "&Answer:&\\text{#{persons[0][0]} now} &= #{answer - time_line_1}"
-    part_3
+    "&Answer:&\\text{#{persons[0][0]} now} &= #{answer}"
   end
 
   def _mtp_type_soln_part_3
@@ -379,6 +368,10 @@ class AgeProblem
     _mtp_type_soln_part_1 + _mtp_type_soln_part_2 + _mtp_type_soln_part_3
   end
 
+  def add_type_soln
+    _add_type_soln_part_1 + _add_type_soln_part_2 + _add_type_soln_part_3
+  end
+
   def self.named_persons
     [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],['Davina',:f],
       ['Henry',:m],['Sarah',:f]]
@@ -395,12 +388,21 @@ class AgeProblem
   end
 
   def self.generate_question(parameters={})
-    generate_mtp_type_question(named_persons,younger_rels,older_rels)
+    if rand(0..1) == 0
+      generate_mtp_type_question(named_persons,younger_rels,older_rels)
+    else
+      generate_add_type_question(named_persons,younger_rels,older_rels)
+    end
   end
 
   def self.latex(question)
-    question_latex = question.generate_mtp_question_text
-    solution_latex = question_latex + "\n\\begin{align*}\n" + question.mtp_type_soln + "\n\\end{align*}\n"
+    if question.time_1_rel == :mtp
+      question_latex = question.generate_mtp_question_text
+      solution_latex = question_latex + "\n\\begin{align*}\n" + question.mtp_type_soln + "\n\\end{align*}\n"
+    else
+      question_latex = question.generate_add_question_text
+      solution_latex = question_latex + "\n\\begin{align*}\n" + question.add_type_soln + "\n\\end{align*}\n"
+    end
     {question_latex:question_latex,solution_latex:solution_latex}
   end
 

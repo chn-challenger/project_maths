@@ -82,10 +82,6 @@ class LatexPrinter
         result_latex[:solution_content] += "\\vspace{10 mm}\n\n\\noindent\n"
       end
       current_question = questions[current_question_number-1]
-
-      p current_question
-      puts topic_class
-      
       current_question_latex = topic_class.latex(current_question)
       result_latex[:question_content] += self._begin_minipage(layout) + self._begin_align(topic) + current_question_number.to_s +
         ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + self._end_align(topic) + self._end_minipage
