@@ -1,41 +1,45 @@
 require './models/age_problem'
 
 describe AgeProblem do
-  # describe '#initialize/new' do
-  #   let(:age_prob_1){described_class.new(:add,10,5,2)}
-  #   let(:age_prob_2){described_class.new(:mtp,3,10,2)}
-  #
-  #   it 'initializes with a time 1 relation' do
-  #     expect(age_prob_1.time_1_rel).to eq :add
-  #   end
-  #
-  #   it 'initializes with a time 1 relational value' do
-  #     expect(age_prob_1.time_1_val).to eq 10
-  #   end
-  #
-  #   it 'initializes with a time 1 and time 2 difference in time' do
-  #     expect(age_prob_1.time_diff).to eq 5
-  #   end
-  #
-  #   it 'initializes with a time 2 relational value' do
-  #     expect(age_prob_1.time_2_val).to eq 2
-  #   end
-  #
-  #   it 'initializes with an initial equation with time 1 relation is add' do
-  #     left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,15)])
-  #     right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,5),Step.new(:mtp,2,:lft)])
-  #     expected_equation = Equation.new(left_side,right_side)
-  #     expect(age_prob_1.equation).to eq expected_equation
-  #   end
-  #
-  #   it 'initializes with an initial equation with time 1 relation is multiply' do
-  #     left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,3,:lft),Step.new(:add,10)])
-  #     right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,10),Step.new(:mtp,2,:lft)])
-  #     expected_equation = Equation.new(left_side,right_side)
-  #     # puts age_prob_2.equation.latex
-  #     expect(age_prob_2.equation).to eq expected_equation
-  #   end
-  # end
+  describe '#initialize/new' do
+    let(:age_prob_1){described_class.new(:add,10,5,2,5,0,5,1,[['Jack',:m],['David',:m]])}
+
+    it 'initializes with a time 1 relation' do
+      expect(age_prob_1.time_1_rel).to eq :add
+    end
+
+    it 'initializes with a time 1 relational value' do
+      expect(age_prob_1.time_1_val).to eq 10
+    end
+
+    it 'initializes with a time 1 and time 2 difference in time' do
+      expect(age_prob_1.time_diff).to eq 5
+    end
+
+    it 'initializes with a time 2 relational value' do
+      expect(age_prob_1.time_2_val).to eq 2
+    end
+
+    it 'initializes with the answer' do
+      expect(age_prob_1.answer).to eq 5
+    end
+
+    it 'initializes with a time line 1 value' do
+      expect(age_prob_1.time_line_1).to eq 0
+    end
+
+    it 'initializes with a time line 2 value' do
+      expect(age_prob_1.time_line_2).to eq 5
+    end
+
+    it 'initializes with a time line 3 value' do
+      expect(age_prob_1.time_line_3).to eq 1
+    end
+
+    it 'initializes with an array of two persons' do
+      expect(age_prob_1.persons).to eq [['Jack',:m],['David',:m]]
+    end
+  end
 
   describe '#generate_add_type_question' do
     let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
@@ -70,13 +74,6 @@ describe AgeProblem do
 
     it 'generate add type questions that are consistent eg 4' do
       srand(130)
-      lhs = question.time_2_val * (question.answer + question.time_diff)
-      rhs = question.answer + question.time_1_val + question.time_diff
-      expect(lhs).to eq rhs
-    end
-
-    it 'generate add type questions that are consistent eg 4' do
-      srand(140)
       lhs = question.time_2_val * (question.answer + question.time_diff)
       rhs = question.answer + question.time_1_val + question.time_diff
       expect(lhs).to eq rhs
@@ -158,6 +155,27 @@ describe AgeProblem do
     it 'generates question text for add type question eg 5' do
       srand(700)
       expect(question_text).to eq "Davina is eleven years younger than Julie. Two years from now, Julie will be twice as old as Davina. How old is Davina now?"
+    end
+  end
+
+  describe '#add_type_soln' do
+    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
+      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
+    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
+      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
+    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
+      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
+    let(:question){described_class.generate_add_type_question(named_persons,younger_rels,older_rels)}
+    let(:solution_latex){question.add_type_soln}
+
+    it 'generates solution latex for add type question eg 1' do
+      srand(400)
+      expect(solution_latex).to eq "&\\text{Now}&&&&\\text{4 years from now}&\\\\\n&\\text{Sarah}\\hspace{10pt}x&&&&\\text{Sarah}\\hspace{10pt}x+4&\\\\\n&\\text{grandmother}\\hspace{10pt}x + 66&&&&\\text{grandmother}\\hspace{10pt}x + 66 + 4&\\\\\n&&\\text{grandmother} &= \\text{7} \\times \\text{Sarah}&\\\\\n&&x+70&=7\\left(x+4\\right)&\\\\\n&&x+70&=7x+28&\\\\\n&&70-28&=7x-x&\\\\\n&&42&=6x&\\\\\n&&\\frac{42}{6}&=x&\\\\\n&&7&=x&\\\\\n&Answer:&\\text{Sarah now} &= 7"
+    end
+
+    it 'generates solution latex for add type question eg 2' do
+      srand(410)
+      expect(solution_latex).to eq "&\\text{Now}&&&&\\text{3 years from now}&\\\\\n&\\text{Davina}\\hspace{10pt}x&&&&\\text{Davina}\\hspace{10pt}x+3&\\\\\n&\\text{grandfather}\\hspace{10pt}x + 50&&&&\\text{grandfather}\\hspace{10pt}x + 50 + 3&\\\\\n&&\\text{grandfather} &= \\text{3} \\times \\text{Davina}&\\\\\n&&x+53&=3\\left(x+3\\right)&\\\\\n&&x+53&=3x+9&\\\\\n&&53-9&=3x-x&\\\\\n&&44&=2x&\\\\\n&&\\frac{44}{2}&=x&\\\\\n&&22&=x&\\\\\n&Answer:&\\text{Davina now} &= 22"
     end
   end
 
@@ -277,7 +295,7 @@ describe AgeProblem do
     end
   end
 
-  describe '#generate_mtp_question_text' do
+  describe '#mtp_type_soln' do
     let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
       ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
     let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
@@ -296,18 +314,7 @@ describe AgeProblem do
       srand(410)
       expect(solution_latex).to eq "&\\text{10 years ago}&&&&\\text{22 years from now}&\\\\\n&\\text{Adam}\\hspace{10pt}x&&&&\\text{Adam}\\hspace{10pt}x+32&\\\\\n&\\text{grandmother}\\hspace{10pt}4x&&&&\\text{grandmother}\\hspace{10pt}4x+32&\\\\\n&&\\text{grandmother} &= \\text{2} \\times \\text{Adam}&\\\\\n&&4x+32&=2\\left(x+32\\right)&\\\\\n&&4x+32&=2x+64&\\\\\n&&4x-2x&=64-32&\\\\\n&&2x&=32&\\\\\n&&x&=\\frac{32}{2}&\\\\\n&&x&=16&\\\\\n&&\\text{Adam now} &= \\text{Adam 10 years ago} + 10\\\\\n&&\\text{Adam now} &= 16 + 10\\\\\n&Answer:&\\text{Adam now} &= 26"
     end
-
-    it 'does some wierd stuff' do
-      question = AgeProblem.generate_question
-      latex = AgeProblem.latex(question)
-      puts latex[:solution_latex]
-      # question = AgeProblem.generate_question
-      # p question
-      # latex = AgeProblem.latex(question)
-      # puts latex[:solution_latex]
-    end
   end
-
 
 
 end

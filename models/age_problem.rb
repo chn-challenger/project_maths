@@ -23,26 +23,6 @@ class AgeProblem
     @time_line_2 = time_line_2
     @time_line_3 = time_line_3
     @persons = persons
-
-    # if time_1_rel == :mtp
-    #   younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
-    #   min_time = -1*younger_age + 1
-    #   @time_line_1 = rand(min_time..min_time.abs)
-    #   @time_line_2 = @time_line_1 + time_diff
-    # else
-    #   @time_line_1 = 0
-    #   @time_line_2 = time_diff
-    # end
-    #
-    # @equation = Equation.new()
-    # if time_1_rel == :add
-    #   total_time_diff = time_1_val + time_diff
-    #   left_side = Expression.new([Step.new(nil,'x'),Step.new(:add,total_time_diff)])
-    # elsif time_1_rel == :mtp
-    #   left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
-    # end
-    # right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
-    # @equation = Equation.new(left_side,right_side)
   end
 
   def self.generate_add_type_question(named_persons,younger_rels,older_rels)
@@ -405,22 +385,6 @@ class AgeProblem
     end
     {question_latex:question_latex,solution_latex:solution_latex}
   end
-
-
-
-  # def self._generate_solution_basics(question)
-  #   #[equations to get to the solution]
-  # end
-  #
-  # def self._generate_question_basics()
-  #   generated_question
-  #   solution = generated_question._generate_solution_basics
-  #   if solution.is_not_integer?
-  #     return self_generate_question_basics
-  #   else
-  #     return {question:generate_question,solution:solution}
-  #   end
-  # end
 
 
 
