@@ -278,6 +278,25 @@ describe AgeProblem do
   end
 
 
+  describe '#generate_mtp_question_text' do
+    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
+      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
+    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
+      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
+    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
+      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
+    let(:question){described_class.generate_mtp_type_question(named_persons,younger_rels,older_rels)}
+    let(:solution_text){question.mtp_type_soln_part_1}
+
+    it 'generates question text for mtp type question eg 1' do
+      srand(300)
+      puts solution_text
+      expect(solution_text).to eq "Three years from now, John's mother will be three times as old as John. Twenty two years from now, John's mother will be twice as old as John. How old is John now?"
+    end
+  end
+
+
+
   describe '#solution/solution_latex' do
     # let(:age_prob_1){described_class.new(:add,20,5,3)}
     # let(:age_prob_2){described_class.new(:mtp,4,10,2)}

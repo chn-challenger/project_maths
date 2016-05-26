@@ -262,9 +262,26 @@ class AgeProblem
     end
   end
 
+  def _time_soln_text(time)
+    if time < 0
+      "#{time.abs} years ago"
+    elsif time == 0
+      "Now"
+    else
+      "#{time} years from now"
+    end
+  end
+
   def mtp_type_soln_part_1
+    time_1 = _time_soln_text(time_line_1)
+    time_2 = _time_soln_text(time_line_2)
+    time_line_text = "&\\text{#{time_1}}&&&&\\text{#{time_2}}&\\\\\n"
+    younger_line = "&\\text{#{persons[0][0]}}\\hspace{10pt}x&&&&\\text{#{persons[0][0]}}\\hspace{10pt}x+#{time_diff}&\\\\\n"
+    older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x&&&&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x+#{time_diff}&\\\\\n"
+    
 
 
+    time_line_text + younger_line + older_line
   end
 
   def solution
