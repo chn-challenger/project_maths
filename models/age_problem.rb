@@ -7,7 +7,7 @@ include EnglishNumber
 
 class AgeProblem
 
-  attr_accessor :time_1_rel, :time_1_val, :time_diff, :time_2_val, :equation, :time_diff_2
+  attr_accessor :time_1_rel, :time_1_val, :time_diff, :time_2_val, :equation, :time_line_1, :time_line_2
 
   def initialize(time_1_rel,time_1_val,time_diff,time_2_val)
     @time_1_rel = time_1_rel
@@ -67,6 +67,8 @@ class AgeProblem
 
 
   def generate_add_question_text(people)
+    @time_line_1 = 0
+    @time_line_2 = time_diff
     age_diff = english_years(time_1_val)
     tme_diff = english_years(time_diff)
     age_mtp = english_times(time_2_val)
@@ -182,8 +184,9 @@ class AgeProblem
     #choose two time lines
     min_time = -1*younger_age + 1
     time_1 = rand(min_time..min_time.abs)
-    @time_diff_2 = time_1
     time_2 = time_1 + time_diff
+    @time_line_1 = time_1
+    @time_line_2 = time_2
 
     time_1_text = _time_text(time_1)
     time_2_text = _time_text(time_2)
@@ -205,7 +208,7 @@ class AgeProblem
       end
     end
 
-    if persons[1][2] == nil && persons[0][2] == :rel #both named
+    if persons[1][2] == nil && persons[0][2] == :rel #older named
       older_s = persons[0][1] == :m ? 'his' : 'her'
       if time_1 < 0
         text_part_1 = "#{persons[1][0]} was #{age_mtp_1}as old as #{older_s} #{persons[0][0]}. "
@@ -223,7 +226,7 @@ class AgeProblem
       end
     end
 
-    if persons[1][2] == :rel && persons[0][2] == nil #both named
+    if persons[1][2] == :rel && persons[0][2] == nil #younger named
       if time_1 < 0
         text_part_1 = "#{persons[0][0]}'s #{persons[1][0]} was #{age_mtp_1}as old as #{persons[0][0]}. "
       elsif time_1 == 0
