@@ -38,18 +38,58 @@ describe AgeProblem do
   # end
 
   describe '#generate_add_question_text/generate_add_question' do
-    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
-      ['Davina',:f],['Henry',:m],['Sarah',:f]]}
-    let(:older_rels)  {   {gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:[['grandfather',:m,:rel],['grandmother',:f,:rel]]} }
-    let(:younger_rels){   {gen1: [['son',:m,:rel],['daughter',:f,:rel]] , gen2: [['grandson',:m,:rel],['granddaughter',:f,:rel]]  }   }
+    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
+      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
+    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
+      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
+    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
+      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
     let(:question){described_class.generate_add_type_question(named_persons,younger_rels,older_rels)}
     # let(:question_text){question.generate_add_question_text(people)}
+    context 'generates add type question' do
+      before(:each) do
+        srand(200)
+      end
 
-    it 'generates a type 1 add question' do
-      # srand(100)
-      p question
-      # expected_text = "Adam is twelve years younger than Sarah. In four years time, Sarah will be twice as old as Adam. How old is Adam now?"
-      # expect(question_text).to eq expected_text
+      it 'with a time 1 relation' do
+        expect(question.time_1_rel).to eq :add
+      end
+
+      it 'with a time 1 value' do
+        expect(question.time_1_val).to eq 30
+      end
+
+      it 'with a time 1 time 2 difference' do
+        expect(question.time_diff).to eq 1
+      end
+
+      it 'with a time 2 value' do
+        expect(question.time_2_val).to eq 3
+      end
+
+      it 'with a answer' do
+        expect(question.answer).to eq 14
+      end
+
+      it 'with a time line 1' do
+        expect(question.time_line_1).to eq 0
+      end
+
+      it 'with a time line 2' do
+        expect(question.time_line_2).to eq 1
+      end
+
+      it 'with a time line 3' do
+        expect(question.time_line_3).to eq 0
+      end
+
+      it 'with a young person' do
+        expect(question.person_1).to eq ["Ken",:m]
+      end
+
+      it 'with a older person' do
+        expect(question.person_2).to eq ["mother",:f,:rel]
+      end
     end
     #
     # it 'generates a type 2 add question' do

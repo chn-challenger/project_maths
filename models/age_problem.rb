@@ -7,16 +7,18 @@ include EnglishNumber
 
 class AgeProblem
 
-  attr_accessor :time_1_rel, :time_1_val, :time_diff, :time_2_val, :solution, :time_line_1, :time_line_2, :time_line_3, :person_1, :person_2
+  attr_accessor :time_1_rel, :time_1_val, :time_diff, :time_2_val, :answer,
+    :time_line_1, :time_line_2, :time_line_3, :person_1, :person_2
 
-  def initialize(time_1_rel,time_1_val,time_diff,time_2_val,solution,time_line_1,
+
+  def initialize(time_1_rel,time_1_val,time_diff,time_2_val,answer,time_line_1,
     time_line_2,time_line_3,person_1,person_2)
 
     @time_1_rel = time_1_rel
     @time_1_val = time_1_val
     @time_diff = time_diff
     @time_2_val = time_2_val
-    @solution = solution
+    @answer = answer
     @time_line_1 = time_line_1
     @time_line_2 = time_line_2
     @time_line_3 = time_line_3
@@ -48,17 +50,6 @@ class AgeProblem
     #based on the following formula for (:add,a,b,c) question
     # a/(c - 1) = x + b
     # a = age_difference, b = time_diff, c = mtp_val
-
-    # if time_1_rel == :mtp
-    #   younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
-    #   min_time = -1*younger_age + 1
-    #   @time_line_1 = rand(min_time..min_time.abs)
-    #   @time_line_2 = @time_line_1 + time_diff
-    # else
-    #   @time_line_1 = 0
-    #   @time_line_2 = time_diff
-    # end
-
     age_difference = (4..80).to_a.sample
     mtp_val_choices = (1..8).to_a.select{|n| age_difference%n == 0 &&
       age_difference + age_difference/n <= 90 && age_difference/n > 1}
@@ -71,10 +62,10 @@ class AgeProblem
       time_line_1 = 0
       time_line_2 = time_diff
       time_line_3 = 0
-
-      persons = _generate_people(named_persons,younger_rels,older_rels,age_difference)
-
-      return age_problem.new(:add,age_difference,time_diff,mtp_val+1,answer,time_line_1,time_line_2,time_line_3,persons[0],persons[1])
+      persons = _generate_people(named_persons,younger_rels,older_rels,
+        age_difference)
+      return age_problem.new(:add,age_difference,time_diff,mtp_val+1,answer,
+        time_line_1,time_line_2,time_line_3,persons[0],persons[1])
     end
   end
 
