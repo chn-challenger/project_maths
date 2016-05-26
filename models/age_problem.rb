@@ -14,6 +14,17 @@ class AgeProblem
     @time_1_val = time_1_val
     @time_diff = time_diff
     @time_2_val = time_2_val
+
+    if time_1_rel == :mtp
+      younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
+      min_time = -1*younger_age + 1
+      @time_line_1 = rand(min_time..min_time.abs)
+      @time_line_2 = @time_line_1 + time_diff
+    else
+      @time_line_1 = 0
+      @time_line_2 = time_diff
+    end
+
     @equation = Equation.new()
     if time_1_rel == :add
       total_time_diff = time_1_val + time_diff
@@ -67,8 +78,6 @@ class AgeProblem
 
 
   def generate_add_question_text(people)
-    @time_line_1 = 0
-    @time_line_2 = time_diff
     age_diff = english_years(time_1_val)
     tme_diff = english_years(time_diff)
     age_mtp = english_times(time_2_val)
@@ -191,11 +200,8 @@ class AgeProblem
     age_diff = younger_age * (time_1_val - 1)
     persons = _generate_people(people,age_diff)
 
-    min_time = -1*younger_age + 1
-    time_1 = rand(min_time..min_time.abs)
-    time_2 = time_1 + time_diff
-    @time_line_1 = time_1
-    @time_line_2 = time_2
+    time_1 = time_line_1
+    time_2 = time_line_2
 
     time_1_text = _time_text(time_1)
     time_2_text = _time_text(time_2)

@@ -106,25 +106,27 @@ describe AgeProblem do
 
     it 'generates a mtp question eg 1' do
       srand(100)
-      expected_text = "Seven years ago, John's father was three times as old as John. Three years from now, John's father will be twice as old as John. How old is John now?"
+      expected_text = "One year from now, Henry's father will be three times as old as Henry. In eleven years time, Henry's father will be twice as old as Henry. How old is Henry now?"
       expect(question_text).to eq expected_text
     end
 
     it 'generates a mtp question eg 2' do
       srand(200)
-      expected_text = "In eight years time, Sarah's grandmother will be five times as old as Sarah. Fourteen years from now, Sarah's grandmother will be four times as old as Sarah. How old is Sarah now?"
+      expected_text = "Five years ago, Sarah was five times as old as his grandson. One year from now, Sarah will be four times as old as his grandson. How old is his grandson now?"
       expect(question_text).to eq expected_text
     end
 
     it 'generates a mtp question eg 3' do
       srand(300)
-      expected_text = "Nine years ago, Davina's father was three times as old as Davina. Ten years from now, Davina's father will be twice as old as Davina. How old is Davina now?"
+      expected_text = "Three years from now, John's mother will be three times as old as John. Twenty two years from now, John's mother will be twice as old as John. How old is John now?"
       expect(question_text).to eq expected_text
     end
 
     it 'generates a mtp question eg 4' do
       srand(400)
-      expected_text = "Fourteen years ago, Henry was three times as old as his son. Seven years from now, Henry will be twice as old as his son. How old is his son now?"
+      expected_text = "Fourteen years ago, Davina's mother was three times as old as Davina. Seven years from now, Davina's mother will be twice as old as Davina. How old is Davina now?"
+      # result_text = question_text
+      # # p question
       expect(question_text).to eq expected_text
     end
   end
