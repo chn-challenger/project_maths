@@ -1,6 +1,7 @@
 require './models/latex_printer'
 
 describe LatexPrinter do
+
   describe '#self.worksheet' do
     context 'generate worksheet for fraction class' do
       shared_context 'fraction sheet' do
@@ -65,10 +66,25 @@ describe LatexPrinter do
 
       it 'generates solution for the non-standard linear equation questions sheet' do
         expected_solutions_sheet = "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-HN620825-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5 Solutions}}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\\frac{68}{530-4\\left(6\\left(x-2\\right)+76\\right)}&=2\\\\\n\\frac{68}{2}&=530-4\\left(6\\left(x-2\\right)+76\\right)\\\\\n34&=530-4\\left(6\\left(x-2\\right)+76\\right)\\\\\n4\\left(6\\left(x-2\\right)+76\\right)&=530-34\\\\\n4\\left(6\\left(x-2\\right)+76\\right)&=496\\\\\n6\\left(x-2\\right)+76&=\\frac{496}{4}\\\\\n6\\left(x-2\\right)+76&=124\\\\\n6\\left(x-2\\right)&=124-76\\\\\n6\\left(x-2\\right)&=48\\\\\nx-2&=\\frac{48}{6}\\\\\nx-2&=8\\\\\nx&=8+2\\\\\nx&=10\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}57+\\frac{219}{5\\left(\\frac{36}{x}-2\\right)+63}&=60\\\\\n\\frac{219}{5\\left(\\frac{36}{x}-2\\right)+63}&=60-57\\\\\n\\frac{219}{5\\left(\\frac{36}{x}-2\\right)+63}&=3\\\\\n\\frac{219}{3}&=5\\left(\\frac{36}{x}-2\\right)+63\\\\\n73&=5\\left(\\frac{36}{x}-2\\right)+63\\\\\n73-63&=5\\left(\\frac{36}{x}-2\\right)\\\\\n10&=5\\left(\\frac{36}{x}-2\\right)\\\\\n\\frac{10}{5}&=\\frac{36}{x}-2\\\\\n2&=\\frac{36}{x}-2\\\\\n2+2&=\\frac{36}{x}\\\\\n4&=\\frac{36}{x}\\\\\nx&=\\frac{36}{4}\\\\\nx&=9\n\\end{align*}\n\\end{minipage}\n\\end{document}"
+
+        worksheet_new = LatexPrinter.worksheet(:age_problem,11,'Thomas Eddison',
+          4,{},{questions_per_row:1})
+        puts worksheet_new[:solutions_sheet]
+
         expect(@worksheet[:solutions_sheet]).to eq expected_solutions_sheet
       end
     end
   end
+
+  # describe '#sometest' do
+  #   it 'does some crazy stuff' do
+  #     worksheet_new = LatexPrinter.worksheet(:age_problem,11,'Thomas Eddison',
+  #       4,{},{questions_per_row:1})
+  #     puts worksheet_new[:solutions_sheet]
+  #
+  #     # expect(@worksheet[:solutions_sheet]).to eq expected_solutions_sheet
+  #   end
+  # end
 
   # describe '#self.paper' do
   #   context 'generate practice paper with questions from fractions and linear equations' do

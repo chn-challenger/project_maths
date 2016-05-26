@@ -1,4 +1,5 @@
 require './models/linear_equation'
+require './models/age_problem'
 
 module ContentGenerator
 

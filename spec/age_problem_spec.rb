@@ -298,10 +298,10 @@ describe AgeProblem do
     end
 
     it 'does some wierd stuff' do
-      question = AgeProblem.generate_question
-      p question
-      latex = AgeProblem.latex(question)
-      puts latex[:solution_latex]
+      # question = AgeProblem.generate_question
+      # p question
+      # latex = AgeProblem.latex(question)
+      # puts latex[:solution_latex]
     end
   end
 

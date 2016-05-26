@@ -308,6 +308,9 @@ class AgeProblem
   end
 
   def _mtp_type_soln_part_3
+    if time_line_1 == 0
+      return "&Answer:&\\text{#{persons[0][0]} now} &= #{answer}"
+    end
     if time_line_1 < 0
       reverse_time_line_1 = "+ #{time_line_1.abs}"
     end
@@ -326,13 +329,6 @@ class AgeProblem
     _mtp_type_soln_part_1 + _mtp_type_soln_part_2 + _mtp_type_soln_part_3
   end
 
-  # def self._solution_latex(solutions_array)
-  #   result = ''
-  #   solutions_array.each do |solution_equation|
-  #     result += solution_equation.latex + '\\\\' + "\n"
-  #   end
-  #   result
-  # end
   def self.named_persons
     [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],['Davina',:f],
       ['Henry',:m],['Sarah',:f]]
