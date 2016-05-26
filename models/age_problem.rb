@@ -190,7 +190,7 @@ class AgeProblem
     younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
     age_diff = younger_age * (time_1_val - 1)
     persons = _generate_people(people,age_diff)
-    #choose two time lines
+
     min_time = -1*younger_age + 1
     time_1 = rand(min_time..min_time.abs)
     time_2 = time_1 + time_diff
@@ -200,33 +200,22 @@ class AgeProblem
     time_1_text = _time_text(time_1)
     time_2_text = _time_text(time_2)
 
-    if persons[1][2] == nil && persons[0][2] == nil #both named
-      person_1 = "#{persons[0][0]}"
-      person_2 = "#{persons[1][0]}"
+    person_1 = persons[0][0]
+    person_2 = persons[1][0]
+    if persons[0][2] == :rel #older named
+      prefix = persons[0][1] == :m ? 'his ' : 'her '
+      person_1 = prefix + person_1
     end
-
-    if persons[1][2] == nil && persons[0][2] == :rel #older named
-      older_s = persons[0][1] == :m ? 'his' : 'her'
-      person_1 = "#{older_s} #{persons[0][0]}"
-      person_2 = "#{persons[1][0]}"
-    end
-
-    if persons[1][2] == :rel && persons[0][2] == nil #younger named
-      person_1 = "#{persons[0][0]}"
-      person_2 = "#{persons[0][0]}'s #{persons[1][0]}"
+    if persons[1][2] == :rel #younger named
+      prefix = "#{persons[0][0]}'s "
+      person_2 = prefix + person_2
     end
 
     text_part_1 = _mtp_question_texts(person_1,person_2,time_1,age_mtp_1)
     text_part_2 = _mtp_question_texts(person_1,person_2,time_2,age_mtp_2)
-
-    if persons[0][2] == nil
-      text_part_3 = "How old is #{persons[0][0]} now?"
-    else
-      text_part_3 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
-    end
+    text_part_3 = "How old is #{person_1} now?"
 
     time_1_text + text_part_1 + time_2_text + text_part_2 + text_part_3
-
   end
 
   def _time_text(time)

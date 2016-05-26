@@ -124,7 +124,7 @@ describe AgeProblem do
 
     it 'generates a mtp question eg 4' do
       srand(400)
-      expected_text = "Fourteen years ago, Henry was three times as old as his son. Seven years from now, Henry will be twice as old as his son. How old is Henry's son now?"
+      expected_text = "Fourteen years ago, Henry was three times as old as his son. Seven years from now, Henry will be twice as old as his son. How old is his son now?"
       expect(question_text).to eq expected_text
     end
   end
