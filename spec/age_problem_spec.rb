@@ -45,7 +45,6 @@ describe AgeProblem do
     let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
       [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
     let(:question){described_class.generate_add_type_question(named_persons,younger_rels,older_rels)}
-    # let(:question_text){question.generate_add_question_text(people)}
     context 'generates add type question' do
       before(:each) do
         srand(200)
@@ -124,6 +123,59 @@ describe AgeProblem do
       expect(question_text).to eq "Davina is eleven years younger than Julie. Two years from now, Julie will be twice as old as Davina. How old is Davina now?"
     end
   end
+
+  describe '#generate_add_question_text/generate_add_question' do
+    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
+      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
+    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
+      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
+    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
+      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
+    let(:question){described_class.generate_mtp_type_question(named_persons,younger_rels,older_rels)}
+    context 'generates add type question' do
+      before(:each) do
+        srand(200)
+      end
+
+      it 'with a time 1 relation' do
+        p question
+        # expect(question.time_1_rel).to eq :mtp
+      end
+
+      # it 'with a time 1 value' do
+      #   expect(question.time_1_val).to eq 30
+      # end
+      #
+      # it 'with a time 1 time 2 difference' do
+      #   expect(question.time_diff).to eq 1
+      # end
+      #
+      # it 'with a time 2 value' do
+      #   expect(question.time_2_val).to eq 3
+      # end
+      #
+      # it 'with a answer' do
+      #   expect(question.answer).to eq 14
+      # end
+      #
+      # it 'with a time line 1' do
+      #   expect(question.time_line_1).to eq 0
+      # end
+      #
+      # it 'with a time line 2' do
+      #   expect(question.time_line_2).to eq 1
+      # end
+      #
+      # it 'with a time line 3' do
+      #   expect(question.time_line_3).to eq 0
+      # end
+      #
+      # it 'with two people' do
+      #   expect(question.persons).to eq [["Ken",:m],["mother",:f,:rel]]
+      # end
+    end
+  end
+
 
   #
   # describe '#generate_mtp_question_text/generate_mtp_question' do
