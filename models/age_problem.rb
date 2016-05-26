@@ -284,12 +284,10 @@ class AgeProblem
     time_line_text + younger_line + older_line + word_eqn
   end
 
-  def solve_eqn
-    # equation = Equation.new()
+  def mtp_type_soln_part_2
     left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
     right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
     equation = Equation.new(left_side,right_side)
-
     sol_eqn_array = []
     step_1 = equation
     sol_eqn_array << step_1
@@ -301,9 +299,15 @@ class AgeProblem
     l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
     l_eqn_soln = l_eqn._generate_solution
     sol_eqn_array = sol_eqn_array + l_eqn_soln
-    return sol_eqn_array
+    # return sol_eqn_array
+    result = ''
+    sol_eqn_array.each do |solution_equation|
+      result += '&&' + solution_equation.latex + '&\\\\' + "\n"
+    end
+    result
   end
 
+    
 
 
   def self._solution_latex(solutions_array)
@@ -311,7 +315,7 @@ class AgeProblem
     solutions_array.each do |solution_equation|
       result += solution_equation.latex + '\\\\' + "\n"
     end
-    result.slice!(-3..-1)
+    result.slice!(-3.
     result
   end
 
