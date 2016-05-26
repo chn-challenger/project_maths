@@ -134,7 +134,7 @@ class LinearEquation < Equation
   end
 
 end
-# 
+#
 #
 # 11-x
 #

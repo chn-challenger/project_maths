@@ -278,25 +278,41 @@ class AgeProblem
     time_line_text = "&\\text{#{time_1}}&&&&\\text{#{time_2}}&\\\\\n"
     younger_line = "&\\text{#{persons[0][0]}}\\hspace{10pt}x&&&&\\text{#{persons[0][0]}}\\hspace{10pt}x+#{time_diff}&\\\\\n"
     older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x&&&&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x+#{time_diff}&\\\\\n"
-    
+    #  	 	&&       \text{John} &= \text{three} \times \text{Son}&\\
+    word_eqn = "&&\\text{#{persons[1][0]}} &= \\text{#{english(time_2_val)}} \\times \\text{#{persons[0][0]}}&\\\\\n"
 
-
-    time_line_text + younger_line + older_line
+    time_line_text + younger_line + older_line + word_eqn
   end
 
-  def solution
+  def solve_eqn
+
+
+    # equation = Equation.new()
+    left_side = Expression.new([Step.new(nil,'x'),Step.new(:mtp,time_1_val,:lft),Step.new(:add,time_diff)])
+    right_side = Expression.new([Step.new(nil,'x'),Step.new(:add,time_diff),Step.new(:mtp,time_2_val,:lft)])
+    equation = Equation.new(left_side,right_side)
+
+    # p equation
+
     sol_eqn_array = []
     step_1 = equation
     sol_eqn_array << step_1
     step_2 = equation.copy._age_problem_expand
     sol_eqn_array << step_2
+    # p sol_eqn_array
     step_3 = step_2.copy._standardise_m_sums.collect_like_terms._remove_m_form_one_coef
     sol_eqn_array << step_3
+    p step_3
+    # p step_3.latex
     step_4 = step_3.copy._age_problem_simplify_m_sums._remove_m_form_one_coef.standardise_linear_equation
+    # step_4 = step_3.copy._age_problem_simplify_m_sums
+    p step_4.latex
     l_eqn = linear_equation.new(step_4.left_side,step_4.right_side)
     l_eqn_soln = l_eqn._generate_solution
-    sol_eqn_array = sol_eqn_array + l_eqn_soln
-    return sol_eqn_array
+    # # p l_eqn_soln
+    # sol_eqn_array = sol_eqn_array + l_eqn_soln
+    # return sol_eqn_array
+    return nil
   end
 
 
