@@ -83,63 +83,48 @@ describe AgeProblem do
         expect(question.time_line_3).to eq 0
       end
 
-      it 'with a young person' do
-        expect(question.person_1).to eq ["Ken",:m]
-      end
-
-      it 'with a older person' do
-        expect(question.person_2).to eq ["mother",:f,:rel]
+      it 'with two people' do
+        expect(question.persons).to eq [["Ken",:m],["mother",:f,:rel]]
       end
     end
-    #
-    # it 'generates a type 2 add question' do
-    #   srand(111)
-    #   expected_text = "John is twenty three years younger than his father. Ten years from now, his father will be twice as old as him. How old is John now?"
-    #   expect(question_text).to eq expected_text
-    # end
-    #
-    # it 'generates a type 3 add question' do
-    #   srand(141)
-    #   expected_text = "Julie is twenty nine years younger than her father. Eight years from now, her father will be twice as old as her. How old is Julie now?"
-    #   expect(question_text).to eq expected_text
-    # end
-    #
-    # it 'generates a type 4 add question' do
-    #   srand(117)
-    #   expected_text = "Davina's daughter is twenty three years younger than Davina. In two years time, Davina will be twice as old as her daughter. How old is Davina's daughter now?"
-    #   expect(question_text).to eq expected_text
-    # end
-    #
-    # it 'generates a type 5 add question' do
-    #   srand(101)
-    #   expected_text = "Sarah is fifteen years older than Davina. Three years from now, Sarah will be four times as old as Davina. How old is Davina now?"
-    #   expect(question_text).to eq expected_text
-    # end
-    #
-    # it 'generates a type 6 add question' do
-    #   srand(1337)
-    #   expected_text = "Adam is twenty seven years older than his daughter. In five years time, Adam will be four times as old as his daughter. How old is his daughter now?"
-    #   expect(question_text).to eq expected_text
-    # end
-    #
-    # it 'generates a type 7 add question' do
-    #   srand(52220)
-    #   expected_text = "Davina is sixty six years older than her granddaughter. Thirteen years from now, Davina will be four times as old as her granddaughter. How old is her granddaughter now?"
-    #   expect(question_text).to eq expected_text
-    # end
-    #
-    # it 'generates a type 8 add question' do
-    #   srand(115)
-    #   expected_text = "John's father is twenty two years older than John. In sixteen years time, John's father will be twice as old as John. How old is John now?"
-    #   expect(question_text).to eq expected_text
-    # end
-    #
-    # it 'generates a type 9 add question' do
-    #   srand(120)
-    #   expected_text = "Henry's son is forty three years younger than Henry. One year from now, Henry will be twice as old as his son. How old is Henry's son now?"
-    #   expect(question_text).to eq expected_text
-    # end
   end
+
+  describe '#generate_add_question_text/generate_add_question' do
+    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
+      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
+    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
+      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
+    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
+      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
+    let(:question){described_class.generate_add_type_question(named_persons,younger_rels,older_rels)}
+    let(:question_text){question.generate_add_question_text}
+
+    it 'generates question text for add type question eg 1' do
+      srand(300)
+      expect(question_text).to eq "Beth is twenty five years older than her daughter. In eleven years time, Beth will be twice as old as her daughter. How old is her daughter now?"
+    end
+
+    it 'generates question text for add type question eg 1' do
+      srand(400)
+      expect(question_text).to eq "Sarah is sixty six years younger than her grandmother. Four years from now, her grandmother will be seven times as old as her. How old is Sarah now?"
+    end
+
+    it 'generates question text for add type question eg 1' do
+      srand(500)
+      expect(question_text).to eq "Sarah's mother is twenty one years older than Sarah. Two years from now, Sarah's mother will be eight times as old as Sarah. How old is Sarah now?"
+    end
+
+    it 'generates question text for add type question eg 1' do
+      srand(600)
+      expect(question_text).to eq "Sarah is seventy two years younger than her grandfather. Four years from now, her grandfather will be nine times as old as her. How old is Sarah now?"
+    end
+
+    it 'generates question text for add type question eg 1' do
+      srand(700)
+      expect(question_text).to eq "Davina is eleven years younger than Julie. Two years from now, Julie will be twice as old as Davina. How old is Davina now?"
+    end
+  end
+
   #
   # describe '#generate_mtp_question_text/generate_mtp_question' do
   #   let(:people){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],
@@ -302,4 +287,57 @@ end
   #   end
   # end
 
+# end
+
+
+
+
+
+#
+# it 'generates a type 2 add question' do
+#   srand(111)
+#   expected_text = "John is twenty three years younger than his father. Ten years from now, his father will be twice as old as him. How old is John now?"
+#   expect(question_text).to eq expected_text
+# end
+#
+# it 'generates a type 3 add question' do
+#   srand(141)
+#   expected_text = "Julie is twenty nine years younger than her father. Eight years from now, her father will be twice as old as her. How old is Julie now?"
+#   expect(question_text).to eq expected_text
+# end
+#
+# it 'generates a type 4 add question' do
+#   srand(117)
+#   expected_text = "Davina's daughter is twenty three years younger than Davina. In two years time, Davina will be twice as old as her daughter. How old is Davina's daughter now?"
+#   expect(question_text).to eq expected_text
+# end
+#
+# it 'generates a type 5 add question' do
+#   srand(101)
+#   expected_text = "Sarah is fifteen years older than Davina. Three years from now, Sarah will be four times as old as Davina. How old is Davina now?"
+#   expect(question_text).to eq expected_text
+# end
+#
+# it 'generates a type 6 add question' do
+#   srand(1337)
+#   expected_text = "Adam is twenty seven years older than his daughter. In five years time, Adam will be four times as old as his daughter. How old is his daughter now?"
+#   expect(question_text).to eq expected_text
+# end
+#
+# it 'generates a type 7 add question' do
+#   srand(52220)
+#   expected_text = "Davina is sixty six years older than her granddaughter. Thirteen years from now, Davina will be four times as old as her granddaughter. How old is her granddaughter now?"
+#   expect(question_text).to eq expected_text
+# end
+#
+# it 'generates a type 8 add question' do
+#   srand(115)
+#   expected_text = "John's father is twenty two years older than John. In sixteen years time, John's father will be twice as old as John. How old is John now?"
+#   expect(question_text).to eq expected_text
+# end
+#
+# it 'generates a type 9 add question' do
+#   srand(120)
+#   expected_text = "Henry's son is forty three years younger than Henry. One year from now, Henry will be twice as old as his son. How old is Henry's son now?"
+#   expect(question_text).to eq expected_text
 # end
