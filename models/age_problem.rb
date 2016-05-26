@@ -23,9 +23,7 @@ class AgeProblem
     @time_line_2 = time_line_2
     @time_line_3 = time_line_3
     @persons = persons
-    # @person_1 = person_1
-    # @person_2 = person_2
-    #
+
     # if time_1_rel == :mtp
     #   younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
     #   min_time = -1*younger_age + 1
@@ -222,13 +220,12 @@ class AgeProblem
     "#{person_2} #{be} #{age_mtp}as old as #{person_1}. "
   end
 
-  def generate_mtp_question_text(people)
+  def generate_mtp_question_text
     age_mtp_1 = english_times(time_1_val)
     tme_diff = english_years(time_diff)
     age_mtp_2 = english_times(time_2_val)
     younger_age = time_diff*(time_2_val-1)/(time_1_val-time_2_val)
     age_diff = younger_age * (time_1_val - 1)
-    persons = _generate_people(people,age_diff)
 
     time_1 = time_line_1
     time_2 = time_line_2
@@ -238,8 +235,9 @@ class AgeProblem
 
     person_1 = persons[0][0]
     person_2 = persons[1][0]
+
     if persons[0][2] == :rel #older named
-      prefix = persons[0][1] == :m ? 'his ' : 'her '
+      prefix = persons[1][1] == :m ? 'his ' : 'her '
       person_1 = prefix + person_1
     end
     if persons[1][2] == :rel #younger named
@@ -315,107 +313,3 @@ class AgeProblem
 
 
 end
-
-
-
-
-
-
-    #
-    # who_first = [0,1].sample
-    #
-    # if who_first == 0 && persons[0][2] == :named
-    #   #younger first
-    #   if time_line_1 < 0
-    #     question_text = "#{time_line_1.abs} years ago, #{persons[0][0]} was #{time_1_val} years younger than "
-    #     if 1 <= time_1_val && time_1_val < 20
-    #       question_text += "#{persons[1][0]}."
-    #     else
-    #       if persons[0][0][1] == :m
-    #         question_text += "his #{persons[1][0]}."
-    #       else
-    #         question_text += "her #{persons[1][0]}."
-    #       end
-    #     end
-    #   elsif time_line_1 == 0
-    #     question_text = "#{persons[0][0]} is #{time_1_val} years younger than "
-    #     if 1 <= time_1_val && time_1_val < 20
-    #       question_text += "#{persons[1][0]}."
-    #     else
-    #       if persons[0][0][1] == :m
-    #         question_text += "his #{persons[1][0]}."
-    #       else
-    #         question_text += "her #{persons[1][0]}."
-    #       end
-    #     end
-    #   elsif time_line_1 > 0
-    #     question_text = "#{time_line_1.abs} years from now, #{persons[0][0]} was #{time_1_val} years younger than "
-    #     if 1 <= time_1_val && time_1_val < 20
-    #       question_text += "#{persons[1][0]}."
-    #     else
-    #       if persons[0][0][1] == :m
-    #         question_text += "his #{persons[1][0]}."
-    #       else
-    #         question_text += "her #{persons[1][0]}."
-    #       end
-    #     end
-    #
-    #   end
-    # else
-    #   #older first
-    #
-    # end
-
-      # def _generate_people(people,diff_in_age)
-      #   named_person = people.sample
-      #   if rand(0..1) == 0
-      #     younger = named_person
-      #     if 1 <= diff_in_age && diff_in_age < 20
-      #       older = people.select{|name| name != named_person}.sample
-      #     elsif 20 <= diff_in_age && diff_in_age < 45
-      #       older = [['father',:m,:rel],['mother',:f,:rel]].sample
-      #     elsif  45 <= diff_in_age && diff_in_age <= 80
-      #       older = [['grandfather',:m,:rel],['grandmother',:f,:rel]].sample
-      #     end
-      #   else
-      #     older = named_person
-      #     if 1 <= diff_in_age && diff_in_age < 20
-      #       younger = people.select{|name| name != named_person}.sample
-      #     elsif 20 <= diff_in_age && diff_in_age < 45
-      #       younger = [['son',:m,:rel],['daughter',:f,:rel]].sample
-      #     elsif  45 <= diff_in_age && diff_in_age <= 80
-      #       younger = [['grandson',:m,:rel],['granddaughter',:f,:rel]].sample
-      #     end
-      #   end
-      #   [younger,older]
-      # end
-
-      #
-      # def self.generate_mtp_type_question
-      #   # based on the following formula for (:mtp,a,b,c) question
-      #   # b(c - 1) = x(a - c)
-      #   x = rand(2..30)
-      #   a_sbt_c = rand(1..[6,100/x].min)
-      #   _gen_mtp_back_track_recursion(x,a_sbt_c)
-      # end
-      #
-      # def self._gen_mtp_back_track_recursion(x,a_sbt_c)
-      #   a_c_choices = []
-      #   for c in 2..7
-      #     a = c + a_sbt_c
-      #     unless a * x > 100 || a_sbt_c * x % (c-1) != 0 || a * x + a_sbt_c * x / (c-1) > 100 #|| x == a_sbt_c * x / (c-1)
-      #       b = a_sbt_c * x / (c-1)
-      #       a_c_choices << [x, a , b , c]
-      #     end
-      #   end
-      #   if a_c_choices.length == 0
-      #     if a_sbt_c > 1
-      #       return _gen_mtp_back_track_recursion(x,a_sbt_c-1)
-      #     else
-      #       return generate_mtp_type_question
-      #     end
-      #   else
-      #     result = a_c_choices.sample
-      #     return age_problem.new(:mtp,result[1],result[2],result[3])
-      #   end
-      # end
