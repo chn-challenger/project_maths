@@ -345,13 +345,9 @@ class AgeProblem
 
   def self.latex(question)
     if question.time_1_rel == :mtp
-      # question_latex = question.generate_mtp_question_text
-      # solution_latex = question_latex + "\n\\begin{align*}\n" + question.mtp_type_soln + "\n\\end{align*}\n"
       question_latex = "\\intertext{" + question.generate_mtp_question_text + "}"
       solution_latex = question_latex + question.mtp_type_soln
     else
-      # question_latex = question.generate_add_question_text
-      # solution_latex = question_latex + "\n\\begin{align*}\n" + question.add_type_soln + "\n\\end{align*}\n"
       question_latex = "\\intertext{" + question.generate_add_question_text + "}"
       solution_latex = question_latex + question.add_type_soln
     end

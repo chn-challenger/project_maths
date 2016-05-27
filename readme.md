@@ -92,6 +92,23 @@ To do:
 * Tidy-up methods in expression class to have more *single responsibility*.
 * Create Ratio & Percentage topic class.
 
+## Topics to create
+The stars denote difficulty
+* Ratio word problems ***
+* Percentage word problems ***
+* Addition and Subtraction of Integers **
+* Long multiplication and division ****
+* Decimal arithmetic ****
+* Basic Sequences **
+* Area & Perimeter *****
+* Transformations *****
+* Integer properties *
+* Negative numbers **
+* Temperature negative number problems ***
+* Simultaneous Equations ***
+* Shopping word problems ***
+* Simultaneous equation word problems ****
+
 ## Latest Macro Ideas
 
 * A class such as ```LinearEquation```, ```AgeProblem```, ```Ratio``` which produce questions for those topic, should only have class methods, and should never need to instantiate any instance of itself, as such they are better served as ruby modules.  Whose end goal is to ```self.generate(options={})``` with return value of a hash of question latex and solution latex.
