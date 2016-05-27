@@ -733,6 +733,23 @@ class Expression
     self
   end
 
+  #expand_with_details plan
+  #part_0  convert_lft_steps
+  #part_1  call expand_with_details on val of any step that is exp_valued
+    #mutate self to these expansions
+    #wrap any ele step to msum step
+    #return an array of step_stages (array of expressions)
+  #part_2  construct the initial expansion_details from self and return array
+    #of part_2
+    #make no change to self
+    #return expansion_details array
+  #part_3
+    #iterate through steps, two cases:
+      #consecutive + - steps
+      #mtp step
+    #mutate self - proper msum (not flattened), simplified
+    #return expansion_details
+
   def expand_with_details
     #part 1 of calling expand_with_details on each exp_valued step later
     expand_details = [self.copy]
