@@ -83,10 +83,10 @@ class LatexPrinter
       end
       current_question = questions[current_question_number-1]
       current_question_latex = topic_class.latex(current_question)
-      result_latex[:question_content] += self._begin_minipage(layout) + self._begin_align(topic) + current_question_number.to_s +
-        ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + self._end_align(topic) + self._end_minipage
-      result_latex[:solution_content] += self._begin_minipage(layout) + self._begin_align(topic) + current_question_number.to_s +
-        ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + self._end_align(topic) + self._end_minipage
+      result_latex[:question_content] += _begin_minipage(layout) + _begin_align(topic) + current_question_number.to_s +
+        ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + _end_align(topic) + _end_minipage
+      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align(topic) + current_question_number.to_s +
+        ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + _end_align(topic) + _end_minipage
       current_question_number += 1
     end
     result_latex

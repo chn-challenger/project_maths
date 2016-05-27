@@ -320,17 +320,19 @@ class AgeProblem
 
   def self.named_persons
     [['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],['Ken',:m],['Davina',:f],
-      ['Henry',:m],['Sarah',:f]]
+      ['Henry',:m],['Sarah',:f],['Alice',:f],['Justin',:m]]
   end
 
   def self.older_rels
-    {gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
-      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}
+    { gen1:[['father',:m,:rel],['mother',:f,:rel],['aunt',:f,:rel],
+        ['uncle',:m,:rel]],
+      gen2:[['grandfather',:m,:rel],['grandmother',:f,:rel]]}
   end
 
   def self.younger_rels
-    {gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
-      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}
+    { gen1:[['son',:m,:rel],['daughter',:f,:rel],['nephew',:m,:rel],
+        ['niece',:f,:rel]],
+      gen2:[['grandson',:m,:rel],['granddaughter',:f,:rel]]}
   end
 
   def self.generate_question(parameters={})

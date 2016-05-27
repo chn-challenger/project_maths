@@ -321,7 +321,7 @@ describe AgeProblem do
       srand(300)
       question = described_class.generate_question
       latex = described_class.latex(question)
-      expect(latex[:solution_latex]).to eq "Beth is twenty five years older than her daughter. In eleven years time, Beth will be twice as old as her daughter. How old is her daughter now?\n\\begin{align*}\n&\\text{Now}&&&&\\text{11 years from now}&\\\\\n&\\text{daughter}\\hspace{10pt}x&&&&\\text{daughter}\\hspace{10pt}x+11&\\\\\n&\\text{Beth}\\hspace{10pt}x + 25&&&&\\text{Beth}\\hspace{10pt}x + 25 + 11&\\\\\n&&\\text{Beth} &= \\text{2} \\times \\text{daughter}&\\\\\n&&x+36&=2\\left(x+11\\right)&\\\\\n&&x+36&=2x+22&\\\\\n&&36-22&=2x-x&\\\\\n&&14&=x&\\\\\n&Answer:&\\text{daughter now} &= 14\n\\end{align*}\n"
+      expect(latex[:solution_latex]).to eq "Justin is twenty five years older than his niece. In eleven years time, Justin will be twice as old as his niece. How old is his niece now?\n\\begin{align*}\n&\\text{Now}&&&&\\text{11 years from now}&\\\\\n&\\text{niece}\\hspace{10pt}x&&&&\\text{niece}\\hspace{10pt}x+11&\\\\\n&\\text{Justin}\\hspace{10pt}x + 25&&&&\\text{Justin}\\hspace{10pt}x + 25 + 11&\\\\\n&&\\text{Justin} &= \\text{2} \\times \\text{niece}&\\\\\n&&x+36&=2\\left(x+11\\right)&\\\\\n&&x+36&=2x+22&\\\\\n&&36-22&=2x-x&\\\\\n&&14&=x&\\\\\n&Answer:&\\text{niece now} &= 14\n\\end{align*}\n"
     end
 
     it 'generates a mtp type question/solution latex' do
