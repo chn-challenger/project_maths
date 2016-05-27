@@ -804,9 +804,22 @@ class Expression
     copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
   end
 
-  def _expand_wd_part_3(expand_details)
+  def _expand_wd_part_3(expansion_details)
+    i = 0
+    expanded_steps = []
+    # remaining_steps = []
+    while true
+      if steps[i].ops == nil || steps[i].ops == :add || steps[i].ops == :sbt
+        #modify  expanded_steps, remaining_steps, i, expansion_details
+      end
+      if steps[i].ops == :mtp
+        remaining_steps = steps.slice(i+1..-1)
+        _expand_wd_mtp_step(expanded_steps,steps[i],remaining_steps,expansion_details)
+      end
+    end
 
-
+    self.steps = expanded_steps
+    self
   end
 
 
