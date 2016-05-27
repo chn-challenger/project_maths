@@ -189,11 +189,6 @@ class Expression
     expanded_steps.first.ops = nil
   end
 
-  def _expand_one_mtp_step_into(expanded_steps,init_ms,mtp_step)
-    copy_init_ms = expression_factory.build(init_ms).copy.steps
-    copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
-  end
-
   def flatten
     _flatten_first_steps_recursively
     _flatten_mid_terms_recursively
@@ -782,6 +777,36 @@ class Expression
       expansion_details << expression_factory.build(stage_steps)
     end
     expansion_details
+  end
+
+  def _expand_wd_mtp_step(expanded_steps,curr_step,remaining_steps,expansion_details)
+    _expand_mtp_into_new(expanded_steps,curr_step)
+    current_exp_steps = expanded_steps + remaining_steps
+    current_exp = expression_factory.build(current_exp_steps).simplify_all_m_forms
+    expansion_details << current_exp
+    simplified_msum_exp = current_exp.copy.simplify_all_m_sums
+    if current_exp != simplified_msum_exp
+      expansion_details << simplified_msum_exp
+    end
+  end
+
+  def _expand_mtp_into_new(expanded_steps,curr_step)
+    init_ms = expression_factory.build(expanded_steps).copy.steps
+    expanded_steps.slice!(0..-1)
+    curr_step.val.steps.each do |mtp_step|
+      _expand_one_mtp_step_into(expanded_steps,init_ms,mtp_step)
+    end
+    expanded_steps.first.ops = nil
+  end
+
+  def _expand_one_mtp_step_into(expanded_steps,init_ms,mtp_step)
+    copy_init_ms = expression_factory.build(init_ms).copy.steps
+    copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
+  end
+
+  def _expand_wd_part_3(expand_details)
+
+
   end
 
 
