@@ -1573,13 +1573,38 @@ describe Expression do
   end
 
   describe '#expand_with_details' do
-    it 'expands (a+3)4' do
+    # it 'expands (a+3)4' do
       # exp = expression_factory.build([[nil,'x'],[:add,3],[:mtp,4]])
       # result = exp.expand_with_details
       # stage_1 = expression_factory.build([[nil,'x'],[:add,3],[:mtp,4]])
       # stage_2 = msum_factory.build([[nil,[4,'x']],[:add,[12]]])
       # expected_result = [stage_1,stage_2]
       # expect(result).to eq expected_result
+    # end
+    context '#_expand_wd_part_2' do
+      it 'wrap each ele steps to msum' do
+        exp = expression_factory.build([[nil,3],[:add,'x'],[:mtp,4]])
+        ms_1 = msum_factory.build([[nil,[3]]])
+        ms_2 = msum_factory.build([[nil,['x']]])
+        ms_3 = msum_factory.build([[nil,[4]]])
+        expected_exp = expression_factory.build([[nil,ms_1],[:add,ms_2],
+          [:mtp,ms_3]])
+        exp._expand_wd_part_2
+        expect(exp).to eq expected_exp
+      end
+
+      it 'returns an array of array with step values for ele steps' do
+        exp = expression_factory.build([[nil,3],[:add,'x'],[:mtp,4]])
+        ms_1 = msum_factory.build([[nil,[3]]])
+        ms_2 = msum_factory.build([[nil,['x']]])
+        ms_3 = msum_factory.build([[nil,[4]]])
+        expected_array = [[ms_1],[ms_2],[ms_3]]
+        array = exp._expand_wd_part_2
+        expect(array).to eq expected_array
+      end
+
+
+
     end
   end
 

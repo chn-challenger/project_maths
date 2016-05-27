@@ -750,23 +750,22 @@ class Expression
     #mutate self - proper msum (not flattened), simplified
     #return expansion_details
 
-  def expand_wd_part_1
+  def _expand_wd_part_1
     convert_lft_steps
   end
 
-  # def expand_wd_part_2
-  #   new_steps = []
-  #   step_stage_arrays = []
-  #   steps.each do |step|
-  #     if step.exp_valued?
-  #       step_stage_arrays << step.val.expand_with_details
-  #     else
-  #       step.mtp_prepare_value_as_ms
-  #     end
-  #   end
-  #
-  #
-  # end
+  def _expand_wd_part_2
+    new_steps = []
+    step_stage_arrays = []
+    steps.each do |step|
+      if step.exp_valued?
+        step_stage_arrays << step.val.expand_with_details
+      else
+        step_stage_arrays << [step.to_msum.val]
+      end
+    end
+    step_stage_arrays  
+  end
 
 
 
