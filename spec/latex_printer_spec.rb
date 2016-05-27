@@ -87,45 +87,46 @@ describe LatexPrinter do
     end
 
   end
-  #
-  # describe '#self.paper' do
-  #   context 'generate practice paper with questions from fractions and linear equations' do
-  #     shared_context 'practice paper 1' do
-  #       before(:all) do
-  #         srand(100)
-  #         @contents = [{topic: :fraction,number_of_questions:3,work_space:100},
-  #           {topic: :linear_equation},
-  #           {topic: :fraction},
-  #           {topic: :linear_equation,number_of_questions:2}
-  #         ]
-  #         @paper = LatexPrinter.paper(@contents,3,'James Davis')
-  #         @contents2 = [{topic: :fraction,number_of_questions:3,work_space:100},
-  #           {topic: :linear_equation,number_of_questions:1},
-  #           {topic: :fraction},
-  #           {topic: :linear_equation,number_of_questions:2},
-  #           {topic: :linear_equation,number_of_questions:1},
-  #           {topic: :fraction}
-  #         ]
-  #         @paper2 = LatexPrinter.paper(@contents2,3,'James Davis')
-  #       end
-  #     end
-  #
-  #     include_context 'practice paper 1'
-  #
-  #     it 'generates practice paper questions sheet' do
-  #       expected_questions_sheet = "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{PP-VE283509-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad James Davis}\n\\begin{document}\n\\section*{\\centerline{Practice Paper 3}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n1.\\hspace{30pt}9\\frac{3}{5}+12\\frac{1}{2}\\\\[100pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n2.\\hspace{30pt}5\\frac{1}{2}\\times2\\frac{3}{4}\\\\[100pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n3.\\hspace{30pt}\\frac{7}{11}-\\frac{1}{2}\\\\[100pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n4.\\hspace{30pt}69+\\frac{6x-15}{3}&=72\\\\[200pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n5.\\hspace{30pt}7\\frac{2}{3}\\div7\\frac{1}{9}\\\\[200pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n6.\\hspace{30pt}10\\left(\\frac{20}{x}+63\\right)+40&=720\\\\[200pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n7.\\hspace{30pt}\\frac{1800}{7\\left(66+x\\right)+82}&=3\\\\[200pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\\end{document}"
-  #       expect(@paper[:questions_sheet]).to eq expected_questions_sheet
-  #     end
-  #
-  #     it 'generates solution for the practice paper questions sheet' do
-  #
-  #       expected_solutions_sheet = "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{PP-VE283509-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad James Davis}\n\\begin{document}\n\\section*{\\centerline{Practice Paper 3 Solutions}}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}9\\frac{3}{5}+12\\frac{1}{2}=22\\frac{1}{10}\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n3.\\hspace{30pt}\\frac{7}{11}-\\frac{1}{2}=\\frac{3}{22}\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n4.\\hspace{30pt}69+\\frac{6x-15}{3}&=72\\\\\n\\frac{6x-15}{3}&=72-69\\\\\n\\frac{6x-15}{3}&=3\\\\\n6x-15&=3\\times3\\\\\n6x-15&=9\\\\\n6x&=9+15\\\\\n6x&=24\\\\\nx&=\\frac{24}{6}\\\\\nx&=4\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n5.\\hspace{30pt}7\\frac{2}{3}\\div7\\frac{1}{9}=1\\frac{5}{64}\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n6.\\hspace{30pt}10\\left(\\frac{20}{x}+63\\right)+40&=720\\\\\n10\\left(\\frac{20}{x}+63\\right)&=720-40\\\\\n10\\left(\\frac{20}{x}+63\\right)&=680\\\\\n\\frac{20}{x}+63&=\\frac{680}{10}\\\\\n\\frac{20}{x}+63&=68\\\\\n\\frac{20}{x}&=68-63\\\\\n\\frac{20}{x}&=5\\\\\n\\frac{20}{5}&=x\\\\\n4&=x\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n7.\\hspace{30pt}\\frac{1800}{7\\left(66+x\\right)+82}&=3\\\\\n\\frac{1800}{3}&=7\\left(66+x\\right)+82\\\\\n600&=7\\left(66+x\\right)+82\\\\\n600-82&=7\\left(66+x\\right)\\\\\n518&=7\\left(66+x\\right)\\\\\n\\frac{518}{7}&=66+x\\\\\n74&=66+x\\\\\n74-66&=x\\\\\n8&=x\n\\end{align*}\n\\end{minipage}\n\\end{document}"
-  #       # puts @paper2[:solutions_sheet]
-  #       # puts @paper2[:questions_sheet]
-  #       expect(@paper[:solutions_sheet]).to eq expected_solutions_sheet
-  #     end
-  #   end
-  #
-  # end
+
+  describe '#self.paper' do
+    context 'generate practice paper with questions from fractions and linear equations' do
+      shared_context 'practice paper 1' do
+        before(:all) do
+          srand(100)
+          @contents = [{topic: :fraction,number_of_questions:3,work_space:100},
+            {topic: :linear_equation},
+            {topic: :fraction},
+            {topic: :linear_equation,number_of_questions:2},
+            {topic: :age_problem,number_of_questions:2,work_space:160}
+          ]
+          @paper = LatexPrinter.paper(@contents,3,'James Davis')
+          @contents2 = [{topic: :fraction,number_of_questions:3,work_space:100},
+            {topic: :linear_equation,number_of_questions:1},
+            {topic: :fraction},
+            {topic: :linear_equation,number_of_questions:2},
+            {topic: :linear_equation,number_of_questions:1},
+            {topic: :fraction}
+          ]
+          @paper2 = LatexPrinter.paper(@contents2,3,'James Davis')
+        end
+      end
+
+      include_context 'practice paper 1'
+
+      it 'generates practice paper questions sheet' do
+        expected_questions_sheet = "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{PP-XW390445-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad James Davis}\n\\begin{document}\n\\section*{\\centerline{Practice Paper 3}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n1.\\hspace{30pt}9\\frac{3}{5}+12\\frac{1}{2}\\\\[100pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n2.\\hspace{30pt}5\\frac{1}{2}\\times2\\frac{3}{4}\\\\[100pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n3.\\hspace{30pt}\\frac{7}{11}-\\frac{1}{2}\\\\[100pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n4.\\hspace{30pt}69+\\frac{6x-15}{3}&=72\\\\[200pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n5.\\hspace{30pt}7\\frac{2}{3}\\div7\\frac{1}{9}\\\\[200pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n6.\\hspace{30pt}10\\left(\\frac{20}{x}+63\\right)+40&=720\\\\[200pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n7.\\hspace{30pt}\\frac{1800}{7\\left(66+x\\right)+82}&=3\\\\[200pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n\\intertext{8.\\hspace{30pt}Julie's grandson is seventy two years younger than Julie. One year from now, Julie will be nine times as old as her grandson. How old is Julie's grandson now?}\\\\[160pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{flalign*}\n\\intertext{9.\\hspace{30pt}Four years ago, Julie's grandmother was four times as old as Julie. In twenty six years time, Julie's grandmother will be twice as old as Julie. How old is Julie now?}\\\\[160pt]\n&&&&&\\text{Answer\\quad..............................}\n\\end{flalign*}\n\\end{minipage}\n\\end{document}"
+        expect(@paper[:questions_sheet]).to eq expected_questions_sheet
+      end
+
+      it 'generates solution for the practice paper questions sheet' do
+
+        expected_solutions_sheet = "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{PP-XW390445-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad James Davis}\n\\begin{document}\n\\section*{\\centerline{Practice Paper 3 Solutions}}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}9\\frac{3}{5}+12\\frac{1}{2}=22\\frac{1}{10}\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n3.\\hspace{30pt}\\frac{7}{11}-\\frac{1}{2}=\\frac{3}{22}\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n4.\\hspace{30pt}69+\\frac{6x-15}{3}&=72\\\\\n\\frac{6x-15}{3}&=72-69\\\\\n\\frac{6x-15}{3}&=3\\\\\n6x-15&=3\\times3\\\\\n6x-15&=9\\\\\n6x&=9+15\\\\\n6x&=24\\\\\nx&=\\frac{24}{6}\\\\\nx&=4\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n5.\\hspace{30pt}7\\frac{2}{3}\\div7\\frac{1}{9}=1\\frac{5}{64}\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n6.\\hspace{30pt}10\\left(\\frac{20}{x}+63\\right)+40&=720\\\\\n10\\left(\\frac{20}{x}+63\\right)&=720-40\\\\\n10\\left(\\frac{20}{x}+63\\right)&=680\\\\\n\\frac{20}{x}+63&=\\frac{680}{10}\\\\\n\\frac{20}{x}+63&=68\\\\\n\\frac{20}{x}&=68-63\\\\\n\\frac{20}{x}&=5\\\\\n\\frac{20}{5}&=x\\\\\n4&=x\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n7.\\hspace{30pt}\\frac{1800}{7\\left(66+x\\right)+82}&=3\\\\\n\\frac{1800}{3}&=7\\left(66+x\\right)+82\\\\\n600&=7\\left(66+x\\right)+82\\\\\n600-82&=7\\left(66+x\\right)\\\\\n518&=7\\left(66+x\\right)\\\\\n\\frac{518}{7}&=66+x\\\\\n74&=66+x\\\\\n74-66&=x\\\\\n8&=x\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{8.\\hspace{30pt}Julie's grandson is seventy two years younger than Julie. One year from now, Julie will be nine times as old as her grandson. How old is Julie's grandson now?}&\\text{Now}&&&&\\text{1 year from now}&\\\\\n&\\text{grandson}\\hspace{10pt}x&&&&\\text{grandson}\\hspace{10pt}x+1&\\\\\n&\\text{Julie}\\hspace{10pt}x + 72&&&&\\text{Julie}\\hspace{10pt}x + 72 + 1&\\\\\n&&\\text{Julie} &= \\text{9} \\times \\text{grandson}&\\\\\n&&x+73&=9\\left(x+1\\right)&\\\\\n&&x+73&=9x+9&\\\\\n&&73-9&=9x-x&\\\\\n&&64&=8x&\\\\\n&&\\frac{64}{8}&=x&\\\\\n&&8&=x&\\\\\n&Answer:&\\text{grandson now} &= 8\n\\end{align*}\n\\end{minipage}\n\\vspace{1 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{9.\\hspace{30pt}Four years ago, Julie's grandmother was four times as old as Julie. In twenty six years time, Julie's grandmother will be twice as old as Julie. How old is Julie now?}&\\text{4 years ago}&&&&\\text{26 years from now}&\\\\\n&\\text{Julie}\\hspace{10pt}x&&&&\\text{Julie}\\hspace{10pt}x+30&\\\\\n&\\text{grandmother}\\hspace{10pt}4x&&&&\\text{grandmother}\\hspace{10pt}4x+30&\\\\\n&&\\text{grandmother} &= \\text{2} \\times \\text{Julie}&\\\\\n&&4x+30&=2\\left(x+30\\right)&\\\\\n&&4x+30&=2x+60&\\\\\n&&4x-2x&=60-30&\\\\\n&&2x&=30&\\\\\n&&x&=\\frac{30}{2}&\\\\\n&&x&=15&\\\\\n&&\\text{Julie now} &= \\text{Julie 4 years ago} + 4\\\\\n&&\\text{Julie now} &= 15 + 4\\\\\n&Answer:&\\text{Julie now} &= 19\n\\end{align*}\n\\end{minipage}\n\\end{document}"
+        # puts @paper[:solutions_sheet]
+        # # puts @paper[:questions_sheet]
+        expect(@paper[:solutions_sheet]).to eq expected_solutions_sheet
+      end
+    end
+
+  end
 
 end
