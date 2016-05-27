@@ -764,9 +764,14 @@ class Expression
         step_stage_arrays << [step.to_msum.val]
       end
     end
-    step_stage_arrays  
+    step_stage_arrays
   end
 
+  def _expand_wd_part_3(step_stage_arrays)
+    
+
+
+  end
 
 
   # def expand_with_details

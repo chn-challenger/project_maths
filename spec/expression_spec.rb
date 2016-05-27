@@ -1602,9 +1602,25 @@ describe Expression do
         array = exp._expand_wd_part_2
         expect(array).to eq expected_array
       end
+    end
 
-
-
+    context '#_expand_wd_part_3' do
+      it 'builds the initial expansion_details array' do
+        ms_1_1 = msum_factory.build([[nil,[3]]])
+        ms_2_1 = msum_factory.build([[nil,['x']]])
+        ms_3_1 = msum_factory.build([[nil,[4]]])
+        ms_2_2 = msum_factory.build([[nil,['y']]])
+        ms_3_2 = msum_factory.build([[nil,[12]]])
+        ms_2_3 = msum_factory.build([[nil,[11]]])
+        step_stage_arrays = [[ms_1_1],[ms_2_1,ms_2_2,ms_2_3],[ms_3_1,ms_3_2]]
+        exp = expression_factory.build([[nil,ms_1_1],[:add,ms_2_1],[:mtp,ms_3_1]])
+        exp_1 = expression_factory.build([[nil,ms_1_1],[:add,ms_2_1],[:mtp,ms_3_1]])
+        exp_2 = expression_factory.build([[nil,ms_1_1],[:add,ms_2_2],[:mtp,ms_3_2]])
+        exp_3 = expression_factory.build([[nil,ms_1_1],[:add,ms_2_3],[:mtp,ms_3_2]])
+        expected_expansion_details = [exp_1,exp_2,exp_3]
+        result = exp._expand_wd_part_3(step_stage_arrays)
+        expect(result).to eq expected_expansion_details
+      end
     end
   end
 
