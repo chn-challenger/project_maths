@@ -17,7 +17,7 @@ class LatexPrinter
     fraction:{work_sheet_title:'Fraction',prefix:'FRA',
       class_name:Fraction},
     age_problem:{work_sheet_title:'Age Problem',prefix:'AGP',
-      class_name:AgeProblem,skip_align:true}
+      class_name:AgeProblem,skip_align:true,text_start:true}
     }
 
   HEADERS = "\\documentclass{article}\n"\
@@ -47,11 +47,13 @@ class LatexPrinter
 
 
   def self._begin_align(topic)
-    TOPICS[topic][:skip_align] ? '' : "\\begin{align*}\n"
+    # TOPICS[topic][:skip_align] ? '' : "\\begin{align*}\n"
+    "\\begin{align*}\n"
   end
 
   def self._end_align(topic)
-    TOPICS[topic][:skip_align] ? '' : "\\end{align*}\n"
+    # TOPICS[topic][:skip_align] ? '' : "\\end{align*}\n"
+    "\\end{align*}\n"
   end
 
   def self._begin_minipage(layout)
@@ -78,15 +80,34 @@ class LatexPrinter
     while current_question_number <= number_of_questions
       if current_question_number % layout[:questions_per_row] == 1 ||
         layout[:questions_per_row] == 1
-        result_latex[:question_content] += "\\vspace{10 mm}\n\n\\noindent\n"
-        result_latex[:solution_content] += "\\vspace{10 mm}\n\n\\noindent\n"
+        if current_question_number == 1
+          result_latex[:question_content] += "\\noindent\n"
+          result_latex[:solution_content] += "\\noindent\n"
+        else
+          result_latex[:question_content] += "\\vspace{10 mm}\n\n\\noindent\n"
+          result_latex[:solution_content] += "\\vspace{10 mm}\n\n\\noindent\n"
+        end
       end
       current_question = questions[current_question_number-1]
       current_question_latex = topic_class.latex(current_question)
+    if TOPICS[topic][:text_start]
+
+      question_number = current_question_number.to_s + ".\\hspace{30pt}"
+
+      question_latex = current_question_latex[:question_latex].insert(11,question_number)
+      result_latex[:question_content] += _begin_minipage(layout) + _begin_align(topic) +
+        question_latex + "\n" + _end_align(topic) + _end_minipage
+
+      solution_latex = current_question_latex[:solution_latex].insert(11,question_number)
+      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align(topic) +
+        solution_latex + "\n" + _end_align(topic) + _end_minipage
+    else
+
       result_latex[:question_content] += _begin_minipage(layout) + _begin_align(topic) + current_question_number.to_s +
         ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + _end_align(topic) + _end_minipage
       result_latex[:solution_content] += _begin_minipage(layout) + _begin_align(topic) + current_question_number.to_s +
         ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + _end_align(topic) + _end_minipage
+    end
       current_question_number += 1
     end
     result_latex
@@ -109,6 +130,14 @@ class LatexPrinter
 
       current_class = TOPICS[current_topic][:class_name]
       current_question_latex = current_class.latex(current_question)
+
+
+      result_latex[:question_content] += _begin_minipage(layout) + _begin_align(topic) + current_question_number.to_s +
+        ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + _end_align(topic) + _end_minipage
+      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align(topic) + current_question_number.to_s +
+        ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + _end_align(topic) + _end_minipage
+
+
       result_latex[:question_content] += self._begin_minipage_flalign(layout) + current_question_number.to_s +
         ".\\hspace{30pt}"  + current_question_latex[:question_latex] +
         "\\\\[#{work_space}pt]\n" + '&'*5 + "\\text{Answer\\quad" + "."*30 + "}\n" + END_MINIPAGE_FLALIGN
