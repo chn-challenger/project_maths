@@ -87,33 +87,16 @@ class LatexPrinter
       end
       current_question = questions[current_question_number-1]
       current_question_latex = topic_class.latex(current_question)
-    if topics[topic][:text_start]
-
       question_number = current_question_number.to_s + ".\\hspace{30pt}"
-
-      question_latex = current_question_latex[:question_latex].insert(11,question_number)
-      result_latex[:question_content] += _begin_minipage(layout) + _begin_align +
-        question_latex + "\n" + _end_align + _end_minipage
-
-      solution_latex = current_question_latex[:solution_latex].insert(11,question_number)
-      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align +
-        solution_latex + "\n" + _end_align + _end_minipage
-    else
-      question_number = current_question_number.to_s + ".\\hspace{30pt}"
-
-      question_latex = current_question_latex[:question_latex].insert(0,question_number)
-      result_latex[:question_content] += _begin_minipage(layout) + _begin_align +
-        question_latex + "\n" + _end_align + _end_minipage
-
-      solution_latex = current_question_latex[:solution_latex].insert(0,question_number)
-      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align +
-        solution_latex + "\n" + _end_align + _end_minipage
-      #
-      # result_latex[:question_content] += _begin_minipage(layout) + _begin_align + current_question_number.to_s +
-      #   ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + _end_align + _end_minipage
-      # result_latex[:solution_content] += _begin_minipage(layout) + _begin_align + current_question_number.to_s +
-      #   ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + _end_align + _end_minipage
-    end
+      insert_index = topics[topic][:text_start]? 11 : 0
+      question_latex = current_question_latex[:question_latex].
+        insert(insert_index,question_number)
+      result_latex[:question_content] += _begin_minipage(layout) +
+        _begin_align + question_latex + "\n" + _end_align + _end_minipage
+      solution_latex = current_question_latex[:solution_latex].
+        insert(insert_index,question_number)
+      result_latex[:solution_content] += _begin_minipage(layout) +
+        _begin_align + solution_latex + "\n" + _end_align + _end_minipage
       current_question_number += 1
     end
     result_latex
