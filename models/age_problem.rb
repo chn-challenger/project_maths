@@ -246,23 +246,16 @@ class AgeProblem
     end
   end
 
-  def _add_type_soln_part_1
+  def _soln_part_1
     time_1 = _time_soln_text(time_line_1)
     time_2 = _time_soln_text(time_line_2)
     time_line_text = "&\\text{#{time_1}}&&&&\\text{#{time_2}}&\\\\\n"
     younger_line = "&\\text{#{persons[0][0]}}\\hspace{10pt}x&&&&\\text{#{persons[0][0]}}\\hspace{10pt}x+#{time_diff}&\\\\\n"
-    older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}x + #{time_1_val}&&&&\\text{#{persons[1][0]}}\\hspace{10pt}x + #{time_1_val} + #{time_diff}&\\\\\n"
-    word_eqn = "&&\\text{#{persons[1][0]}} &= \\text{#{time_2_val}} \\times \\text{#{persons[0][0]}}&\\\\\n"
-    time_line_text + younger_line + older_line + word_eqn
-  end
-
-
-  def _mtp_type_soln_part_1
-    time_1 = _time_soln_text(time_line_1)
-    time_2 = _time_soln_text(time_line_2)
-    time_line_text = "&\\text{#{time_1}}&&&&\\text{#{time_2}}&\\\\\n"
-    younger_line = "&\\text{#{persons[0][0]}}\\hspace{10pt}x&&&&\\text{#{persons[0][0]}}\\hspace{10pt}x+#{time_diff}&\\\\\n"
-    older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x&&&&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x+#{time_diff}&\\\\\n"
+    if time_1_rel == :add
+      older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}x + #{time_1_val}&&&&\\text{#{persons[1][0]}}\\hspace{10pt}x + #{time_1_val} + #{time_diff}&\\\\\n"
+    else
+      older_line = "&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x&&&&\\text{#{persons[1][0]}}\\hspace{10pt}#{time_1_val}x+#{time_diff}&\\\\\n"
+    end
     word_eqn = "&&\\text{#{persons[1][0]}} &= \\text{#{time_2_val}} \\times \\text{#{persons[0][0]}}&\\\\\n"
     time_line_text + younger_line + older_line + word_eqn
   end
@@ -311,11 +304,11 @@ class AgeProblem
   end
 
   def mtp_type_soln
-    _mtp_type_soln_part_1 + _both_type_soln_part_2 + _mtp_type_soln_part_3
+    _soln_part_1 + _both_type_soln_part_2 + _mtp_type_soln_part_3
   end
 
   def add_type_soln
-    _add_type_soln_part_1 + _both_type_soln_part_2 + _add_type_soln_part_3
+    _soln_part_1 + _both_type_soln_part_2 + _add_type_soln_part_3
   end
 
   def self.named_persons
