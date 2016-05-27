@@ -88,8 +88,8 @@ __Help sought!: I am still looking for improvements to make these methods more r
 
 To do:
 * Write a more generic linear_equation solver for those with x on both sides.
-* Complete ```AgeProblem``` topic class.
 * Make generic linear equation solvers.
+* Tidy-up methods in expression class to have more *single responsibility*.
 * Create Ratio & Percentage topic class.
 
 ## Latest Macro Ideas
@@ -98,11 +98,15 @@ To do:
 * A module for a topic such as ```AgeProblem```, ```Ratio``` will make use of classes instances from things like ```Expression```, ```Equation```.
 * Therefore ```Fraction``` class should be split responsibility in two classes in two parts, one part deals with the basics of ```Fraction``` whose instances are used as values of Expressions and can be used in any other topic module.  Whilst the question generators into its own ```FractionQuestion``` module.  
 
-### Example of generated worksheet solutions
+### Example of generated linear equation worksheet solutions
 ![](http://i.imgur.com/toGzuGM.png)
+
+### Example of generated age problem worksheet solutions
+![](http://i.imgur.com/vdbNicP.png)
 
 ### Example of generated latex string script
 ![](http://i.imgur.com/TTUGbFi.png)
+
 
 ## Ideas for future improvements (These are NOT necessary for either than Prototype or final versions.)
 
