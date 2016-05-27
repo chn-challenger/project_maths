@@ -750,11 +750,9 @@ class Expression
     #mutate self - proper msum (not flattened), simplified
     #return expansion_details
 
+
   def _expand_wd_part_1
     convert_lft_steps
-  end
-
-  def _expand_wd_part_2
     new_steps = []
     step_stage_arrays = []
     steps.each do |step|
@@ -767,37 +765,22 @@ class Expression
     step_stage_arrays
   end
 
-  def _expand_wd_part_3(step_stage_arrays)
-    # max = 1
-    # step_stage_arrays.each do |step_stage_array|
-    #   max = step_stage_array.length if step_stage_array.length > max
-    # end
-    max_array = step_stage_arrays.inject([]) do |res,ele|
-      res << ele.length
-    end
-    num_of_stages = max_array.max
+  def _expand_wd_part_2(step_stage_arrays)
+    num_of_stages = step_stage_arrays.inject([]){|r,e| r << e.length}.max
     expansion_details = []
     for i in 0...num_of_stages
-
       stage_steps = []
-
       for j in 0...steps.length
         curr_step_ops = steps[j].ops
-
-        stage_length = step_stage_arrays[j].length
-        if i > stage_length - 1
+        if i >= step_stage_arrays[j].length
           curr_step_val = step_stage_arrays[j].last
         else
-          curr_step_val = step_stage_arrays[j][i]  #unless i is too big!!!
+          curr_step_val = step_stage_arrays[j][i]
         end
-
-        curr_step = step_factory.build([curr_step_ops,curr_step_val])
-        stage_steps << curr_step
+        stage_steps << step_factory.build([curr_step_ops,curr_step_val])
       end
-
       expansion_details << expression_factory.build(stage_steps)
     end
-
     expansion_details
   end
 
