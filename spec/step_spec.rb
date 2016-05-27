@@ -297,8 +297,15 @@ describe Step do
   describe '#mtp_prepare_value_as_ms' do
     it 'prepares an elementary step for multiplication by change it to ms' do
       step = step_factory.build([:mtp,7])
+
+      msum_val = msum_factory.build([[nil,[7]]])
+      test_step = step_factory.build([:mtp,msum_val])
+      test_1 = step_factory.build([:mtp,[[nil,[[nil,7]]]]])
+      
       expected_step = step_factory.build([:mtp,[[nil,7]]])
       expect(step.mtp_prepare_value_as_ms).to eq expected_step
+      # expect(test_step).to eq test_1
+      # expect(test_1.val.steps.first.val.is_m_form?).to be true
     end
 
     it 'prepares an elementary step for mtp by mutating it' do

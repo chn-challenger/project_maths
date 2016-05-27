@@ -120,7 +120,7 @@ class Step
     value_config = self.val.steps + step.val.steps
   end
 
-  def mtp_prepare_value_as_ms
+  def mtp_prepare_value_as_ms  #not really it is an m-form
     copy = self.copy
     if val.is_a?(expression_class)
       val.expand

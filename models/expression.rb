@@ -734,53 +734,73 @@ class Expression
   end
 
   #expand_with_details plan
-  #part_0  convert_lft_steps
-  #part_1  call expand_with_details on val of any step that is exp_valued
+  #part_1  convert_lft_steps
+  #part_2  call expand_with_details on val of any step that is exp_valued
     #mutate self to these expansions
     #wrap any ele step to msum step
     #return an array of step_stages (array of expressions)
-  #part_2  construct the initial expansion_details from self and return array
+  #part_3  construct the initial expansion_details from self and return array
     #of part_2
     #make no change to self
     #return expansion_details array
-  #part_3
+  #part_4
     #iterate through steps, two cases:
       #consecutive + - steps
       #mtp step
     #mutate self - proper msum (not flattened), simplified
     #return expansion_details
 
-  def expand_with_details
-    #part 1 of calling expand_with_details on each exp_valued step later
-    expand_details = [self.copy]
-    expanded_steps = []
-    steps.each do |step|
-
-      if step.ops == nil || step.ops == :add
-        expanded_steps << step
-      end
-
-      if step.ops == :mtp
-        step._wrap_ele_to_mform
-        for i in 0...expanded_steps.length
-          expanded_steps[i] = expanded_steps[i].em_mtp_em(step)
-        end
-
-        new_stage_1 = expression_class.new(expanded_steps).simplify_all_m_forms
-        new_stage_1.steps.first.ops = nil
-        expand_details << new_stage_1
-
-        new_stage_2 = new_stage_1.copy.simplify_all_m_sums
-        if new_stage_1 != new_stage_2
-          expand_details <<new_stage_2
-        end
-      end
-
-    end
-    self.steps.first.ops = nil
-    self.steps = expanded_steps
-    expand_details
+  def expand_wd_part_1
+    convert_lft_steps
   end
+
+  # def expand_wd_part_2
+  #   new_steps = []
+  #   step_stage_arrays = []
+  #   steps.each do |step|
+  #     if step.exp_valued?
+  #       step_stage_arrays << step.val.expand_with_details
+  #     else
+  #       step.mtp_prepare_value_as_ms
+  #     end
+  #   end
+  #
+  #
+  # end
+
+
+
+  # def expand_with_details
+  #   #part 1 of calling expand_with_details on each exp_valued step later
+  #   expand_details = [self.copy]
+  #   expanded_steps = []
+  #   steps.each do |step|
+  #
+  #     if step.ops == nil || step.ops == :add
+  #       expanded_steps << step
+  #     end
+  #
+  #     if step.ops == :mtp
+  #       step._wrap_ele_to_mform
+  #       for i in 0...expanded_steps.length
+  #         expanded_steps[i] = expanded_steps[i].em_mtp_em(step)
+  #       end
+  #
+  #       new_stage_1 = expression_class.new(expanded_steps).simplify_all_m_forms
+  #       new_stage_1.steps.first.ops = nil
+  #       expand_details << new_stage_1
+  #
+  #       new_stage_2 = new_stage_1.copy.simplify_all_m_sums
+  #       if new_stage_1 != new_stage_2
+  #         expand_details <<new_stage_2
+  #       end
+  #     end
+  #
+  #   end
+  #   self.steps.first.ops = nil
+  #   self.steps = expanded_steps
+  #   expand_details
+  # end
 
 
 
