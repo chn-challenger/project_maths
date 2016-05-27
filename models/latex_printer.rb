@@ -4,8 +4,11 @@ require './models/linear_equation'
 require './models/age_problem'
 require './models/equation'
 require './models/question_generator'
+require './models/topics'
+
 include SerialNumber
 include ContentGenerator
+include Topics
 
 class LatexPrinter
 
@@ -40,33 +43,25 @@ class LatexPrinter
     "\\usepackage{fancyhdr}\n"\
     "\\renewcommand{\\headrulewidth}{0pt}\n"\
     "\\pagestyle{fancy}\n"
-  END_MINIPAGE_ALIGN = "\\end{align*}\n"\
-      "\\end{minipage}\n"
-  END_MINIPAGE_FLALIGN = "\\end{flalign*}\n"\
-      "\\end{minipage}\n"
 
-
-  def self._begin_align(topic)
-    # TOPICS[topic][:skip_align] ? '' : "\\begin{align*}\n"
+  def self._begin_align
     "\\begin{align*}\n"
   end
 
-  def self._end_align(topic)
-    # TOPICS[topic][:skip_align] ? '' : "\\end{align*}\n"
+  def self._end_align
     "\\end{align*}\n"
   end
 
-  def self._begin_falign(topic)
+  def self._begin_falign
     "\\begin{flalign*}\n"
   end
 
-  def self._end_falign(topic)
+  def self._end_falign
     "\\end{flalign*}\n"
   end
 
   def self._begin_minipage(layout)
     minipage_width = '%.4f' % (1.to_f / layout[:questions_per_row])
-    # "\\begin{minipage}[t]{#{minipage_width}\\textwidth}\n\\begin{align*}\n"
     "\\begin{minipage}[t]{#{minipage_width}\\textwidth}\n"
   end
 
@@ -74,47 +69,50 @@ class LatexPrinter
     "\\end{minipage}\n"
   end
 
-  def self._begin_minipage_flalign(layout)
-    minipage_width = '%.4f' % (1.to_f / layout[:questions_per_row])
-    "\\begin{minipage}[t]{#{minipage_width}\\textwidth}\n\\begin{flalign*}\n"
-  end
-
   def self.worksheet_content_latex(questions,topic,layout={})
     layout[:questions_per_row] ||= 2
-    topic_class = TOPICS[topic][:class_name]
+    topic_class = topics[topic][:class_name]
     number_of_questions = questions.length
     current_question_number = 1
     result_latex = {question_content:'',solution_content:''}
     while current_question_number <= number_of_questions
       if current_question_number % layout[:questions_per_row] == 1 ||
         layout[:questions_per_row] == 1
-        if current_question_number == 1
-          result_latex[:question_content] += "\\noindent\n"
-          result_latex[:solution_content] += "\\noindent\n"
-        else
-          result_latex[:question_content] += "\\vspace{10 mm}\n\n\\noindent\n"
-          result_latex[:solution_content] += "\\vspace{10 mm}\n\n\\noindent\n"
+        if current_question_number != 1
+          result_latex[:question_content] += "\\vspace{10 mm}\n\n"
+          result_latex[:solution_content] += "\\vspace{10 mm}\n\n"
         end
+        result_latex[:question_content] += "\\noindent\n"
+        result_latex[:solution_content] += "\\noindent\n"
       end
       current_question = questions[current_question_number-1]
       current_question_latex = topic_class.latex(current_question)
-    if TOPICS[topic][:text_start]
+    if topics[topic][:text_start]
 
       question_number = current_question_number.to_s + ".\\hspace{30pt}"
 
       question_latex = current_question_latex[:question_latex].insert(11,question_number)
-      result_latex[:question_content] += _begin_minipage(layout) + _begin_align(topic) +
-        question_latex + "\n" + _end_align(topic) + _end_minipage
+      result_latex[:question_content] += _begin_minipage(layout) + _begin_align +
+        question_latex + "\n" + _end_align + _end_minipage
 
       solution_latex = current_question_latex[:solution_latex].insert(11,question_number)
-      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align(topic) +
-        solution_latex + "\n" + _end_align(topic) + _end_minipage
+      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align +
+        solution_latex + "\n" + _end_align + _end_minipage
     else
+      question_number = current_question_number.to_s + ".\\hspace{30pt}"
 
-      result_latex[:question_content] += _begin_minipage(layout) + _begin_align(topic) + current_question_number.to_s +
-        ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + _end_align(topic) + _end_minipage
-      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align(topic) + current_question_number.to_s +
-        ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + _end_align(topic) + _end_minipage
+      question_latex = current_question_latex[:question_latex].insert(0,question_number)
+      result_latex[:question_content] += _begin_minipage(layout) + _begin_align +
+        question_latex + "\n" + _end_align + _end_minipage
+
+      solution_latex = current_question_latex[:solution_latex].insert(0,question_number)
+      result_latex[:solution_content] += _begin_minipage(layout) + _begin_align +
+        solution_latex + "\n" + _end_align + _end_minipage
+      #
+      # result_latex[:question_content] += _begin_minipage(layout) + _begin_align + current_question_number.to_s +
+      #   ".\\hspace{30pt}"  + current_question_latex[:question_latex] + "\n" + _end_align + _end_minipage
+      # result_latex[:solution_content] += _begin_minipage(layout) + _begin_align + current_question_number.to_s +
+      #   ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + _end_align + _end_minipage
     end
       current_question_number += 1
     end
@@ -135,39 +133,19 @@ class LatexPrinter
       current_question = questions[current_question_number-1][:question]
       current_topic = questions[current_question_number-1][:topic]
       work_space = questions[current_question_number-1][:work_space]
-
-      current_class = TOPICS[current_topic][:class_name]
-      current_question_latex = current_class.latex(current_question)
-
-
-      if TOPICS[current_topic][:text_start]
-        question_number = current_question_number.to_s + ".\\hspace{30pt}"
-
-        question_latex = current_question_latex[:question_latex].insert(11,question_number)
-        result_latex[:question_content] += _begin_minipage(layout) + _begin_falign(current_topic) +
-          question_latex + "\\\\[#{work_space}pt]\n" + '&'*5 + "\\text{Answer\\quad" + "."*30 + "}\n" + _end_falign(current_topic) + _end_minipage
-
-        solution_latex = current_question_latex[:solution_latex].insert(11,question_number)
-        result_latex[:solution_content] += _begin_minipage(layout) + _begin_align(current_topic) +
-          solution_latex + "\n" + _end_align(current_topic) + _end_minipage
-      else
-        question_number = current_question_number.to_s + ".\\hspace{30pt}"
-
-        question_latex = current_question_latex[:question_latex].insert(0,question_number)
-        result_latex[:question_content] += _begin_minipage(layout) + _begin_falign(current_topic) +
-          question_latex + "\\\\[#{work_space}pt]\n" + '&'*5 + "\\text{Answer\\quad" + "."*30 + "}\n" + _end_falign(current_topic) + _end_minipage
-
-        solution_latex = current_question_latex[:solution_latex].insert(0,question_number)
-        result_latex[:solution_content] += _begin_minipage(layout) + _begin_align(current_topic) +
-          solution_latex + "\n" + _end_align(current_topic) + _end_minipage
-      end
-
-
-      # result_latex[:question_content] += self._begin_minipage_flalign(layout) + current_question_number.to_s +
-      #   ".\\hspace{30pt}"  + current_question_latex[:question_latex] +
-      #   "\\\\[#{work_space}pt]\n" + '&'*5 + "\\text{Answer\\quad" + "."*30 + "}\n" + END_MINIPAGE_FLALIGN
-      # result_latex[:solution_content] += self._begin_minipage(layout) + current_question_number.to_s +
-      #   ".\\hspace{30pt}"  + current_question_latex[:solution_latex] + "\n" + self._end_minipage
+      current_question_latex = topics[current_topic][:class_name].
+        latex(current_question)
+      question_number = current_question_number.to_s + ".\\hspace{30pt}"
+      insert_index = topics[current_topic][:text_start]? 11 : 0
+      question_latex = current_question_latex[:question_latex].
+        insert(insert_index,question_number)
+      result_latex[:question_content] += _begin_minipage(layout) +
+        _begin_falign + question_latex + "\\\\[#{work_space}pt]\n" + '&'*5 +
+        "\\text{Answer\\quad" + "."*30 + "}\n" + _end_falign + _end_minipage
+      solution_latex = current_question_latex[:solution_latex].
+        insert(insert_index,question_number)
+      result_latex[:solution_content] += _begin_minipage(layout) +
+        _begin_align + solution_latex + "\n" + _end_align + _end_minipage
       current_question_number += 1
     end
     result_latex
@@ -194,7 +172,7 @@ class LatexPrinter
   end
 
   def self.worksheet_ends(topic,sheet_number,student)
-    title,topic_prefix = TOPICS[topic][:work_sheet_title],TOPICS[topic][:prefix]
+    title,topic_prefix = topics[topic][:work_sheet_title],topics[topic][:prefix]
     result = {questions:{},solutions:{}}
     serial = generate_serial
     result[:questions][:start] = HEADERS
@@ -223,7 +201,7 @@ class LatexPrinter
 
   def self.worksheet(topic,sheet_number,student,number_of_questions,parameters={},layout_format={})
     questions = generate_worksheet_questions(number_of_questions,
-      TOPICS[topic][:class_name],parameters)
+      topics[topic][:class_name],parameters)
     content_latex = self.worksheet_content_latex(questions,topic,layout_format)
     worksheet_ends = self.worksheet_ends(topic,sheet_number,student)
     questions_sheet = worksheet_ends[:questions][:start] + content_latex[:question_content] + worksheet_ends[:questions][:end]
