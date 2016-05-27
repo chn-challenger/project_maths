@@ -784,13 +784,17 @@ class Expression
       for j in 0...steps.length
         curr_step_ops = steps[j].ops
 
-        curr_step_val = step_stage_arrays[j][i]  #unless i is too big!!!
-
-
+        stage_length = step_stage_arrays[j].length
+        if i > stage_length - 1
+          curr_step_val = step_stage_arrays[j].last
+        else
+          curr_step_val = step_stage_arrays[j][i]  #unless i is too big!!!
+        end
 
         curr_step = step_factory.build([curr_step_ops,curr_step_val])
         stage_steps << curr_step
       end
+
       expansion_details << expression_factory.build(stage_steps)
     end
 
