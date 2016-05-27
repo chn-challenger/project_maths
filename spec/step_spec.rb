@@ -301,7 +301,7 @@ describe Step do
       msum_val = msum_factory.build([[nil,[7]]])
       test_step = step_factory.build([:mtp,msum_val])
       test_1 = step_factory.build([:mtp,[[nil,[[nil,7]]]]])
-      
+
       expected_step = step_factory.build([:mtp,[[nil,7]]])
       expect(step.mtp_prepare_value_as_ms).to eq expected_step
       # expect(test_step).to eq test_1
@@ -349,5 +349,23 @@ describe Step do
     end
   end
 
+  describe '#to_msum' do
+    it 'mutates an elementary step to be wrapped up as an m-sum' do
+      step = step_factory.build([:add,'x'])
+      msum = msum_factory.build([[nil,['x']]])
+      expected_step = step_factory.build([:add,msum])
+      result_step = step.to_msum
+      expect(result_step).to eq expected_step
+    end
+
+    it 'is a mutator that returns itself' do
+      step = step_factory.build([:add,'x'])
+      msum = msum_factory.build([[nil,['x']]])
+      expected_step = step_factory.build([:add,msum])
+      result_step = step.to_msum
+      expect(step.object_id).to eq result_step.object_id
+      expect(step).to eq expected_step
+    end
+  end
 
 end

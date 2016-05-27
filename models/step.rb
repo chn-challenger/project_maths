@@ -143,8 +143,8 @@ class Step
     step_factory.build([_sign(r_step),[[nil,nrator],[:div,dnator]]])
   end
 
-  def _wrap_ele_to_mform
-    self.val = expression_factory.build([[nil,val]])
+  def to_msum
+    self.val = expression_factory.build([[nil,[[nil,val]]]])
     self
   end
 
