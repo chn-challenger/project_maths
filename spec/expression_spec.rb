@@ -1561,25 +1561,27 @@ describe Expression do
       expected_exp = expression_factory.build([[nil,'x'],[:add,8,:lft],
         [:div,7,:lft],[:mtp,6,:lft],[:sbt,5,:lft],[:div,4,:lft],[:sbt,3,:lft],
         [:mtp,11,:lft],[:add,9],[:div,10]])
-      # p exp
-      # puts expected_exp.latex
       result = exp.standardise_linear_exp
       expect(result).to eq expected_exp
     end
 
     it 'is a mutator method which returns the object itself' do
       exp = expression_factory.build([[nil,5],[:add,'x']])
-      # p exp.latex
       expected_exp = expression_factory.build([[nil,5],[:add,'x']])
       expect(exp.expand.object_id).to eq exp.object_id
     end
-
-
-
-
-
   end
 
+  describe '#expand_with_details' do
+    it 'expands (a+3)4' do
+      exp = expression_factory.build([[nil,'x'],[:add,3],[:mtp,4]])
+      result = exp.expand_with_details
+      stage_1 = expression_factory.build([[nil,'x'],[:add,3],[:mtp,4]])
+      stage_2 = msum_factory.build([[nil,[4,'x']],[:add,[12]]])
+      expected_result = [stage_1,stage_2]
+      expect(result).to eq expected_result
+    end
 
+  end
 
 end

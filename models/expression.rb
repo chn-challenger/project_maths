@@ -733,6 +733,98 @@ class Expression
     self
   end
 
+  def expand_with_details
+    #part 1 of calling expand_with_details on each exp_valued step later
+    expand_details = [self.copy]
+    expanded_steps = []
+    steps.each do |step|
+
+      if step.ops == nil || step.ops == :add
+        expanded_steps << step
+      end
+
+      if step.ops == :mtp
+        step._wrap_ele_to_mform
+        for i in 0...expanded_steps.length
+          expanded_steps[i] = expanded_steps[i].em_mtp_em(step)
+        end
+
+        new_stage_1 = expression_class.new(expanded_steps).simplify_all_m_forms
+        new_stage_1.steps.first.ops = nil
+        expand_details << new_stage_1
+
+        new_stage_2 = new_stage_1.copy.simplify_all_m_sums
+        if new_stage_1 != new_stage_2
+          expand_details <<new_stage_2
+        end
+      end
+
+    end
+    self.steps.first.ops = nil
+    self.steps = expanded_steps
+    expand_details
+  end
+
+
+
+
+# def expand
+#   convert_lft_steps
+#   expanded_steps = []
+#   steps.each do |step|
+#     _expand_nil_or_add_into(expanded_steps,step) if _nil_or_add?(step)
+#     _expand_sbt_into(expanded_steps,step) if step.ops == :sbt
+#     _expand_mtp_into(expanded_steps,step) if step.ops == :mtp
+#   end
+#   self.steps = expanded_steps
+#   self.steps.first.ops = nil  #this is to be taken out once nullify first step is written
+#   return self
+# end
+#
+# def _expand_nil_or_add_into(expanded_steps,step)
+#   if step.exp_valued?
+#     step.val.expand
+#     step.val.steps.first.ops = :add
+#     step.val.steps.each{|step| expanded_steps << step}
+#   else
+#    expanded_steps << step
+#   end
+# end
+#
+# def _nil_or_add?(step)
+#   step.ops == nil || step.ops == :add
+# end
+#
+# def _expand_sbt_into(expanded_steps,step)
+#   if step.val.is_a?(expression_class)
+#     step.val.expand
+#     step.val._add_sbt_sign_switch
+#     step.val.steps.each{|step| expanded_steps << step}
+#   else
+#    expanded_steps << step
+#   end
+# end
+#
+# def _add_sbt_sign_switch
+#   switch_hash = {nil=>:sbt,:add=>:sbt,:sbt=>:add}
+#   steps.each{|step| step.ops = switch_hash[step.ops]}
+# end
+#
+# def _expand_mtp_into(expanded_steps,step)
+#   step.mtp_prepare_value_as_ms
+#   init_ms = expression_factory.build(expanded_steps).copy.steps
+#   expanded_steps.slice!(0..-1)
+#   step.val.steps.each do |mtp_step|
+#     _expand_one_mtp_step_into(expanded_steps,init_ms,mtp_step)
+#   end
+#   expanded_steps.first.ops = nil
+# end
+#
+# def _expand_one_mtp_step_into(expanded_steps,init_ms,mtp_step)
+#   copy_init_ms = expression_factory.build(init_ms).copy.steps
+#   copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
+# end
+
 
 
 end
