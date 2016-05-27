@@ -89,18 +89,16 @@ class AgeProblem
       if persons[1][2] == nil #2nd person is named
         text_part_1 += "#{persons[1][0]}. "
         text_part_3 = "#{text_part_3} #{persons[0][0]}. "
-        text_part_4 = "How old is #{persons[0][0]} now?"
       else
         if persons[0][1] == :m
           text_part_1 += "his #{persons[1][0]}. "
           text_part_3 = "his #{text_part_3} him. "
-          text_part_4 = "How old is #{persons[0][0]} now?"
         else
           text_part_1 += "her #{persons[1][0]}. "
           text_part_3 = "her #{text_part_3} her. "
-          text_part_4 = "How old is #{persons[0][0]} now?"
         end
       end
+      text_part_4 = "How old is #{persons[0][0]} now?"
     end
 
     if who_first == :older && persons[1][2] == nil #second person is named
@@ -124,11 +122,8 @@ class AgeProblem
 
     if who_first == :younger && persons[0][2] == :rel #first person is relative
       text_part_1 = "#{persons[1][0]}'s #{persons[0][0]} is #{age_diff} younger than #{persons[1][0]}. "
-      if persons[1][1] == :m
-        text_part_3 = "#{text_part_3} his #{persons[0][0]}. "
-      else
-        text_part_3 = "#{text_part_3} her #{persons[0][0]}. "
-      end
+      his_her = persons[1][1] == :m ? 'his' : 'her'
+      text_part_3 = "#{text_part_3} #{his_her} #{persons[0][0]}. "
       text_part_4 = "How old is #{persons[1][0]}'s #{persons[0][0]} now?"
     end
 
