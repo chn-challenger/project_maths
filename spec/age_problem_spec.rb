@@ -321,14 +321,14 @@ describe AgeProblem do
       srand(300)
       question = described_class.generate_question
       latex = described_class.latex(question)
-      expect(latex[:solution_latex]).to eq "Justin is twenty five years older than his niece. In eleven years time, Justin will be twice as old as his niece. How old is his niece now?\n\\begin{align*}\n&\\text{Now}&&&&\\text{11 years from now}&\\\\\n&\\text{niece}\\hspace{10pt}x&&&&\\text{niece}\\hspace{10pt}x+11&\\\\\n&\\text{Justin}\\hspace{10pt}x + 25&&&&\\text{Justin}\\hspace{10pt}x + 25 + 11&\\\\\n&&\\text{Justin} &= \\text{2} \\times \\text{niece}&\\\\\n&&x+36&=2\\left(x+11\\right)&\\\\\n&&x+36&=2x+22&\\\\\n&&36-22&=2x-x&\\\\\n&&14&=x&\\\\\n&Answer:&\\text{niece now} &= 14\n\\end{align*}\n"
+      expect(latex[:solution_latex]).to eq "\\intertext{Justin is twenty five years older than his niece. In eleven years time, Justin will be twice as old as his niece. How old is his niece now?}&\\text{Now}&&&&\\text{11 years from now}&\\\\\n&\\text{niece}\\hspace{10pt}x&&&&\\text{niece}\\hspace{10pt}x+11&\\\\\n&\\text{Justin}\\hspace{10pt}x + 25&&&&\\text{Justin}\\hspace{10pt}x + 25 + 11&\\\\\n&&\\text{Justin} &= \\text{2} \\times \\text{niece}&\\\\\n&&x+36&=2\\left(x+11\\right)&\\\\\n&&x+36&=2x+22&\\\\\n&&36-22&=2x-x&\\\\\n&&14&=x&\\\\\n&Answer:&\\text{niece now} &= 14"
     end
 
     it 'generates a mtp type question/solution latex' do
       srand(100)
       question = described_class.generate_question
       latex = described_class.latex(question)
-      expect(latex[:solution_latex]).to eq "In ten years time, John's grandfather will be seven times as old as John. Twenty two years from now, John's grandfather will be four times as old as John. How old is John now?\n\\begin{align*}\n&\\text{10 years from now}&&&&\\text{22 years from now}&\\\\\n&\\text{John}\\hspace{10pt}x&&&&\\text{John}\\hspace{10pt}x+12&\\\\\n&\\text{grandfather}\\hspace{10pt}7x&&&&\\text{grandfather}\\hspace{10pt}7x+12&\\\\\n&&\\text{grandfather} &= \\text{4} \\times \\text{John}&\\\\\n&&7x+12&=4\\left(x+12\\right)&\\\\\n&&7x+12&=4x+48&\\\\\n&&7x-4x&=48-12&\\\\\n&&3x&=36&\\\\\n&&x&=\\frac{36}{3}&\\\\\n&&x&=12&\\\\\n&&\\text{John now} &= \\text{John 10 years from now} - 10\\\\\n&&\\text{John now} &= 12 - 10\\\\\n&Answer:&\\text{John now} &= 2\n\\end{align*}\n"
+      expect(latex[:solution_latex]).to eq "\\intertext{In ten years time, John's grandfather will be seven times as old as John. Twenty two years from now, John's grandfather will be four times as old as John. How old is John now?}&\\text{10 years from now}&&&&\\text{22 years from now}&\\\\\n&\\text{John}\\hspace{10pt}x&&&&\\text{John}\\hspace{10pt}x+12&\\\\\n&\\text{grandfather}\\hspace{10pt}7x&&&&\\text{grandfather}\\hspace{10pt}7x+12&\\\\\n&&\\text{grandfather} &= \\text{4} \\times \\text{John}&\\\\\n&&7x+12&=4\\left(x+12\\right)&\\\\\n&&7x+12&=4x+48&\\\\\n&&7x-4x&=48-12&\\\\\n&&3x&=36&\\\\\n&&x&=\\frac{36}{3}&\\\\\n&&x&=12&\\\\\n&&\\text{John now} &= \\text{John 10 years from now} - 10\\\\\n&&\\text{John now} &= 12 - 10\\\\\n&Answer:&\\text{John now} &= 2"
     end
   end
 end
