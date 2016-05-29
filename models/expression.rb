@@ -810,8 +810,8 @@ class Expression
     # remaining_steps = []
     while true
       if steps[i].ops == nil || steps[i].ops == :add || steps[i].ops == :sbt
-        #1. expand a streak of + - together
-        #2. simplify_all_m_sums
+        #1. expand a streak of + - together - put these into expansion_details
+        #2. simplify_all_m_sums if 1. != 2. put into expansion_details
         #modify  expanded_steps, remaining_steps, i, expansion_details
       end
       if steps[i].ops == :mtp

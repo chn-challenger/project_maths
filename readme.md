@@ -108,6 +108,7 @@ The stars denote difficulty
 * Simultaneous Equations ***
 * Shopping word problems ***
 * Simultaneous equation word problems ****
+* Pattern recognition with basic shape patterns *****
 
 ## Latest Macro Ideas
 
