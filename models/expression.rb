@@ -779,6 +779,43 @@ class Expression
     expansion_details
   end
 
+  def _expand_wd_part_3(expansion_details)
+    i = 0
+    expanded_steps = []
+    # remaining_steps = []
+
+
+    while i < steps.length
+
+      if steps[i].ops == nil || steps[i].ops == :add || steps[i].ops == :sbt
+        add_sbt_step_streak = [steps[i]]
+        i += 1
+
+        while i < steps.length
+          if steps[i].ops == :add || steps[i].ops == :sbt
+            add_sbt_step_streak << steps[i]
+            i += 1
+          else
+            break
+          end
+        end
+        #1. expand a streak of + - together - put these into expansion_details
+        #2. simplify_all_m_sums if 1. != 2. put into expansion_details
+        #modify  expanded_steps, remaining_steps, i, expansion_details
+      end
+
+      if steps[i].ops == :mtp
+        remaining_steps = steps.slice(i+1..-1)
+        _expand_wd_mtp_step(expanded_steps,steps[i],remaining_steps,expansion_details)
+        i += 1
+      end
+
+    end
+    self.steps = expanded_steps
+    self
+
+  end
+
   def _expand_wd_mtp_step(expanded_steps,curr_step,remaining_steps,expansion_details)
     _expand_mtp_into_new(expanded_steps,curr_step)
     current_exp_steps = expanded_steps + remaining_steps
@@ -802,25 +839,6 @@ class Expression
   def _expand_one_mtp_step_into(expanded_steps,init_ms,mtp_step)
     copy_init_ms = expression_factory.build(init_ms).copy.steps
     copy_init_ms.each{|step| expanded_steps << step.em_mtp_em(mtp_step)}
-  end
-
-  def _expand_wd_part_3(expansion_details)
-    i = 0
-    expanded_steps = []
-    # remaining_steps = []
-    while true
-      if steps[i].ops == nil || steps[i].ops == :add || steps[i].ops == :sbt
-        #1. expand a streak of + - together - put these into expansion_details
-        #2. simplify_all_m_sums if 1. != 2. put into expansion_details
-        #modify  expanded_steps, remaining_steps, i, expansion_details
-      end
-      if steps[i].ops == :mtp
-        remaining_steps = steps.slice(i+1..-1)
-        _expand_wd_mtp_step(expanded_steps,steps[i],remaining_steps,expansion_details)
-      end
-    end
-    self.steps = expanded_steps
-    self
   end
 
 
@@ -919,3 +937,53 @@ class Expression
 
 
 end
+
+
+
+
+
+
+
+    #
+    # just_incase = 1
+    # while i < steps.length && just_incase < 100
+    #
+    #
+    #   if steps[i].ops == nil || steps[i].ops == :add || steps[i].ops == :sbt
+    #     add_sbt_step_streak = []
+    #     add_sbt_step_streak << steps[i]
+    #     i += 1
+    #
+    #     break if i >= steps.length
+    #
+    #     just_incase_2 = 1
+    #     while true && just_incase_2 < 100
+    #       if steps[i].ops == :add || steps[i].ops == :sbt
+    #         add_sbt_step_streak << steps[i]
+    #         i += 1
+    #
+    #         break if i >= steps.length
+    #
+    #       else
+    #         break
+    #       end
+    #       just_incase_2 += 1
+    #     end
+    #     #1. expand a streak of + - together - put these into expansion_details
+    #     #2. simplify_all_m_sums if 1. != 2. put into expansion_details
+    #     #modify  expanded_steps, remaining_steps, i, expansion_details
+    #   end
+    #
+    #
+    #
+    #   if steps[i].ops == :mtp
+    #     #do smething
+    #     # remaining_steps = steps.slice(i+1..-1)
+    #     # _expand_wd_mtp_step(expanded_steps,steps[i],remaining_steps,expansion_details)
+    #     i += 1
+    #     break if i >= steps.length
+    #   end
+    #
+    #   just_incase += 1
+    # end
+    # p add_sbt_step_streak

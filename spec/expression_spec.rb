@@ -1677,19 +1677,20 @@ describe Expression do
       end
     end
 
-    # context '#_expand_wd_part_3' do
-    #   it 'example 1' do
-    #     ms_1 = msum_factory.build([[nil,['x']]])
-    #     ms_2 = msum_factory.build([[nil,[3]],[:add,['x']]])
-    #     ms_3 = msum_factory.build([[nil,[4]],[:add,['y']]])
-    #     ms_4 = msum_factory.build([[nil,[5]],[:add,['z']]])
-    #     exp = expression_factory.build([[nil,ms_1],[:add,ms_2],[:sbt,ms_3],
-    #       [:mtp,ms_4]])
-    #     stage_1 = expression_factory.build([[nil,ms_1],[:add,ms_2],[:sbt,ms_3],
-    #       [:mtp,ms_4]])
-    #     expected_expansion_details = [stage_1]
-    #   end
-    # end
+    context '#_expand_wd_part_3' do
+      it 'example 1' do
+        ms_1 = msum_factory.build([[nil,['x']]])
+        ms_2 = msum_factory.build([[nil,[3]],[:add,['x']]])
+        ms_3 = msum_factory.build([[nil,[4]],[:add,['y']]])
+        ms_4 = msum_factory.build([[nil,[5]],[:add,['z']]])
+        exp = expression_factory.build([[nil,ms_1],[:add,ms_2],[:sbt,ms_3],
+          [:mtp,ms_4]])
+        stage_1 = expression_factory.build([[nil,ms_1],[:add,ms_2],[:sbt,ms_3],
+          [:mtp,ms_4]])
+        # expected_expansion_details = [stage_1]
+        stage_1._expand_wd_part_3([])
+      end
+    end
 
 
   end
