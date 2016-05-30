@@ -796,6 +796,8 @@ class Expression
             add_sbt_step_streak << steps[i]
             i += 1
           else
+            remaining_steps = steps.slice(i..-1)
+            _expand_wd_add_sbt_streak(expanded_steps,add_sbt_step_streak,remaining_steps,expansion_details)
             break
           end
         end
@@ -815,6 +817,38 @@ class Expression
     self
 
   end
+
+  def _expand_wd_add_sbt_streak(expanded_steps,add_sbt_step_streak,remaining_steps,expansion_details)
+    switch_hash = {nil=>:sbt,:add=>:sbt,:sbt=>:add}
+    add_sbt_step_streak.each do |msum_step|
+      msum_step.val.steps.each do |m_step|
+        if msum_step.ops == :sbt
+          m_step.ops = switch_hash[m_step.ops]
+        else
+          m_step.ops = :add if m_step.ops == nil
+        end
+        expanded_steps << m_step
+      end
+    end
+
+    expanded_steps_copy = expression_class.new(expanded_steps).copy.steps
+    simplified_expanded_steps = expression_class.new(expanded_steps_copy).simplify_all_m_sums.steps
+
+    current_stage = expression_class.new(expanded_steps + remaining_steps)
+    simplified_stage = expression_class.new(simplified_expanded_steps + remaining_steps)
+
+    expansion_details << current_stage
+    if current_stage != simplified_stage
+      expansion_details << simplified_stage
+    end
+
+    expanded_steps.slice!(0..-1)
+    simplified_expanded_steps.each do |simp_step|
+      expanded_steps << simp_step
+    end
+
+  end
+
 
   def _expand_wd_mtp_step(expanded_steps,curr_step,remaining_steps,expansion_details)
     _expand_mtp_into_new(expanded_steps,curr_step)
@@ -890,29 +924,29 @@ class Expression
 #   return self
 # end
 #
-# def _expand_nil_or_add_into(expanded_steps,step)
-#   if step.exp_valued?
-#     step.val.expand
-#     step.val.steps.first.ops = :add
-#     step.val.steps.each{|step| expanded_steps << step}
-#   else
-#    expanded_steps << step
-#   end
-# end
-#
-# def _nil_or_add?(step)
-#   step.ops == nil || step.ops == :add
-# end
-#
-# def _expand_sbt_into(expanded_steps,step)
-#   if step.val.is_a?(expression_class)
-#     step.val.expand
-#     step.val._add_sbt_sign_switch
-#     step.val.steps.each{|step| expanded_steps << step}
-#   else
-#    expanded_steps << step
-#   end
-# end
+def _expand_nil_or_add_into(expanded_steps,step)
+  if step.exp_valued?
+    step.val.expand
+    step.val.steps.first.ops = :add
+    step.val.steps.each{|step| expanded_steps << step}
+  else
+   expanded_steps << step
+  end
+end
+
+def _nil_or_add?(step)
+  step.ops == nil || step.ops == :add
+end
+
+def _expand_sbt_into(expanded_steps,step)
+  if step.val.is_a?(expression_class)
+    step.val.expand
+    step.val._add_sbt_sign_switch
+    step.val.steps.each{|step| expanded_steps << step}
+  else
+   expanded_steps << step
+  end
+end
 #
 # def _add_sbt_sign_switch
 #   switch_hash = {nil=>:sbt,:add=>:sbt,:sbt=>:add}

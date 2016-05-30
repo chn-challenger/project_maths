@@ -1677,20 +1677,48 @@ describe Expression do
       end
     end
 
-    context '#_expand_wd_part_3' do
-      it 'example 1' do
-        ms_1 = msum_factory.build([[nil,['x']]])
-        ms_2 = msum_factory.build([[nil,[3]],[:add,['x']]])
-        ms_3 = msum_factory.build([[nil,[4]],[:add,['y']]])
-        ms_4 = msum_factory.build([[nil,[5]],[:add,['z']]])
-        exp = expression_factory.build([[nil,ms_1],[:add,ms_2],[:sbt,ms_3],
-          [:mtp,ms_4]])
-        stage_1 = expression_factory.build([[nil,ms_1],[:add,ms_2],[:sbt,ms_3],
-          [:mtp,ms_4]])
-        # expected_expansion_details = [stage_1]
-        stage_1._expand_wd_part_3([])
+    context '#_expand_wd_add_sbt_streak' do
+      it 'expands a + - streak into expanded_steps and expansion_details' do
+        expanded_ms = msum_factory.build([[nil,[9,'x']],[:add,[8,'y']]])
+        expanded_steps = expanded_ms.steps
+        ms_3 = msum_factory.build([[nil,[7]]])
+        ms_4 = msum_factory.build([[nil,[4]],[:add,['a']]])
+        ms_5 = msum_factory.build([[nil,[5]],[:sbt,['b']]])
+        step_3 = step_factory.build([:add,ms_3])
+        step_4 = step_factory.build([:sbt,ms_4])
+        step_5 = step_factory.build([:mtp,ms_5])
+        add_sbt_step_streak = [step_3,step_4]
+        remaining_steps = [step_5]
+        expansion_details = ['stage_1','stage_2']
+        exp = expression_factory.build([])
+        exp._expand_wd_add_sbt_streak(expanded_steps,add_sbt_step_streak,remaining_steps,expansion_details)
+
+        expected_m_sum_1 = msum_factory.build([[nil,[9,'x']],[:add,[8,'y']],[:add,[7]],[:sbt,[4]],[:sbt,['a']]])
+        expected_m_sum_2 = msum_factory.build([[nil,[9,'x']],[:add,[8,'y']],[:add,[3]],[:sbt,[1,'a']]])
+        last_step = step_factory.build([:mtp,msum_factory.build([[nil,[5]],[:sbt,['b']]])])
+
+        stage_3 = expression_class.new(expected_m_sum_1.steps + [last_step])
+        stage_4 = expression_class.new(expected_m_sum_2.steps + [last_step])
+        expected_expansion_details = ['stage_1','stage_2',stage_3,stage_4]
+        expect(expansion_details).to eq expected_expansion_details
+        expect(expanded_steps).to eq expected_m_sum_2.steps
       end
     end
+
+    # context '#_expand_wd_part_3' do
+    #   it 'example 1' do
+    #     ms_1 = msum_factory.build([[nil,['x']]])
+    #     ms_2 = msum_factory.build([[nil,[3]],[:add,['x']]])
+    #     ms_3 = msum_factory.build([[nil,[4]],[:add,['y']]])
+    #     ms_4 = msum_factory.build([[nil,[5]],[:add,['z']]])
+    #     exp = expression_factory.build([[nil,ms_1],[:add,ms_2],[:sbt,ms_3],
+    #       [:mtp,ms_4]])
+    #     stage_1 = expression_factory.build([[nil,ms_1],[:add,ms_2],[:sbt,ms_3],
+    #       [:mtp,ms_4]])
+    #     # expected_expansion_details = [stage_1]
+    #     stage_1._expand_wd_part_3([])
+    #   end
+    # end
 
 
   end
