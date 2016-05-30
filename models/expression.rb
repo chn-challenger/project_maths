@@ -854,6 +854,10 @@ class Expression
     _expand_mtp_into_new(expanded_steps,curr_step)
     current_exp_steps = expanded_steps + remaining_steps
     current_exp = expression_factory.build(current_exp_steps).simplify_all_m_forms
+
+    #simplify_all_m_sums will not work unless the remaining steps also make the whole thing an msum, change it per the above method
+    #make updates to expanded_steps similar to above
+
     expansion_details << current_exp
     simplified_msum_exp = current_exp.copy.simplify_all_m_sums
     if current_exp != simplified_msum_exp
