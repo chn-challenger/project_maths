@@ -747,6 +747,7 @@ class Expression
 
 
   def _expand_wd_part_1
+    #bug with no mutating self
     convert_lft_steps
     new_steps = []
     step_stage_arrays = []
