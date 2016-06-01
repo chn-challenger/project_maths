@@ -1,8 +1,11 @@
 # Project Mathematics
 
+Change of plan to follow shortly...
+-------
+
 Outline of the eventual website
 -------
-The idea for the website, which will eventually have sibling mobile supporting apps - is that of a maths education website that wholly encompass all aspects of a student's need delivered in a consistent way.
+The idea for the website, which will eventually have sibling mobile supporting apps - is that of a maths education website that wholly encompass all aspects of a student's need delivered in a consistent way.  
 
 The MVP will contain
 -------
