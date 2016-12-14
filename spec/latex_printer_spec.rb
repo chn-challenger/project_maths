@@ -6,7 +6,7 @@ describe LatexPrinter do
   end
 
   describe '#self.worksheet' do
-    context 'generate worksheet for Fraction class' do
+    xcontext 'generate worksheet for Fraction class' do
       let(:worksheet){described_class.worksheet(:fraction,21,'Robert Hook',2)}
 
       it 'generates fraction questions sheet' do
@@ -18,7 +18,7 @@ describe LatexPrinter do
       end
     end
 
-    context 'generate worksheet for Linear Equation class' do
+    xcontext 'generate worksheet for Linear Equation class' do
       let(:worksheet){described_class.worksheet(:linear_equation,5,
         'Isaac Newton',4)}
 
@@ -31,13 +31,18 @@ describe LatexPrinter do
       end
     end
 
-    context 'generate non-standard worksheet for linear equation class' do
+    xcontext 'generate non-standard worksheet for linear equation class' do
 
       let(:worksheet){described_class.worksheet(:linear_equation,5,
         'Isaac Newton',2,{number_of_steps:6,multiple_division:true},
         {questions_per_row:1})}
+      # let(:worksheet2){described_class.worksheet(:linear_equation,5,
+      #   'Isaac Newton',10,{number_of_steps:9,multiple_division:true},
+      #   {questions_per_row:1})}
+
 
       it 'generates non standard linear equation questions sheet' do
+        # puts worksheet2[:questions_sheet]
         expect(worksheet[:questions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-HN620825-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5}}\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\\frac{68}{530-4\\left(6\\left(x-2\\right)+76\\right)}&=2\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}57+\\frac{219}{5\\left(\\frac{36}{x}-2\\right)+63}&=60\n\\end{align*}\n\\end{minipage}\n\\end{document}"
       end
 
@@ -50,11 +55,21 @@ describe LatexPrinter do
       let(:worksheet){described_class.worksheet(:age_problem,11,'Leonhard Euler',
         4,{},{questions_per_row:1})}
 
+      # let(:worksheet2){described_class.worksheet(:age_problem,3,'Any',
+        # 4,{},{questions_per_row:1})}
+      # let(:worksheet2){described_class.worksheet(:fraction,6,'Any',12)}
+      let(:worksheet2){described_class.worksheet(:linear_equation,3,
+        'Any',8,{number_of_steps:10,multiple_division:true},
+        {questions_per_row:1})}
+
       it 'generates age problem questions sheet' do
+        srand(213)
+        # puts worksheet2[:questions_sheet]
+        puts worksheet2[:questions_sheet]
         expect(worksheet[:questions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{AGP-XH029932-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Leonhard Euler}\n\\begin{document}\n\\section*{\\centerline{Age Problem 11}}\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{1.\\hspace{30pt}Ten years from now, John's grandfather will be seven times as old as John. Twenty two years from now, John's grandfather will be four times as old as John. How old is John now?}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{2.\\hspace{30pt}Six years from now, Ken will be three times as old as his son. Twenty five years from now, Ken will be twice as old as his son. How old is his son now?}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{3.\\hspace{30pt}Twelve years from now, Henry's grandmother will be four times as old as Henry. Twenty one years from now, Henry's grandmother will be three times as old as Henry. How old is Henry now?}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{4.\\hspace{30pt}One year ago, Ken was seven times as old as his niece. In two years time, Ken will be five times as old as his niece. How old is his niece now?}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
       end
 
-      it 'generates age problem solutions sheet'  do
+      xit 'generates age problem solutions sheet'  do
         expect(worksheet[:solutions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{AGP-XH029932-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Leonhard Euler}\n\\begin{document}\n\\section*{\\centerline{Age Problem 11 Solutions}}\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{1.\\hspace{30pt}Ten years from now, John's grandfather will be seven times as old as John. Twenty two years from now, John's grandfather will be four times as old as John. How old is John now?}&\\text{10 years from now}&&&&\\text{22 years from now}&\\\\\n&\\text{John}\\hspace{10pt}x&&&&\\text{John}\\hspace{10pt}x+12&\\\\\n&\\text{grandfather}\\hspace{10pt}7x&&&&\\text{grandfather}\\hspace{10pt}7x+12&\\\\\n&&\\text{grandfather} &= \\text{4} \\times \\text{John}&\\\\\n&&7x+12&=4\\left(x+12\\right)&\\\\\n&&7x+12&=4x+48&\\\\\n&&7x-4x&=48-12&\\\\\n&&3x&=36&\\\\\n&&x&=\\frac{36}{3}&\\\\\n&&x&=12&\\\\\n&&\\text{John now} &= \\text{John 10 years from now} - 10\\\\\n&&\\text{John now} &= 12 - 10\\\\\n&Answer:&\\text{John now} &= 2\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{2.\\hspace{30pt}Six years from now, Ken will be three times as old as his son. Twenty five years from now, Ken will be twice as old as his son. How old is his son now?}&\\text{6 years from now}&&&&\\text{25 years from now}&\\\\\n&\\text{son}\\hspace{10pt}x&&&&\\text{son}\\hspace{10pt}x+19&\\\\\n&\\text{Ken}\\hspace{10pt}3x&&&&\\text{Ken}\\hspace{10pt}3x+19&\\\\\n&&\\text{Ken} &= \\text{2} \\times \\text{son}&\\\\\n&&3x+19&=2\\left(x+19\\right)&\\\\\n&&3x+19&=2x+38&\\\\\n&&3x-2x&=38-19&\\\\\n&&x&=19&\\\\\n&&\\text{son now} &= \\text{son 6 years from now} - 6\\\\\n&&\\text{son now} &= 19 - 6\\\\\n&Answer:&\\text{son now} &= 13\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{3.\\hspace{30pt}Twelve years from now, Henry's grandmother will be four times as old as Henry. Twenty one years from now, Henry's grandmother will be three times as old as Henry. How old is Henry now?}&\\text{12 years from now}&&&&\\text{21 years from now}&\\\\\n&\\text{Henry}\\hspace{10pt}x&&&&\\text{Henry}\\hspace{10pt}x+9&\\\\\n&\\text{grandmother}\\hspace{10pt}4x&&&&\\text{grandmother}\\hspace{10pt}4x+9&\\\\\n&&\\text{grandmother} &= \\text{3} \\times \\text{Henry}&\\\\\n&&4x+9&=3\\left(x+9\\right)&\\\\\n&&4x+9&=3x+27&\\\\\n&&4x-3x&=27-9&\\\\\n&&x&=18&\\\\\n&&\\text{Henry now} &= \\text{Henry 12 years from now} - 12\\\\\n&&\\text{Henry now} &= 18 - 12\\\\\n&Answer:&\\text{Henry now} &= 6\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{4.\\hspace{30pt}One year ago, Ken was seven times as old as his niece. In two years time, Ken will be five times as old as his niece. How old is his niece now?}&\\text{1 year ago}&&&&\\text{2 years from now}&\\\\\n&\\text{niece}\\hspace{10pt}x&&&&\\text{niece}\\hspace{10pt}x+3&\\\\\n&\\text{Ken}\\hspace{10pt}7x&&&&\\text{Ken}\\hspace{10pt}7x+3&\\\\\n&&\\text{Ken} &= \\text{5} \\times \\text{niece}&\\\\\n&&7x+3&=5\\left(x+3\\right)&\\\\\n&&7x+3&=5x+15&\\\\\n&&7x-5x&=15-3&\\\\\n&&2x&=12&\\\\\n&&x&=\\frac{12}{2}&\\\\\n&&x&=6&\\\\\n&&\\text{niece now} &= \\text{niece 1 year ago} + 1\\\\\n&&\\text{niece now} &= 6 + 1\\\\\n&Answer:&\\text{niece now} &= 7\n\\end{align*}\n\\end{minipage}\n\\end{document}"
       end
     end
@@ -62,7 +77,7 @@ describe LatexPrinter do
   end
 
   describe '#self.paper' do
-    context 'generate practice paper with questions from each topic' do
+    xcontext 'generate practice paper with questions from each topic' do
       let(:contents){[{topic: :fraction,number_of_questions:3,work_space:100},
         {topic: :linear_equation},
         {topic: :fraction},

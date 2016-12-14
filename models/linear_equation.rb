@@ -62,9 +62,10 @@ class LinearEquation < Equation
   def self._solution_latex(solutions_array)
     result = ''
     solutions_array.each do |solution_equation|
-      result += solution_equation.latex + '\\\\' + "\n"
+      result += solution_equation.latex + '\\\\[4pt]' + "\n"
     end
-    result.slice!(-3..-1)
+    result.slice!(-1..-1)
+    # result.slice!(-3..-1)
     result
   end
 

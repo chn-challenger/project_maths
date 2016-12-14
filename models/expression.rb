@@ -293,7 +293,7 @@ class Expression
 
   def _div_latex(step,result)
     step_latex = step.exp_valued? ? step.val.latex : step.val.to_s
-    '\frac{' + result + '}{' + step_latex + '}'
+    '\cfrac{' + result + '}{' + step_latex + '}'
   end
 
   def _ops_latex
