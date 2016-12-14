@@ -8,9 +8,11 @@ class LinearEquation < Equation
   def self.set_default_parameters(parameters)
     parameters[:number_of_steps] ||= 4
     parameters[:variable] ||= 'x'
+    parameters[:solution_min] ||= 2
     parameters[:solution_max] ||= 10
     parameters[:negative_allowed] ||= false
     parameters[:multiple_division] ||= false
+    parameters[:continued_fraction] ||= false
   end
 
   def self.generate_question(parameters={})
@@ -21,7 +23,7 @@ class LinearEquation < Equation
 
   def self._generate_question(parameters={})
     self.set_default_parameters(parameters)
-    solution = rand(2..parameters[:solution_max])
+    solution = rand(parameters[:solution_min]..parameters[:solution_max])
     left_side = [Step.new(nil,parameters[:variable])]
     current_value = solution
     parameters[:number_of_steps].times do
@@ -103,18 +105,30 @@ class LinearEquation < Equation
   end
 
   def self._next_step_ops(left_side,parameters)
-    return [[:add,:sbt],[:mtp,:div]].sample.sample if left_side.length == 1
-    last_ops = left_side.last.ops
-    has_div = false
-    left_side.each do |step|
-      has_div = true if step.ops == :div
+    if !parameters[:continued_fraction]
+      return [[:add,:sbt],[:mtp,:div]].sample.sample if left_side.length == 1
+      last_ops = left_side.last.ops
+      has_div = false
+      left_side.each do |step|
+        has_div = true if step.ops == :div
+      end
+      if [:add,:sbt].include?(last_ops)
+        no_more_div = (!parameters[:multiple_division] && has_div)
+        return no_more_div ? :mtp : [:mtp,:div].sample
+      end
+      if [:mtp,:div].include?(last_ops)
+        return [:add,:sbt].sample
+      end
     end
-    if [:add,:sbt].include?(last_ops)
-      no_more_div = (!parameters[:multiple_division] && has_div)
-      return no_more_div ? :mtp : [:mtp,:div].sample
-    end
-    if [:mtp,:div].include?(last_ops)
-      return [:add,:sbt].sample
+    if parameters[:continued_fraction]
+      return [:mtp].sample if left_side.length == 1
+      last_ops = left_side.last.ops
+      if [:add,:sbt].include?(last_ops)
+        return :div
+      end
+      if [:mtp,:div].include?(last_ops)
+        return [:add,:sbt].sample
+      end
     end
   end
 

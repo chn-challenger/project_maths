@@ -28,7 +28,7 @@ class LatexPrinter
     "\\usepackage[fleqn]{amsmath}\n"\
     "\\usepackage{scrextend}\n"\
     "\\changefontsizes[20pt]{14pt}\n"\
-    "\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n"\
+    "\\usepackage[a4paper, left=0.3in,right=0.3in,top=1in,bottom=1in]{geometry}\n"\
     "\\pagenumbering{gobble}\n"\
     "\\usepackage{fancyhdr}\n"\
     "\\renewcommand{\\headrulewidth}{0pt}\n"\
@@ -38,7 +38,7 @@ class LatexPrinter
     "\\usepackage[fleqn]{amsmath}\n"\
     "\\usepackage{scrextend}\n"\
     "\\changefontsizes[16pt]{12pt}\n"\
-    "\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n"\
+    "\\usepackage[a4paper, left=0.3in,right=0.3in,top=1in,bottom=1in]{geometry}\n"\
     "\\pagenumbering{gobble}\n"\
     "\\usepackage{fancyhdr}\n"\
     "\\renewcommand{\\headrulewidth}{0pt}\n"\
@@ -87,7 +87,7 @@ class LatexPrinter
       end
       current_question = questions[current_question_number-1]
       current_question_latex = topic_class.latex(current_question)
-      question_number = current_question_number.to_s + ".\\hspace{30pt}"
+      question_number = current_question_number.to_s + ".\\hspace{10pt}"
       insert_index = topics[topic][:text_start]? 11 : 0
       question_latex = current_question_latex[:question_latex].
         insert(insert_index,question_number)
@@ -190,6 +190,15 @@ class LatexPrinter
     questions_sheet = worksheet_ends[:questions][:start] + content_latex[:question_content] + worksheet_ends[:questions][:end]
     solutions_sheet = worksheet_ends[:solutions][:start] + content_latex[:solution_content] + worksheet_ends[:solutions][:end]
     {questions_sheet:questions_sheet,solutions_sheet:solutions_sheet}
+  end
+
+  def self.create_worksheet(topic,sheet_number,student,number_of_questions,parameters={},layout_format={})
+    text_content = self.worksheet(topic,sheet_number,student,number_of_questions,parameters,layout_format)
+    worksheet_name = topics[topic][:work_sheet_title].downcase!.split(" ").join('_') + "_#{sheet_number}_" + student.downcase!.split(" ").join('_')
+    File.open(worksheet_name + '.tex', 'w'){|f| f.puts text_content[:questions_sheet]}
+    solution_sheet_name = worksheet_name + '_solutions'
+    File.open(solution_sheet_name + '.tex', 'w'){|f| f.puts text_content[:solutions_sheet]}
+    # system 'pdflatex test_questions.tex'
   end
 
 end
