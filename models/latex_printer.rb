@@ -97,10 +97,22 @@ class LatexPrinter
         insert(insert_index,question_number)
       result_latex[:solution_content] += _begin_minipage(layout) +
         _begin_align + solution_latex + "\n" + _end_align + _end_minipage
-      answer_latex = current_question_latex[:answer_latex]
-      result_latex[:rails_content] += _begin_align + question_latex + _end_align +
-        _begin_align + solution_latex + _end_align +
-        answer_latex + _end_align
+      current_question_number += 1
+    end
+    result_latex
+  end
+
+  def self.rails_sheet_latex(questions, topic, parameters={})
+    topic_class = topics[topic][:class_name]
+    number_of_questions = questions.length
+    current_question_number = 1
+    result_latex = ' '
+
+    while current_question_number <= number_of_questions
+      current_question = questions[current_question_number-1]
+      current_question_latex = topic_class.latex(current_question, parameters)
+      rails_question_latex = current_question_latex[:rails_question_latex]
+      result_latex += rails_question_latex
       current_question_number += 1
     end
     result_latex
@@ -177,13 +189,26 @@ class LatexPrinter
     result
   end
 
+  def self.rails_ends
+    rails = {questions:{},solutions:{}}
+    rails[:questions][:start] = HEADERS
+    rails[:questions][:start] += "\\lfoot{#{Time.now}-Q\\quad \\text copyright\\,
+    Joe Zhou, 2016}\n\n \\begin{document}\n\n"
+    rails[:questions][:end] = "\\end{document}"
+    rails
+  end
+
   def self.paper(contents,paper_number,student,layout={})
     questions = generate_paper_questions(contents)
     content_latex = self.paper_content_latex(questions,layout)
     worksheet_ends = self.paper_ends(paper_number,student)
-    questions_sheet = worksheet_ends[:questions][:start] + content_latex[:question_content] + worksheet_ends[:questions][:end]
-    solutions_sheet = worksheet_ends[:solutions][:start] + content_latex[:solution_content] + worksheet_ends[:solutions][:end]
+    questions_sheet = decorate_sheet(:questions, content_latex[:question_content], worksheet_ends)
+    solutions_sheet = decorate_sheet(:solutions, content_latex[:solution_content], worksheet_ends)
     {questions_sheet:questions_sheet,solutions_sheet:solutions_sheet}
+  end
+
+  def self.decorate_sheet(type_sym, latex_content, tex_wrappers)
+    tex_wrappers[type_sym][:start] + latex_content + tex_wrappers[type_sym][:end]
   end
 
   def self.worksheet(topic,sheet_number,student,number_of_questions,parameters={},layout_format={})
@@ -191,10 +216,18 @@ class LatexPrinter
       topics[topic][:class_name],parameters)
     content_latex = self.worksheet_content_latex(questions,topic,layout_format)
     worksheet_ends = self.worksheet_ends(topic,sheet_number,student)
-    questions_sheet = worksheet_ends[:questions][:start] + content_latex[:question_content] + worksheet_ends[:questions][:end]
-    solutions_sheet = worksheet_ends[:solutions][:start] + content_latex[:solution_content] + worksheet_ends[:solutions][:end]
-    rails_sheet     = worksheet_ends[:questions][:start] + content_latex[:rails_content] + worksheet_ends[:questions][:end]
-    {questions_sheet:questions_sheet,solutions_sheet:solutions_sheet, rails_sheet: rails_sheet}
+    questions_sheet = decorate_sheet(:questions, content_latex[:question_content], worksheet_ends)
+    solutions_sheet = decorate_sheet(:solutions, content_latex[:solution_content], worksheet_ends)
+    {questions_sheet: questions_sheet, solutions_sheet: solutions_sheet}
+  end
+
+  def self.rails_sheet(topic,number_of_questions,parameters={})
+    questions = generate_worksheet_questions(number_of_questions,
+      topics[topic][:class_name],parameters)
+    rails_tex_ends = rails_ends
+    content_latex = self.rails_sheet_latex(questions,topic, parameters)
+
+    decorate_sheet(:questions, content_latex, rails_tex_ends)
   end
 
 end

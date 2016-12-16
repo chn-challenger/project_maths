@@ -19,7 +19,7 @@ describe LinearEquation do
       end
 
       it 'generates solution for the one step question' do
-        expected_solution_latex = "25+x&=33\\\\\nx&=33-25\\\\\nx&=8"
+        expected_solution_latex = "25+x&=33\\\\[2pt]\nx&=33-25\\\\[2pt]\nx&=8"
         expect(@question_latex[:solution_latex]).to eq expected_solution_latex
       end
     end
@@ -42,9 +42,9 @@ describe LinearEquation do
 
       it 'generates solution for the standard four step question' do
         expected_solution_latex = "8\\left(\\frac{264}{25+x}+41\\right)&=392\\"\
-          "\\\n\\frac{264}{25+x}+41&=\\frac{392}{8}\\\\\n\\frac{264}{25+x}+41&"\
-          "=49\\\\\n\\frac{264}{25+x}&=49-41\\\\\n\\frac{264}{25+x}&=8\\\\\n\\"\
-          "frac{264}{8}&=25+x\\\\\n33&=25+x\\\\\n33-25&=x\\\\\n8&=x"
+          "\\[2pt]\n\\frac{264}{25+x}+41&=\\frac{392}{8}\\\\[2pt]\n\\frac{264}{25+x}+41&"\
+          "=49\\\\[2pt]\n\\frac{264}{25+x}&=49-41\\\\[2pt]\n\\frac{264}{25+x}&=8\\\\[2pt]\n\\"\
+          "frac{264}{8}&=25+x\\\\[2pt]\n33&=25+x\\\\[2pt]\n33-25&=x\\\\[2pt]\n8&=x"
         expect(@question_latex[:solution_latex]).to eq expected_solution_latex
       end
     end
@@ -67,11 +67,11 @@ describe LinearEquation do
 
       it 'generates solution for the five step question' do
         expected_solution_latex = "8\\left(\\frac{264}{25+x}+41\\right)+61&=45"\
-        "3\\\\\n8\\left(\\frac{264}{25+x}+41\\right)&=453-61\\\\\n8\\left(\\fr"\
-        "ac{264}{25+x}+41\\right)&=392\\\\\n\\frac{264}{25+x}+41&=\\frac{392}{"\
-        "8}\\\\\n\\frac{264}{25+x}+41&=49\\\\\n\\frac{264}{25+x}&=49-41\\\\\n"\
-        "\\frac{264}{25+x}&=8\\\\\n\\frac{264}{8}&=25+x\\\\\n33&=25+x\\\\\n33-"\
-        "25&=x\\\\\n8&=x"
+        "3\\\\[2pt]\n8\\left(\\frac{264}{25+x}+41\\right)&=453-61\\\\[2pt]\n8\\left(\\fr"\
+        "ac{264}{25+x}+41\\right)&=392\\\\[2pt]\n\\frac{264}{25+x}+41&=\\frac{392}{"\
+        "8}\\\\[2pt]\n\\frac{264}{25+x}+41&=49\\\\[2pt]\n\\frac{264}{25+x}&=49-41\\\\[2pt]\n"\
+        "\\frac{264}{25+x}&=8\\\\[2pt]\n\\frac{264}{8}&=25+x\\\\[2pt]\n33&=25+x\\\\[2pt]\n33-"\
+        "25&=x\\\\[2pt]\n8&=x"
         expect(@question_latex[:solution_latex]).to eq expected_solution_latex
       end
     end

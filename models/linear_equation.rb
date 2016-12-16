@@ -15,6 +15,7 @@ class LinearEquation < Equation
     parameters[:exp] ||= 25
     parameters[:order] ||= ''
     parameters[:level] ||= 1
+    parameters[:rails] ||= false
   end
 
   def self.generate_question(parameters={})
@@ -25,9 +26,9 @@ class LinearEquation < Equation
 
   def self._generate_question(parameters={})
     self.set_default_parameters(parameters)
-    @question_solution = rand(2..parameters[:solution_max])
+    solution = rand(2..parameters[:solution_max])
     left_side = [Step.new(nil,parameters[:variable])]
-    current_value = @question_solution
+    current_value = solution
     parameters[:number_of_steps].times do
       next_step = self._next_step(left_side,current_value,parameters)
       current_value = evaluate([Step.new(nil,current_value),next_step])
@@ -38,7 +39,7 @@ class LinearEquation < Equation
     end
     left_expression = Expression.new(left_side)
     right_expression = Expression.new([Step.new(nil,current_value)])
-    equation_solution = {parameters[:variable] => @question_solution}
+    equation_solution = {parameters[:variable] => solution}
     LinearEquation.new(left_expression,right_expression,equation_solution)
   end
 
@@ -57,24 +58,48 @@ class LinearEquation < Equation
     return solution_equations
   end
 
-  def self.latex(generated_question)
+  def self.latex(generated_question, parameters={})
+    self.set_default_parameters(parameters)
     return if generated_question[:question].nil?
-    question_latex = generated_question[:question].latex.prepend('question-text$\\\$' + "\n" + '$\begin{align*}') << '\end{align*}$$\\\$' + "\n\n"
-    solution_latex = self._solution_latex(generated_question[:solution]).prepend('solution-text$\\\$' + "\n" + '$\begin{align*}') << '\end{align*}$$\\\$' + "\n\n"
-    {question_latex:question_latex,solution_latex:solution_latex, answer_latex: format_answer(generated_question) }
+
+    question_latex = generated_question[:question].latex
+    solution_latex = self._solution_latex(generated_question[:solution])
+
+    if parameters[:rails] == true
+      rails_format_question(question_latex, solution_latex) { |r|
+        r += format_answer(generated_question)
+      }
+    else
+      { question_latex: question_latex, solution_latex: solution_latex }
+    end
   end
 
-  def self.format_answer(q,parameters={})
+  def self.rails_format_question(question_latex, solution_latex, parameters={})
     self.set_default_parameters(parameters)
-    solution = q[:question].solution[parameters[:variable]]
-    answer_exp = 'question-experience$\\\$' + "\n" + parameters[:exp].to_s + '$\\\$' + "\n\n"
-    answer_order = 'question-order-group$\\\$' + "\n" + parameters[:order].to_s + '$\\\$' + "\n\n"
-    answer_lvl = 'question-level$\\\$' + "\n" + parameters[:level].to_s + '$\\\$' + "\n\n"
+    question_exp = 'question-experience$\\\$' + "\n" + parameters[:exp].to_s + '$\\\$' + "\n\n"
+    question_order = 'question-order-group$\\\$' + "\n" + parameters[:order].to_s + '$\\\$' + "\n\n"
+    question_lvl = 'question-level$\\\$' + "\n" + parameters[:level].to_s + '$\\\$' + "\n\n"
+
+    rails_latex = rails_decorator('question-text',question_latex) +
+                  rails_decorator('solution-text', solution_latex) +
+                  question_exp + question_order + question_lvl
+
+    yield(rails_latex)
+    { rails_question_latex: rails_latex  }
+  end
+
+  def self.rails_decorator(sym_name, value)
+    value.prepend("#{sym_name.to_s}$\\\\$" + "\n" + '$\begin{align*}') << '\end{align*}$$\\\$' + "\n\n"
+  end
+
+  def self.format_answer(generated_question, parameters={})
+    self.set_default_parameters(parameters)
+    solution = generated_question[:question].solution[parameters[:variable]]
 
     answer_label = 'answer-label$\\\$' + "\n$" + parameters[:variable] + '=$$\\\$' + "\n\n"
     answer_value = 'answer-value$\\\$' + "\n" + solution.to_s + '$\\\$' + "\n\n"
     answer_hint = 'answer-hint$\\\$' + "\n" + parameters[:hint] + '$\\\$' + "\n\n"
-    answer_exp + answer_order + answer_lvl + answer_label + answer_value + answer_hint
+    answer_label + answer_value + answer_hint
   end
 
   def self._solution_latex(solutions_array)
@@ -86,7 +111,7 @@ class LinearEquation < Equation
         result += solution_equation.latex
       end
     end
-    result.slice!(-1..-1)
+    # result.slice!(-1..-1)
     result
   end
 
