@@ -11,6 +11,10 @@ class LinearEquation < Equation
     parameters[:solution_max] ||= 10
     parameters[:negative_allowed] ||= false
     parameters[:multiple_division] ||= false
+    parameters[:hint] ||= 'Give integer solution.'
+    parameters[:exp] ||= 25
+    parameters[:order] ||= ''
+    parameters[:level] ||= 1
   end
 
   def self.generate_question(parameters={})
@@ -21,9 +25,9 @@ class LinearEquation < Equation
 
   def self._generate_question(parameters={})
     self.set_default_parameters(parameters)
-    solution = rand(2..parameters[:solution_max])
+    @question_solution = rand(2..parameters[:solution_max])
     left_side = [Step.new(nil,parameters[:variable])]
-    current_value = solution
+    current_value = @question_solution
     parameters[:number_of_steps].times do
       next_step = self._next_step(left_side,current_value,parameters)
       current_value = evaluate([Step.new(nil,current_value),next_step])
@@ -34,7 +38,7 @@ class LinearEquation < Equation
     end
     left_expression = Expression.new(left_side)
     right_expression = Expression.new([Step.new(nil,current_value)])
-    equation_solution = {parameters[:variable] => solution}
+    equation_solution = {parameters[:variable] => @question_solution}
     LinearEquation.new(left_expression,right_expression,equation_solution)
   end
 
@@ -54,17 +58,35 @@ class LinearEquation < Equation
   end
 
   def self.latex(generated_question)
-    question_latex = generated_question[:question].latex
-    solution_latex = self._solution_latex(generated_question[:solution])
-    {question_latex:question_latex,solution_latex:solution_latex}
+    return if generated_question[:question].nil?
+    question_latex = generated_question[:question].latex.prepend('question-text$\\\$' + "\n" + '$\begin{align*}') << '\end{align*}$$\\\$' + "\n\n"
+    solution_latex = self._solution_latex(generated_question[:solution]).prepend('solution-text$\\\$' + "\n" + '$\begin{align*}') << '\end{align*}$$\\\$' + "\n\n"
+    {question_latex:question_latex,solution_latex:solution_latex, answer_latex: format_answer(generated_question) }
+  end
+
+  def self.format_answer(q,parameters={})
+    self.set_default_parameters(parameters)
+    solution = q[:question].solution[parameters[:variable]]
+    answer_exp = 'question-experience$\\\$' + "\n" + parameters[:exp].to_s + '$\\\$' + "\n\n"
+    answer_order = 'question-order-group$\\\$' + "\n" + parameters[:order].to_s + '$\\\$' + "\n\n"
+    answer_lvl = 'question-level$\\\$' + "\n" + parameters[:level].to_s + '$\\\$' + "\n\n"
+
+    answer_label = 'answer-label$\\\$' + "\n$" + parameters[:variable] + '=$$\\\$' + "\n\n"
+    answer_value = 'answer-value$\\\$' + "\n" + solution.to_s + '$\\\$' + "\n\n"
+    answer_hint = 'answer-hint$\\\$' + "\n" + parameters[:hint] + '$\\\$' + "\n\n"
+    answer_exp + answer_order + answer_lvl + answer_label + answer_value + answer_hint
   end
 
   def self._solution_latex(solutions_array)
     result = ''
-    solutions_array.each do |solution_equation|
-      result += solution_equation.latex + '\\\\' + "\n"
+    solutions_array.each_with_index do |solution_equation, i|
+      unless i == solutions_array.size - 1
+        result += solution_equation.latex + '\\\[2pt]' + "\n"
+      else
+        result += solution_equation.latex
+      end
     end
-    result.slice!(-3..-1)
+    result.slice!(-1..-1)
     result
   end
 

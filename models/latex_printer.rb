@@ -57,7 +57,7 @@ class LatexPrinter
   end
 
   def self._end_falign
-    "\\end{flalign*}\n"
+    "\\end{flalign*}$\\$\n"
   end
 
   def self._begin_minipage(layout)
@@ -74,7 +74,7 @@ class LatexPrinter
     topic_class = topics[topic][:class_name]
     number_of_questions = questions.length
     current_question_number = 1
-    result_latex = {question_content:'',solution_content:''}
+    result_latex = {question_content:'',solution_content:'', rails_content: ''}
     while current_question_number <= number_of_questions
       if current_question_number % layout[:questions_per_row] == 1 ||
         layout[:questions_per_row] == 1
@@ -87,7 +87,7 @@ class LatexPrinter
       end
       current_question = questions[current_question_number-1]
       current_question_latex = topic_class.latex(current_question)
-      question_number = current_question_number.to_s + ".\\hspace{30pt}"
+      question_number = current_question_number.to_s + ".\\hspace{30pt}" + "\n"
       insert_index = topics[topic][:text_start]? 11 : 0
       question_latex = current_question_latex[:question_latex].
         insert(insert_index,question_number)
@@ -97,6 +97,10 @@ class LatexPrinter
         insert(insert_index,question_number)
       result_latex[:solution_content] += _begin_minipage(layout) +
         _begin_align + solution_latex + "\n" + _end_align + _end_minipage
+      answer_latex = current_question_latex[:answer_latex]
+      result_latex[:rails_content] += _begin_align + question_latex + _end_align +
+        _begin_align + solution_latex + _end_align +
+        answer_latex + _end_align
       current_question_number += 1
     end
     result_latex
@@ -143,13 +147,13 @@ class LatexPrinter
     result[:questions][:start] += "\\lfoot{#{topic_prefix}-#{serial}-Q\\quad \\textc"\
       "opyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad"\
       " #{student}}\n\\begin{document}\n"
-    result[:questions][:start] += "\\section*{\\centerline{#{title} #{paper_number}}}\n"
+    result[:questions][:start] += "\\section*{\\centerline{#{title} #{paper_number}}}\n\n"
     result[:questions][:end] = "\\end{document}"
     result[:solutions][:start] = SOLUTION_HEADERS
     result[:solutions][:start] += "\\lfoot{#{topic_prefix}-#{serial}-S\\quad \\textc"\
       "opyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad"\
-      " #{student}}\n\\begin{document}\n"
-    result[:solutions][:start] += "\\section*{\\centerline{#{title} #{paper_number} Solutions}}\n"
+      " #{student}}\n\\begin{document}\n\n"
+    result[:solutions][:start] += "\\section*{\\centerline{#{title} #{paper_number} Solutions}}\n\n"
     result[:solutions][:end] = "\\end{document}"
     result
   end
@@ -162,13 +166,13 @@ class LatexPrinter
     result[:questions][:start] += "\\lfoot{#{topic_prefix}-#{serial}-Q\\quad \\textc"\
       "opyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad"\
       " #{student}}\n\\begin{document}\n"
-    result[:questions][:start] += "\\section*{\\centerline{#{title} #{sheet_number}}}\n"
+    result[:questions][:start] += "\\section*{\\centerline{#{title} #{sheet_number}}}\n\n"
     result[:questions][:end] = "\\end{document}"
     result[:solutions][:start] = SOLUTION_HEADERS
     result[:solutions][:start] += "\\lfoot{#{topic_prefix}-#{serial}-S\\quad \\textc"\
       "opyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad"\
       " #{student}}\n\\begin{document}\n"
-    result[:solutions][:start] += "\\section*{\\centerline{#{title} #{sheet_number} Solutions}}\n"
+    result[:solutions][:start] += "\\section*{\\centerline{#{title} #{sheet_number} Solutions}}\n\n"
     result[:solutions][:end] = "\\end{document}"
     result
   end
@@ -189,7 +193,8 @@ class LatexPrinter
     worksheet_ends = self.worksheet_ends(topic,sheet_number,student)
     questions_sheet = worksheet_ends[:questions][:start] + content_latex[:question_content] + worksheet_ends[:questions][:end]
     solutions_sheet = worksheet_ends[:solutions][:start] + content_latex[:solution_content] + worksheet_ends[:solutions][:end]
-    {questions_sheet:questions_sheet,solutions_sheet:solutions_sheet}
+    rails_sheet     = worksheet_ends[:questions][:start] + content_latex[:rails_content] + worksheet_ends[:questions][:end]
+    {questions_sheet:questions_sheet,solutions_sheet:solutions_sheet, rails_sheet: rails_sheet}
   end
 
 end
