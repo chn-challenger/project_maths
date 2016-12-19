@@ -5,17 +5,17 @@ input_str = "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[f
 q = nil
 
 matcher = if q
-  '\4\\left(6\\left(x-2\\right)+76\\right)&=496'
-  # '\intertext{This is an Age Problem.}'
-else
-  '\5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}'
-  # '\intertext{This is an Age Problem Solution.}'
+            '\4\\left(6\\left(x-2\\right)+76\\right)&=496'
+          # '\intertext{This is an Age Problem.}'
+          else
+            '\5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}'
+          # '\intertext{This is an Age Problem Solution.}'
 end
 
 sub_str = if q
-  '#{question}'
-else
-  '#{solution}'
+            '#{question}'
+          else
+            '#{solution}'
 end
 
 p result = input_str.gsub(matcher, sub_str)

@@ -4,7 +4,7 @@ module ClassName
   end
 
   def integer
-    Fixnum
+    Integer
   end
 
   def expression_class

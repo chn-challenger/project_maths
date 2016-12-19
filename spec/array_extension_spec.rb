@@ -3,22 +3,22 @@ require './models/array_extension'
 describe Array do
   describe '#collect_move' do
     it 'collects even integers and leave the odd ones' do
-      array = [1,2,3,4,5,6,7,8]
-      collected_elements = array.collect_move{|e| e%2 == 0}
-      expect(array).to eq [1,3,5,7]
-      expect(collected_elements).to eq [2,4,6,8]
+      array = [1, 2, 3, 4, 5, 6, 7, 8]
+      collected_elements = array.collect_move(&:even?)
+      expect(array).to eq [1, 3, 5, 7]
+      expect(collected_elements).to eq [2, 4, 6, 8]
     end
 
     it 'collect and move strings to the return array' do
-      array = [1,'hello',2,'world',3,4]
-      collected_elements = array.collect_move{|e| e.is_a?(String)}
-      expect(array).to eq [1,2,3,4]
-      expect(collected_elements).to eq ['hello','world']
+      array = [1, 'hello', 2, 'world', 3, 4]
+      collected_elements = array.collect_move { |e| e.is_a?(String) }
+      expect(array).to eq [1, 2, 3, 4]
+      expect(collected_elements).to eq %w(hello world)
     end
 
     it 'return empty array if invoked on an empty array' do
       array = []
-      collected_elements = array.collect_move{|e| e.is_a?(String)}
+      collected_elements = array.collect_move { |e| e.is_a?(String) }
       expect(array).to eq []
       expect(collected_elements).to eq []
     end
@@ -64,5 +64,4 @@ describe Array do
   #   end
   #
   # end
-
 end

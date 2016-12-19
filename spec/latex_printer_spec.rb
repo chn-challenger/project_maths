@@ -7,13 +7,13 @@ describe LatexPrinter do
 
   describe '#self.worksheet' do
     context 'generate worksheet for Fraction class' do
-      let(:worksheet) { described_class.worksheet(:fraction,21,'Robert Hook',2) }
+      let(:worksheet) { described_class.worksheet(:fraction, 21, 'Robert Hook', 2) }
       let(:question) { '9\frac{3}{5}+12\frac{1}{2}' }
       let(:solution) { '5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}' }
 
       before do
-        allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{question: 'Q1',solution: 'S1'}, {question: 'Q1',solution: 'S1'}])
-        allow(Fraction).to receive(:latex).and_return({question_latex: question , solution_latex: solution})
+        allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{ question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }])
+        allow(Fraction).to receive(:latex).and_return(question_latex: question, solution_latex: solution)
       end
 
       it 'generates fraction questions sheet' do
@@ -21,96 +21,102 @@ describe LatexPrinter do
       end
 
       it 'generates solution for the fraction questions sheet' do
-        expect(worksheet[:solutions_sheet]).to eq         "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{FRA-IY377042-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Robert Hook}\n\\begin{document}\n\\section*{\\centerline{Fraction 21 Solutions}}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
+        expect(worksheet[:solutions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{FRA-IY377042-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Robert Hook}\n\\begin{document}\n\\section*{\\centerline{Fraction 21 Solutions}}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
       end
     end
   end
 
-    context 'generate worksheet for Linear Equation class' do
-      let(:worksheet){described_class.worksheet(:linear_equation,5,
-        'Isaac Newton',4)}
-      let!(:question) { '4\\left(6\\left(x-2\\right)+76\\right)&=496' }
-      let!(:solution) { '5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}' }
+  context 'generate worksheet for Linear Equation class' do
+    let(:worksheet) do
+      described_class.worksheet(:linear_equation, 5,
+                                'Isaac Newton', 4)
+    end
+    let!(:question) { '4\\left(6\\left(x-2\\right)+76\\right)&=496' }
+    let!(:solution) { '5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}' }
 
-      before do
-        allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{question: 'Q1',solution: 'S1'}, {question: 'Q1',solution: 'S1'}, {question: 'Q1',solution: 'S1'}, {question: 'Q1',solution: 'S1'}])
+    before do
+      allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{ question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }])
 
-        allow(LinearEquation).to receive(:latex).and_return({question_latex: question , solution_latex: solution})
-      end
-
-      it 'generates linear equation questions sheet' do
-        expect(worksheet[:questions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-IY377042-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5}}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n#{question}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n#{question}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n3.\\hspace{30pt}\n#{question}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n4.\\hspace{30pt}\n#{question}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
-      end
-
-      it 'generates solution for the linear equation questions sheet' do
-        expect(worksheet[:solutions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-IY377042-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5 Solutions}}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n#{solution}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n#{solution}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n3.\\hspace{30pt}\n#{solution}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n4.\\hspace{30pt}\n#{solution}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
-
-      end
+      allow(LinearEquation).to receive(:latex).and_return(question_latex: question, solution_latex: solution)
     end
 
-    context 'generate non-standard worksheet for linear equation class' do
-      let(:worksheet){described_class.worksheet(:linear_equation,5,
-        'Isaac Newton',2,{number_of_steps:6,multiple_division:true},
-        {questions_per_row:1})}
-
-      let!(:question) { '4\\left(6\\left(x-2\\right)+76\\right)&=496' }
-      let!(:solution) { '5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}' }
-
-      before do
-        allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{question: 'Q1',solution: 'S1'}, {question: 'Q1',solution: 'S1'}])
-
-        allow(LinearEquation).to receive(:latex).and_return({question_latex: question , solution_latex: solution})
-      end
-
-      it 'generates non standard linear equation questions sheet' do
-        expect(worksheet[:questions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-IY377042-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n4\\left(6\\left(x-2\\right)+76\\right)&=496\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n4\\left(6\\left(x-2\\right)+76\\right)&=496\n\\end{align*}\n\\end{minipage}\n\\end{document}"
-      end
-
-      it 'generates solution for the non standard linear equation sheet' do
-        expect(worksheet[:solutions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-IY377042-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5 Solutions}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
-      end
+    it 'generates linear equation questions sheet' do
+      expect(worksheet[:questions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-IY377042-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5}}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n#{question}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n#{question}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n3.\\hspace{30pt}\n#{question}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n4.\\hspace{30pt}\n#{question}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
     end
 
-    context 'generate worksheet for Age Problem class' do
-      let(:worksheet){described_class.worksheet(:age_problem,11,'Leonhard Euler',
-        4,{},{questions_per_row:1})}
-
-      let!(:question) { '\intertext{This is an Age Problem.}' }
-      let!(:solution) { '\intertext{This is an Age Problem Solution.}' }
-
-      before do
-        allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{question: 'Q1',solution: 'S1'}, {question: 'Q1',solution: 'S1'}])
-
-        allow(AgeProblem).to receive(:latex).and_return({question_latex: question , solution_latex: solution})
-      end
-
-      it 'generates age problem questions sheet' do
-        expect(worksheet[:questions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{AGP-IY377042-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Leonhard Euler}\n\\begin{document}\n\\section*{\\centerline{Age Problem 11}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{1.\\hspace{30pt}\nThis is an Age Problem.}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{2.\\hspace{30pt}\nThis is an Age Problem.}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
-      end
-
-      it 'generates age problem solutions sheet'  do
-        expect(worksheet[:solutions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{AGP-IY377042-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Leonhard Euler}\n\\begin{document}\n\\section*{\\centerline{Age Problem 11 Solutions}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{1.\\hspace{30pt}\nThis is an Age Problem Solution.}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{2.\\hspace{30pt}\nThis is an Age Problem Solution.}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
-      end
+    it 'generates solution for the linear equation questions sheet' do
+      expect(worksheet[:solutions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-IY377042-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5 Solutions}}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n#{solution}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n#{solution}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n3.\\hspace{30pt}\n#{solution}\n\\end{align*}\n\\end{minipage}\n\\begin{minipage}[t]{0.5000\\textwidth}\n\\begin{align*}\n4.\\hspace{30pt}\n#{solution}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
     end
+  end
+
+  context 'generate non-standard worksheet for linear equation class' do
+    let(:worksheet) do
+      described_class.worksheet(:linear_equation, 5,
+                                'Isaac Newton', 2, { number_of_steps: 6, multiple_division: true },
+                                questions_per_row: 1)
+    end
+
+    let!(:question) { '4\\left(6\\left(x-2\\right)+76\\right)&=496' }
+    let!(:solution) { '5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}' }
+
+    before do
+      allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{ question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }])
+
+      allow(LinearEquation).to receive(:latex).and_return(question_latex: question, solution_latex: solution)
+    end
+
+    it 'generates non standard linear equation questions sheet' do
+      expect(worksheet[:questions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-IY377042-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n4\\left(6\\left(x-2\\right)+76\\right)&=496\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n4\\left(6\\left(x-2\\right)+76\\right)&=496\n\\end{align*}\n\\end{minipage}\n\\end{document}"
+    end
+
+    it 'generates solution for the non standard linear equation sheet' do
+      expect(worksheet[:solutions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{LEQ-IY377042-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Isaac Newton}\n\\begin{document}\n\\section*{\\centerline{Linear Equation 5 Solutions}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n1.\\hspace{30pt}\n5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n2.\\hspace{30pt}\n5\\frac{1}{2}\\times2\\frac{3}{4}=15\\frac{1}{8}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
+    end
+  end
+
+  context 'generate worksheet for Age Problem class' do
+    let(:worksheet) do
+      described_class.worksheet(:age_problem, 11, 'Leonhard Euler',
+                                4, {}, questions_per_row: 1)
+    end
+
+    let!(:question) { '\intertext{This is an Age Problem.}' }
+    let!(:solution) { '\intertext{This is an Age Problem Solution.}' }
+
+    before do
+      allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{ question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }])
+
+      allow(AgeProblem).to receive(:latex).and_return(question_latex: question, solution_latex: solution)
+    end
+
+    it 'generates age problem questions sheet' do
+      expect(worksheet[:questions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{AGP-IY377042-Q\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Leonhard Euler}\n\\begin{document}\n\\section*{\\centerline{Age Problem 11}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{1.\\hspace{30pt}\nThis is an Age Problem.}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{2.\\hspace{30pt}\nThis is an Age Problem.}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
+    end
+
+    it 'generates age problem solutions sheet'  do
+      expect(worksheet[:solutions_sheet]).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[16pt]{12pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{AGP-IY377042-S\\quad \\textcopyright\\, Joe Zhou, 2016}\n\\rfoot{\\textit{student:}\\quad Leonhard Euler}\n\\begin{document}\n\\section*{\\centerline{Age Problem 11 Solutions}}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{1.\\hspace{30pt}\nThis is an Age Problem Solution.}\n\\end{align*}\n\\end{minipage}\n\\vspace{10 mm}\n\n\\noindent\n\\begin{minipage}[t]{1.0000\\textwidth}\n\\begin{align*}\n\\intertext{2.\\hspace{30pt}\nThis is an Age Problem Solution.}\n\\end{align*}\n\\end{minipage}\n\\end{document}"
+    end
+  end
 
   describe '#self.paper' do
     context 'generate practice paper with questions from each topic' do
-      let(:contents){[{topic: :fraction,number_of_questions:3,work_space:100},
-        {topic: :linear_equation},
-        {topic: :fraction},
-        {topic: :linear_equation,number_of_questions:2},
-        {topic: :age_problem,number_of_questions:2,work_space:160}
-      ]}
+      let(:contents) do
+        [{ topic: :fraction, number_of_questions: 3, work_space: 100 },
+         { topic: :linear_equation },
+         { topic: :fraction },
+         { topic: :linear_equation, number_of_questions: 2 },
+         { topic: :age_problem, number_of_questions: 2, work_space: 160 }]
+      end
       let!(:question) { '4\\left(6\\left(x-2\\right)+76\\right)&=496' }
       let!(:solution) { '5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}' }
-      let(:paper){described_class.paper(contents,3,'James Davis')}
+      let(:paper) { described_class.paper(contents, 3, 'James Davis') }
 
       before do
-        allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{question: 'Q1',solution: 'S1'}, {question: 'Q1',solution: 'S1'}, {question: 'Q1',solution: 'S1'}])
+        allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{ question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }])
 
-        allow(AgeProblem).to receive(:latex).and_return({question_latex: question , solution_latex: solution})
-        allow(Fraction).to receive(:latex).and_return({question_latex: question , solution_latex: solution})
-        allow(LinearEquation).to receive(:latex).and_return({question_latex: question , solution_latex: solution})
+        allow(AgeProblem).to receive(:latex).and_return(question_latex: question, solution_latex: solution)
+        allow(Fraction).to receive(:latex).and_return(question_latex: question, solution_latex: solution)
+        allow(LinearEquation).to receive(:latex).and_return(question_latex: question, solution_latex: solution)
       end
 
       it 'generates practice paper questions sheet' do
@@ -122,5 +128,4 @@ describe LatexPrinter do
       end
     end
   end
-
 end

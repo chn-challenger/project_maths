@@ -1,25 +1,25 @@
 require './models/expression'
 
 describe Expression do
-  let(:step_1){double(:step_1)}
-  let(:step_2){double(:step_2)}
-  let(:exp){described_class.new([step_1,step_2])}
-  let(:exp_copy){exp.copy}
+  let(:step_1) { double(:step_1) }
+  let(:step_2) { double(:step_2) }
+  let(:exp) { described_class.new([step_1, step_2]) }
+  let(:exp_copy) { exp.copy }
 
   describe '#new/initialize' do
     it 'initialize with an array of steps which can be read as attribute' do
-      expect(exp.steps).to eq [step_1,step_2]
+      expect(exp.steps).to eq [step_1, step_2]
     end
   end
 
   describe '#==' do
     it 'returns true when all steps are orderedly equal(==)' do
-      exp_2 = described_class.new([step_1,step_2])
+      exp_2 = described_class.new([step_1, step_2])
       expect(exp).to eq exp_2
     end
 
     it 'returns false when steps are equal but not the same order' do
-      exp_2 = described_class.new([step_2,step_1])
+      exp_2 = described_class.new([step_2, step_1])
       expect(exp).not_to eq exp_2
     end
 
@@ -42,7 +42,7 @@ describe Expression do
       end
 
       it 'steps in the copied expression are copies' do
-        expect(exp_copy.steps).to eq ['copy_of_step_1','copy_of_step_2']
+        expect(exp_copy.steps).to eq %w(copy_of_step_1 copy_of_step_2)
       end
     end
   end
@@ -67,10 +67,10 @@ describe Expression do
 
   describe '#expand' do
     it 'returns an array of expanded steps' do
-      allow(step_1).to receive(:expand_into).with([]).
-        and_return('expanded_steps_1')
-      allow(step_2).to receive(:expand_into).with('expanded_steps_1').
-        and_return('expanded_steps_2')
+      allow(step_1).to receive(:expand_into).with([])
+        .and_return('expanded_steps_1')
+      allow(step_2).to receive(:expand_into).with('expanded_steps_1')
+        .and_return('expanded_steps_2')
       expect(exp.expand).to eq 'expanded_steps_2'
     end
 
@@ -81,7 +81,7 @@ describe Expression do
 end
 
 describe NumExp do
-  let(:num_exp){described_class.new(1)}
+  let(:num_exp) { described_class.new(1) }
 
   describe '#initializes/new' do
     it 'initializes with a numerical value that can be read as an attribute' do
@@ -92,8 +92,8 @@ end
 
 describe NumStep do
   describe '#initialize/new' do
-    let(:num_exp){double(:num_exp)}
-    let(:num_step){described_class.new(:add,num_exp)}
+    let(:num_exp) { double(:num_exp) }
+    let(:num_step) { described_class.new(:add, num_exp) }
 
     it 'with an operation that can be read as an attribute' do
       expect(num_step.ops).to eq :add
@@ -110,46 +110,45 @@ describe NumStep do
 
   describe '#expand_into' do
     context 'addition' do
-      let(:num_exp){double(:num_exp)}
-      let(:num_add_step){described_class.new(:add,num_exp)}
+      let(:num_exp) { double(:num_exp) }
+      let(:num_add_step) { described_class.new(:add, num_exp) }
 
       it 'expands into a steps array by appending itself to the end' do
         step_1 = double(:step_1)
         step_2 = double(:step_2)
-        steps = [step_1,step_2]
-        expect(num_add_step.expand_into(steps)).to eq [step_1,step_2,
-          num_add_step]
+        steps = [step_1, step_2]
+        expect(num_add_step.expand_into(steps)).to eq [step_1, step_2,
+                                                       num_add_step]
       end
     end
 
     context 'multiplication' do
-    #   let(:num_exp){double(:num_exp)}
-    #   let(:num_mtp_step){described_class.new(:mtp,num_exp)}
-    #
-    #   it 'expands into '
-    #
-    #
+      #   let(:num_exp){double(:num_exp)}
+      #   let(:num_mtp_step){described_class.new(:mtp,num_exp)}
+      #
+      #   it 'expands into '
+      #
+      #
     end
   end
 
   describe '#multiply_num_step' do
-    let(:num_exp){double(:num_exp)}
-    let(:num_mtp_step){described_class.new(:mtp,num_exp)}
+    let(:num_exp) { double(:num_exp) }
+    let(:num_mtp_step) { described_class.new(:mtp, num_exp) }
 
     it 'multiplies with another num step to give a num step' do
       num_exp_2 = double(:num_exp_2)
-      num_step_2 = described_class.new(:sbt,num_exp_2)
+      num_step_2 = described_class.new(:sbt, num_exp_2)
       num_exp_3 = double(:num_exp_3)
       allow(num_exp).to receive(:mtp_num_exp).with(num_exp_2).and_return(num_exp_3)
-      expected_num_step = described_class.new(:sbt,num_exp_3)
+      expected_num_step = described_class.new(:sbt, num_exp_3)
       expect(num_step_2.mtp_num_step(num_mtp_step)).to eq expected_num_step
     end
   end
-
 end
 
 describe StringExp do
-  let(:str_exp){described_class.new('x')}
+  let(:str_exp) { described_class.new('x') }
 
   describe '#initializes/new' do
     it 'initializes with a string value that can be read as an attribute' do
@@ -159,8 +158,8 @@ describe StringExp do
 end
 
 describe StringStep do
-  let(:str_exp){double(:str_exp)}
-  let(:str_step){described_class.new(:add,str_exp)}
+  let(:str_exp) { double(:str_exp) }
+  let(:str_step) { described_class.new(:add, str_exp) }
 
   describe '#initialize/new' do
     it 'with an operation that can be read as an attribute' do

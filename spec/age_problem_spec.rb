@@ -2,7 +2,7 @@ require './models/age_problem'
 
 describe AgeProblem do
   describe '#initialize/new' do
-    let(:age_prob_1){described_class.new(:add,10,5,2,5,0,5,1,[['Jack',:m],['David',:m]])}
+    let(:age_prob_1) { described_class.new(:add, 10, 5, 2, 5, 0, 5, 1, [['Jack', :m], ['David', :m]]) }
 
     it 'initializes with a time 1 relation' do
       expect(age_prob_1.time_1_rel).to eq :add
@@ -37,19 +37,24 @@ describe AgeProblem do
     end
 
     it 'initializes with an array of two persons' do
-      expect(age_prob_1.persons).to eq [['Jack',:m],['David',:m]]
+      expect(age_prob_1.persons).to eq [['Jack', :m], ['David', :m]]
     end
   end
 
   describe '#generate_add_type_question' do
-    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
-      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
-    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
-      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
-    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
-      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
-    let(:question){described_class.generate_add_type_question(named_persons,younger_rels,older_rels)}
-
+    let(:named_persons) do
+      [['Adam', :m], ['Beth', :f], ['John', :m], ['Julie', :f],
+       ['Ken', :m], ['Davina', :f], ['Henry', :m], ['Sarah', :f]]
+    end
+    let(:older_rels) do
+      { gen1: [['father', :m, :rel], ['mother', :f, :rel]], gen2:
+      [['grandfather', :m, :rel], ['grandmother', :f, :rel]] }
+    end
+    let(:younger_rels) do
+      { gen1: [['son', :m, :rel], ['daughter', :f, :rel]], gen2:
+      [['grandson', :m, :rel], ['granddaughter', :f, :rel]] }
+    end
+    let(:question) { described_class.generate_add_type_question(named_persons, younger_rels, older_rels) }
 
     it 'generate add type questions that are consistent eg 1' do
       srand(100)
@@ -117,56 +122,68 @@ describe AgeProblem do
       end
 
       it 'with two people' do
-        expect(question.persons).to eq [["Ken",:m],["mother",:f,:rel]]
+        expect(question.persons).to eq [['Ken', :m], ['mother', :f, :rel]]
       end
     end
   end
 
   describe '#generate_add_question_text' do
-    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
-      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
-    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
-      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
-    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
-      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
-    let(:question){described_class.generate_add_type_question(named_persons,younger_rels,older_rels)}
-    let(:question_text){question.generate_add_question_text}
+    let(:named_persons) do
+      [['Adam', :m], ['Beth', :f], ['John', :m], ['Julie', :f],
+       ['Ken', :m], ['Davina', :f], ['Henry', :m], ['Sarah', :f]]
+    end
+    let(:older_rels) do
+      { gen1: [['father', :m, :rel], ['mother', :f, :rel]], gen2:
+      [['grandfather', :m, :rel], ['grandmother', :f, :rel]] }
+    end
+    let(:younger_rels) do
+      { gen1: [['son', :m, :rel], ['daughter', :f, :rel]], gen2:
+      [['grandson', :m, :rel], ['granddaughter', :f, :rel]] }
+    end
+    let(:question) { described_class.generate_add_type_question(named_persons, younger_rels, older_rels) }
+    let(:question_text) { question.generate_add_question_text }
 
     it 'generates question text for add type question eg 1' do
       srand(300)
-      expect(question_text).to eq "Beth is twenty five years older than her daughter. In eleven years time, Beth will be twice as old as her daughter. How old is her daughter now?"
+      expect(question_text).to eq 'Beth is twenty five years older than her daughter. In eleven years time, Beth will be twice as old as her daughter. How old is her daughter now?'
     end
 
     it 'generates question text for add type question eg 2' do
       srand(400)
-      expect(question_text).to eq "Sarah is sixty six years younger than her grandmother. Four years from now, her grandmother will be seven times as old as her. How old is Sarah now?"
+      expect(question_text).to eq 'Sarah is sixty six years younger than her grandmother. Four years from now, her grandmother will be seven times as old as her. How old is Sarah now?'
     end
 
     it 'generates question text for add type question eg 3' do
       srand(500)
-      expect(question_text).to eq "Sarah is thirty five years older than her daughter. Eight years from now, Sarah will be twice as old as her daughter. How old is her daughter now?"
+      expect(question_text).to eq 'Sarah is thirty five years older than her daughter. Eight years from now, Sarah will be twice as old as her daughter. How old is her daughter now?'
     end
 
     it 'generates question text for add type question eg 4' do
       srand(600)
-      expect(question_text).to eq "Sarah is seventy two years younger than her grandfather. Four years from now, her grandfather will be nine times as old as her. How old is Sarah now?"
+      expect(question_text).to eq 'Sarah is seventy two years younger than her grandfather. Four years from now, her grandfather will be nine times as old as her. How old is Sarah now?'
     end
 
     it 'generates question text for add type question eg 5' do
       srand(700)
-      expect(question_text).to eq "Davina is eleven years younger than Julie. Two years from now, Julie will be twice as old as Davina. How old is Davina now?"
+      expect(question_text).to eq 'Davina is eleven years younger than Julie. Two years from now, Julie will be twice as old as Davina. How old is Davina now?'
     end
   end
 
   describe '#add_type_soln' do
-    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
-      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
-    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
-      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
-    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
-      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
-    let(:question){described_class.generate_add_type_question(named_persons,younger_rels,older_rels)}
-    let(:solution_latex){question.add_type_soln}
+    let(:named_persons) do
+      [['Adam', :m], ['Beth', :f], ['John', :m], ['Julie', :f],
+       ['Ken', :m], ['Davina', :f], ['Henry', :m], ['Sarah', :f]]
+    end
+    let(:older_rels) do
+      { gen1: [['father', :m, :rel], ['mother', :f, :rel]], gen2:
+      [['grandfather', :m, :rel], ['grandmother', :f, :rel]] }
+    end
+    let(:younger_rels) do
+      { gen1: [['son', :m, :rel], ['daughter', :f, :rel]], gen2:
+      [['grandson', :m, :rel], ['granddaughter', :f, :rel]] }
+    end
+    let(:question) { described_class.generate_add_type_question(named_persons, younger_rels, older_rels) }
+    let(:solution_latex) { question.add_type_soln }
 
     it 'generates solution latex for add type question eg 1' do
       srand(400)
@@ -180,13 +197,19 @@ describe AgeProblem do
   end
 
   describe '#generate_mtp_type_question' do
-    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
-      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
-    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
-      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
-    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
-      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
-    let(:question){described_class.generate_mtp_type_question(named_persons,younger_rels,older_rels)}
+    let(:named_persons) do
+      [['Adam', :m], ['Beth', :f], ['John', :m], ['Julie', :f],
+       ['Ken', :m], ['Davina', :f], ['Henry', :m], ['Sarah', :f]]
+    end
+    let(:older_rels) do
+      { gen1: [['father', :m, :rel], ['mother', :f, :rel]], gen2:
+      [['grandfather', :m, :rel], ['grandmother', :f, :rel]] }
+    end
+    let(:younger_rels) do
+      { gen1: [['son', :m, :rel], ['daughter', :f, :rel]], gen2:
+      [['grandson', :m, :rel], ['granddaughter', :f, :rel]] }
+    end
+    let(:question) { described_class.generate_mtp_type_question(named_persons, younger_rels, older_rels) }
 
     it 'generate mtp type questions that are consistent eg 1' do
       srand(100)
@@ -254,20 +277,26 @@ describe AgeProblem do
       end
 
       it 'with two people' do
-        expect(question.persons).to eq [["Henry",:m],["father",:m,:rel]]
+        expect(question.persons).to eq [['Henry', :m], ['father', :m, :rel]]
       end
     end
   end
 
   describe '#generate_mtp_question_text' do
-    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
-      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
-    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
-      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
-    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
-      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
-    let(:question){described_class.generate_mtp_type_question(named_persons,younger_rels,older_rels)}
-    let(:question_text){question.generate_mtp_question_text}
+    let(:named_persons) do
+      [['Adam', :m], ['Beth', :f], ['John', :m], ['Julie', :f],
+       ['Ken', :m], ['Davina', :f], ['Henry', :m], ['Sarah', :f]]
+    end
+    let(:older_rels) do
+      { gen1: [['father', :m, :rel], ['mother', :f, :rel]], gen2:
+      [['grandfather', :m, :rel], ['grandmother', :f, :rel]] }
+    end
+    let(:younger_rels) do
+      { gen1: [['son', :m, :rel], ['daughter', :f, :rel]], gen2:
+      [['grandson', :m, :rel], ['granddaughter', :f, :rel]] }
+    end
+    let(:question) { described_class.generate_mtp_type_question(named_persons, younger_rels, older_rels) }
+    let(:question_text) { question.generate_mtp_question_text }
 
     it 'generates question text for mtp type question eg 1' do
       srand(300)
@@ -281,29 +310,35 @@ describe AgeProblem do
 
     it 'generates question text for mtp type question eg 3' do
       srand(500)
-      expect(question_text).to eq "Eleven years ago, Sarah was three times as old as her daughter. Eight years from now, Sarah will be twice as old as her daughter. How old is her daughter now?"
+      expect(question_text).to eq 'Eleven years ago, Sarah was three times as old as her daughter. Eight years from now, Sarah will be twice as old as her daughter. How old is her daughter now?'
     end
 
     it 'generates question text for mtp type question eg 4' do
       srand(600)
-      expect(question_text).to eq "In five years time, Julie will be nine times as old as her grandson. In eleven years time, Julie will be five times as old as her grandson. How old is her grandson now?"
+      expect(question_text).to eq 'In five years time, Julie will be nine times as old as her grandson. In eleven years time, Julie will be five times as old as her grandson. How old is her grandson now?'
     end
 
     it 'generates question text for mtp type question eg 5' do
       srand(700)
-      expect(question_text).to eq "Seventeen years ago, Henry was three times as old as his granddaughter. In eight years time, Henry will be twice as old as his granddaughter. How old is his granddaughter now?"
+      expect(question_text).to eq 'Seventeen years ago, Henry was three times as old as his granddaughter. In eight years time, Henry will be twice as old as his granddaughter. How old is his granddaughter now?'
     end
   end
 
   describe '#mtp_type_soln' do
-    let(:named_persons){[['Adam',:m],['Beth',:f],['John',:m],['Julie',:f],
-      ['Ken',:m],['Davina',:f],['Henry',:m],['Sarah',:f]]}
-    let(:older_rels){{gen1:[['father',:m,:rel],['mother',:f,:rel]],gen2:
-      [['grandfather',:m,:rel],['grandmother',:f,:rel]]}}
-    let(:younger_rels){{gen1:[['son',:m,:rel],['daughter',:f,:rel]],gen2:
-      [['grandson',:m,:rel],['granddaughter',:f,:rel]]}}
-    let(:question){described_class.generate_mtp_type_question(named_persons,younger_rels,older_rels)}
-    let(:solution_latex){question.mtp_type_soln}
+    let(:named_persons) do
+      [['Adam', :m], ['Beth', :f], ['John', :m], ['Julie', :f],
+       ['Ken', :m], ['Davina', :f], ['Henry', :m], ['Sarah', :f]]
+    end
+    let(:older_rels) do
+      { gen1: [['father', :m, :rel], ['mother', :f, :rel]], gen2:
+      [['grandfather', :m, :rel], ['grandmother', :f, :rel]] }
+    end
+    let(:younger_rels) do
+      { gen1: [['son', :m, :rel], ['daughter', :f, :rel]], gen2:
+      [['grandson', :m, :rel], ['granddaughter', :f, :rel]] }
+    end
+    let(:question) { described_class.generate_mtp_type_question(named_persons, younger_rels, older_rels) }
+    let(:solution_latex) { question.mtp_type_soln }
 
     it 'generates solution latex for mtp type question eg 1' do
       srand(400)

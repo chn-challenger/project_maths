@@ -2,7 +2,7 @@ require './models/fraction'
 
 describe Fraction do
   describe '#initialize/new' do
-    let(:fraction){described_class.new(2,3,4)}
+    let(:fraction) { described_class.new(2, 3, 4) }
 
     it 'initializes with a integer part' do
       expect(fraction.integer).to eq 2
@@ -16,8 +16,8 @@ describe Fraction do
   end
 
   describe '#simplify' do
-    let(:fraction1){described_class.new(3,6,8)}
-    let(:fraction2){described_class.new(4,12,8)}
+    let(:fraction1) { described_class.new(3, 6, 8) }
+    let(:fraction2) { described_class.new(4, 12, 8) }
 
     context 'make fraction parts into lowest form' do
       it 'has new simplified numerator' do
@@ -54,8 +54,8 @@ describe Fraction do
   end
 
   describe '#==' do
-    let(:fraction1){described_class.new(2,5,8)}
-    let(:fraction2){described_class.new(2,5,8)}
+    let(:fraction1) { described_class.new(2, 5, 8) }
+    let(:fraction2) { described_class.new(2, 5, 8) }
 
     it 'two fractions to be equal if they have the same parts' do
       expect(fraction1 == fraction2).to be true
@@ -63,10 +63,10 @@ describe Fraction do
   end
 
   describe '#>' do
-    let(:fraction1){described_class.new(3,5,8)}
-    let(:fraction2){described_class.new(2,5,8)}
-    let(:fraction3){described_class.new(0,35,8)}
-    let(:fraction4){described_class.new(1,26,16)}
+    let(:fraction1) { described_class.new(3, 5, 8) }
+    let(:fraction2) { described_class.new(2, 5, 8) }
+    let(:fraction3) { described_class.new(0, 35, 8) }
+    let(:fraction4) { described_class.new(1, 26, 16) }
 
     it 'is true when fraction is greater than another fraction' do
       expect(fraction1 > fraction2).to be true
@@ -82,10 +82,10 @@ describe Fraction do
   end
 
   describe '#<' do
-    let(:fraction1){described_class.new(3,5,8)}
-    let(:fraction2){described_class.new(2,5,8)}
-    let(:fraction3){described_class.new(0,35,8)}
-    let(:fraction4){described_class.new(1,26,16)}
+    let(:fraction1) { described_class.new(3, 5, 8) }
+    let(:fraction2) { described_class.new(2, 5, 8) }
+    let(:fraction3) { described_class.new(0, 35, 8) }
+    let(:fraction4) { described_class.new(1, 26, 16) }
 
     it 'is false when fraction is greater than another fraction' do
       expect(fraction1 < fraction2).to be false
@@ -101,8 +101,8 @@ describe Fraction do
   end
 
   describe '#same_value?' do
-    let(:fraction1){described_class.new(2,5,8)}
-    let(:fraction2){described_class.new(1,26,16)}
+    let(:fraction1) { described_class.new(2, 5, 8) }
+    let(:fraction2) { described_class.new(1, 26, 16) }
 
     it 'two fractions to be equal if they have the same simplified parts' do
       expect(fraction1.same_value?(fraction2)).to eq true
@@ -110,8 +110,8 @@ describe Fraction do
   end
 
   describe '#mixed_to_topheavy' do
-    let(:fraction1){described_class.new(2,5,8)}
-    let(:fraction2){described_class.new(2,5,8)}
+    let(:fraction1) { described_class.new(2, 5, 8) }
+    let(:fraction2) { described_class.new(2, 5, 8) }
 
     it 'changes a mixed fraction into a top-heavy fraction' do
       new_fraction = fraction1.mixed_to_topheavy
@@ -130,8 +130,8 @@ describe Fraction do
   end
 
   describe '#topheavy_to_mixed' do
-    let(:fraction1){described_class.new(0,21,8)}
-    let(:fraction2){described_class.new(0,21,8)}
+    let(:fraction1) { described_class.new(0, 21, 8) }
+    let(:fraction2) { described_class.new(0, 21, 8) }
 
     it 'changes a top-heavy fraction into a mixed fraction' do
       new_fraction = fraction1.topheavy_to_mixed
@@ -150,9 +150,9 @@ describe Fraction do
   end
 
   describe '#+' do
-    let(:fraction1){described_class.new(2,5,8)}
-    let(:fraction2){described_class.new(4,5,6)}
-    let(:result_fraction){described_class.new(7,11,24)}
+    let(:fraction1) { described_class.new(2, 5, 8) }
+    let(:fraction2) { described_class.new(4, 5, 6) }
+    let(:result_fraction) { described_class.new(7, 11, 24) }
 
     it 'adds a fraction to another fraction resulting in a new fraction' do
       expect(fraction1 + fraction2).to eq result_fraction
@@ -160,9 +160,9 @@ describe Fraction do
   end
 
   describe '#-' do
-    let(:fraction1){described_class.new(5,4,9)}
-    let(:fraction2){described_class.new(2,2,3)}
-    let(:result_fraction){described_class.new(2,7,9)}
+    let(:fraction1) { described_class.new(5, 4, 9) }
+    let(:fraction2) { described_class.new(2, 2, 3) }
+    let(:result_fraction) { described_class.new(2, 7, 9) }
 
     it 'subtracts a fraction from another fraction resulting in a new fraction' do
       expect(fraction1 - fraction2).to eq result_fraction
@@ -170,9 +170,9 @@ describe Fraction do
   end
 
   describe '#*' do
-    let(:fraction1){described_class.new(3,2,3)}
-    let(:fraction2){described_class.new(2,3,4)}
-    let(:result_fraction){described_class.new(10,1,12)}
+    let(:fraction1) { described_class.new(3, 2, 3) }
+    let(:fraction2) { described_class.new(2, 3, 4) }
+    let(:result_fraction) { described_class.new(10, 1, 12) }
 
     it 'multiply a fraction to another fraction resulting in a new fraction' do
       expect(fraction1 * fraction2).to eq result_fraction
@@ -180,9 +180,9 @@ describe Fraction do
   end
 
   describe '#/' do
-    let(:fraction1){described_class.new(3,2,3)}
-    let(:fraction2){described_class.new(2,3,4)}
-    let(:result_fraction){described_class.new(1,1,3)}
+    let(:fraction1) { described_class.new(3, 2, 3) }
+    let(:fraction2) { described_class.new(2, 3, 4) }
+    let(:result_fraction) { described_class.new(1, 1, 3) }
 
     it 'divide a fraction from another fraction resulting in a new fraction' do
       expect(fraction1 / fraction2).to eq result_fraction
@@ -229,12 +229,12 @@ describe Fraction do
       include_context 'addition question'
 
       it 'generates addition question' do
-        expected_question_latex = "3\\frac{3}{4}+2\\frac{9}{11}"
+        expected_question_latex = '3\\frac{3}{4}+2\\frac{9}{11}'
         expect(@question_latex[:question_latex]).to eq expected_question_latex
       end
 
       it 'generates solution for the addition question' do
-        expected_solution_latex = "3\\frac{3}{4}+2\\frac{9}{11}=6\\frac{25}{44}"
+        expected_solution_latex = '3\\frac{3}{4}+2\\frac{9}{11}=6\\frac{25}{44}'
         expect(@question_latex[:solution_latex]).to eq expected_solution_latex
       end
     end
@@ -251,12 +251,12 @@ describe Fraction do
       include_context 'subtraction question'
 
       it 'generates subtraction question' do
-        expected_question_latex = "8\\frac{1}{2}-1\\frac{7}{11}"
+        expected_question_latex = '8\\frac{1}{2}-1\\frac{7}{11}'
         expect(@question_latex[:question_latex]).to eq expected_question_latex
       end
 
       it 'generates solution for the subtraction question' do
-        expected_solution_latex = "8\\frac{1}{2}-1\\frac{7}{11}=6\\frac{19}{22}"
+        expected_solution_latex = '8\\frac{1}{2}-1\\frac{7}{11}=6\\frac{19}{22}'
         expect(@question_latex[:solution_latex]).to eq expected_solution_latex
       end
     end
@@ -273,12 +273,12 @@ describe Fraction do
       include_context 'multiplication question'
 
       it 'generates multiplication question' do
-        expected_question_latex = "1\\frac{1}{3}\\times11\\frac{1}{2}"
+        expected_question_latex = '1\\frac{1}{3}\\times11\\frac{1}{2}'
         expect(@question_latex[:question_latex]).to eq expected_question_latex
       end
 
       it 'generates solution for the multiplication question' do
-        expected_solution_latex = "1\\frac{1}{3}\\times11\\frac{1}{2}=15\\frac{1}{3}"
+        expected_solution_latex = '1\\frac{1}{3}\\times11\\frac{1}{2}=15\\frac{1}{3}'
         expect(@question_latex[:solution_latex]).to eq expected_solution_latex
       end
     end
@@ -295,12 +295,12 @@ describe Fraction do
       include_context 'division question'
 
       it 'generates division question' do
-        expected_question_latex = "7\\frac{1}{2}\\div6\\frac{1}{2}"
+        expected_question_latex = '7\\frac{1}{2}\\div6\\frac{1}{2}'
         expect(@question_latex[:question_latex]).to eq expected_question_latex
       end
 
       it 'generates solution for the division question' do
-        expected_solution_latex = "7\\frac{1}{2}\\div6\\frac{1}{2}=1\\frac{2}{13}"
+        expected_solution_latex = '7\\frac{1}{2}\\div6\\frac{1}{2}=1\\frac{2}{13}'
         expect(@question_latex[:solution_latex]).to eq expected_solution_latex
       end
     end
@@ -309,7 +309,7 @@ describe Fraction do
       shared_context 'question' do
         before(:all) do
           srand(127)
-          @question = Fraction.generate_question({max_integer_value:100,max_fraction_value:50})
+          @question = Fraction.generate_question(max_integer_value: 100, max_fraction_value: 50)
           @question_latex = Fraction.latex(@question)
         end
       end
@@ -317,20 +317,16 @@ describe Fraction do
       include_context 'question'
 
       it 'generates question with non-default parameters' do
-        expected_question_latex = "60\\frac{29}{36}-30\\frac{4}{11}"
+        expected_question_latex = '60\\frac{29}{36}-30\\frac{4}{11}'
         expect(@question_latex[:question_latex]).to eq expected_question_latex
       end
 
       it 'generates solution for the question with non-default parameters' do
-        expected_solution_latex = "60\\frac{29}{36}-30\\frac{4}{11}=30\\frac{175}{396}"
+        expected_solution_latex = '60\\frac{29}{36}-30\\frac{4}{11}=30\\frac{175}{396}'
         expect(@question_latex[:solution_latex]).to eq expected_solution_latex
       end
     end
-
   end
-
-
-
 
   #
   # describe '#question' do

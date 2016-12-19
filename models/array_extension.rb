@@ -1,15 +1,14 @@
 class Array
-
-  def collect_move &block
-    return [] if self.length == 0
+  def collect_move
+    return [] if length == 0
     collected_elements = []
     index = 0
-    while true
-      if block.call(self[index])
-        collected_elements << self.delete_at(index)
-        return collected_elements if index == self.length
+    loop do
+      if yield(self[index])
+        collected_elements << delete_at(index)
+        return collected_elements if index == length
       else
-        return collected_elements if index == self.length - 1
+        return collected_elements if index == length - 1
         index += 1
       end
     end
@@ -31,5 +30,4 @@ class Array
   #   end
   #   return number_of_swaps == 0 ? self : self._sort_by_value
   # end
-
 end

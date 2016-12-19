@@ -6,7 +6,7 @@ describe LinearEquation do
       shared_context 'one step question' do
         before(:all) do
           srand(122)
-          @question = LinearEquation.generate_question({number_of_steps:1})
+          @question = LinearEquation.generate_question(number_of_steps: 1)
           @question_latex = LinearEquation.latex(@question)
         end
       end
@@ -14,7 +14,7 @@ describe LinearEquation do
       include_context 'one step question'
 
       it 'generates one step question' do
-        expected_question_latex = "25+x&=33"
+        expected_question_latex = '25+x&=33'
         expect(@question_latex[:question_latex]).to eq expected_question_latex
       end
 
@@ -28,7 +28,7 @@ describe LinearEquation do
       shared_context 'standard four step question' do
         before(:all) do
           srand(122)
-          @question = LinearEquation.generate_question()
+          @question = LinearEquation.generate_question
           @question_latex = LinearEquation.latex(@question)
         end
       end
@@ -36,12 +36,12 @@ describe LinearEquation do
       include_context 'standard four step question'
 
       it 'generates standard four step question' do
-        expected_question_latex = "8\\left(\\frac{264}{25+x}+41\\right)&=392"
+        expected_question_latex = '8\\left(\\frac{264}{25+x}+41\\right)&=392'
         expect(@question_latex[:question_latex]).to eq expected_question_latex
       end
 
       it 'generates solution for the standard four step question' do
-        expected_solution_latex = "8\\left(\\frac{264}{25+x}+41\\right)&=392\\"\
+        expected_solution_latex = '8\\left(\\frac{264}{25+x}+41\\right)&=392\\'\
           "\\[2pt]\n\\frac{264}{25+x}+41&=\\frac{392}{8}\\\\[2pt]\n\\frac{264}{25+x}+41&"\
           "=49\\\\[2pt]\n\\frac{264}{25+x}&=49-41\\\\[2pt]\n\\frac{264}{25+x}&=8\\\\[2pt]\n\\"\
           "frac{264}{8}&=25+x\\\\[2pt]\n33&=25+x\\\\[2pt]\n33-25&=x\\\\[2pt]\n8&=x"
@@ -53,7 +53,7 @@ describe LinearEquation do
       shared_context 'five step question' do
         before(:all) do
           srand(122)
-          @question = LinearEquation.generate_question({number_of_steps:5})
+          @question = LinearEquation.generate_question(number_of_steps: 5)
           @question_latex = LinearEquation.latex(@question)
         end
       end
@@ -61,12 +61,12 @@ describe LinearEquation do
       include_context 'five step question'
 
       it 'generates five step question' do
-        expected_question_latex = "8\\left(\\frac{264}{25+x}+41\\right)+61&=453"
+        expected_question_latex = '8\\left(\\frac{264}{25+x}+41\\right)+61&=453'
         expect(@question_latex[:question_latex]).to eq expected_question_latex
       end
 
       it 'generates solution for the five step question' do
-        expected_solution_latex = "8\\left(\\frac{264}{25+x}+41\\right)+61&=45"\
+        expected_solution_latex = '8\\left(\\frac{264}{25+x}+41\\right)+61&=45'\
         "3\\\\[2pt]\n8\\left(\\frac{264}{25+x}+41\\right)&=453-61\\\\[2pt]\n8\\left(\\fr"\
         "ac{264}{25+x}+41\\right)&=392\\\\[2pt]\n\\frac{264}{25+x}+41&=\\frac{392}{"\
         "8}\\\\[2pt]\n\\frac{264}{25+x}+41&=49\\\\[2pt]\n\\frac{264}{25+x}&=49-41\\\\[2pt]\n"\
@@ -76,9 +76,4 @@ describe LinearEquation do
       end
     end
   end
-
-
-
-
-
 end

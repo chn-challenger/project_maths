@@ -6,7 +6,7 @@ class Expression
   extend Forwardable
   def_delegators :@value, :size, :each, :[]
 
-  def initialize(value=[])
+  def initialize(value = [])
     @value = value
   end
 
@@ -15,7 +15,7 @@ class Expression
   end
 
   def copy
-    self.class.new(value.inject([]){|result,element| result << element.copy})
+    self.class.new(value.inject([]) { |result, element| result << element.copy })
   end
 
   def expand_to_ms
@@ -34,7 +34,7 @@ end
 class Step
   attr_reader :ops, :val, :dir
 
-  def initialize(ops,val,dir=:rgt)
+  def initialize(ops, val, dir = :rgt)
     @ops = ops
     @val = val
     @dir = dir
@@ -44,12 +44,12 @@ class Step
     ops == step.ops && val = step.val && dir == step.dir
   end
 
-  def expand_into_ms(ms_exp) #can ALWAYS be invoked, since every possible val object
+  def expand_into_ms(ms_exp) # can ALWAYS be invoked, since every possible val object
     # has to implement expand_into_ms
-    val.expand_into_ms(ms_exp,self)
+    val.expand_into_ms(ms_exp, self)
   end
 
-  def append(step)  #cannot be invoked on some instances of Step, it depends on the val obj stored in Step
+  def append(step) # cannot be invoked on some instances of Step, it depends on the val obj stored in Step
     # the val object needs to implement convert_to_m_form and some valid val objects do not
     # implement convert_to_m_form
     m_form = val.convert_to_m_form
@@ -65,17 +65,17 @@ class NumExp
     @value = value
   end
 
-  def expand_into_ms(ms_exp,step)
+  def expand_into_ms(ms_exp, step)
     case step.ops
     when nil then ms_exp.value << step
     when :add then ms_exp.value << step
     when :sbt then ms_exp.value << step
-    when :mtp then ms_exp.value.each{|mf_step| mf_step.append(step)}
+    when :mtp then ms_exp.value.each { |mf_step| mf_step.append(step) }
     end
   end
 
   def convert_to_m_form
-    mf_klass.new([step_klass.new(nil,self)])
+    mf_klass.new([step_klass.new(nil, self)])
   end
 
   def mf_klass
@@ -90,7 +90,7 @@ end
 class MtpFormExp
   attr_reader :value
 
-  def initialize(value=[])
+  def initialize(value = [])
     @value = value
   end
 
@@ -102,7 +102,7 @@ end
 class MtpFormSumExp
   attr_reader :value
 
-  def initialize(value=[])
+  def initialize(value = [])
     @value = value
   end
 
@@ -110,7 +110,6 @@ class MtpFormSumExp
     value == expression.value
   end
 end
-
 
 # a = Expression.new()
 # p a.ms_klass
@@ -121,7 +120,6 @@ end
 # step_2 = Step.new(:mtp,number_2)
 # step_1.append(step_2)
 # p step_1
-
 
 #
 # class StringExp
@@ -147,7 +145,6 @@ end
 #   end
 #
 # end
-
 
 ################################################
 #
@@ -218,8 +215,6 @@ end
 #
 # end
 
-
-
 # module Operations
 #   def add
 #     :add
@@ -233,7 +228,6 @@ end
 #     :mtp
 #   end
 # end
-
 
 # case ops
 #
