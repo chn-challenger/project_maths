@@ -86,19 +86,22 @@ class LatexPrinter
         result_latex[:solution_content] += "\\noindent\n"
       end
       current_question = questions[current_question_number-1]
-      # p current_question
       current_question_latex = topic_class.latex(current_question)
-      p current_question_latex
       question_number = current_question_number.to_s + ".\\hspace{30pt}" + "\n"
       insert_index = topics[topic][:text_start]? 11 : 0
-      question_latex = current_question_latex[:question_latex].
+
+      question_latex = current_question_latex[:question_latex].dup.
         insert(insert_index,question_number)
+
       result_latex[:question_content] += _begin_minipage(layout) +
         _begin_align + question_latex + "\n" + _end_align + _end_minipage
-      solution_latex = current_question_latex[:solution_latex].
+
+      solution_latex = current_question_latex[:solution_latex].dup.
         insert(insert_index,question_number)
+
       result_latex[:solution_content] += _begin_minipage(layout) +
         _begin_align + solution_latex + "\n" + _end_align + _end_minipage
+
       current_question_number += 1
     end
     result_latex
@@ -138,12 +141,12 @@ class LatexPrinter
         latex(current_question)
       question_number = current_question_number.to_s + ".\\hspace{30pt}"
       insert_index = topics[current_topic][:text_start]? 11 : 0
-      question_latex = current_question_latex[:question_latex].
+      question_latex = current_question_latex[:question_latex].dup.
         insert(insert_index,question_number)
       result_latex[:question_content] += _begin_minipage(layout) +
         _begin_falign + question_latex + "\\\\[#{work_space}pt]\n" + '&'*5 +
         "\\text{Answer\\quad" + "."*30 + "}\n" + _end_falign + _end_minipage
-      solution_latex = current_question_latex[:solution_latex].
+      solution_latex = current_question_latex[:solution_latex].dup.
         insert(insert_index,question_number)
       result_latex[:solution_content] += _begin_minipage(layout) +
         _begin_align + solution_latex + "\n" + _end_align + _end_minipage
