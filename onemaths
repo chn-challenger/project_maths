@@ -1,0 +1,88 @@
+#! /usr/bin/env ruby
+
+require './models/latex_printer'
+require 'optparse'
+
+options = {}
+parameters = {}
+
+opt_parser = OptionParser.new do |opt|
+  opt.banner = "Usage: opt_parser COMMAND [OPTIONS]"
+  opt.separator ""
+  opt.separator "Commands"
+  opt.separator "   rails_sheet: generate sheet to be parsed by Rails."
+  opt.separator "   worksheet: generate standard Latex worksheet."
+  opt.separator "   paper: generate standard practice paper."
+  opt.separator ""
+  opt.separator "Options"
+
+  opt.on("-t", "--topic TOPIC", "which type of question would you like to generate") do |topic|
+    options[:topic] = topic
+  end
+
+  opt.on("-n", "--number NUMBER", "how many questions would you like to generate") do |number|
+    options[:number_of_questions] = number
+  end
+
+  opt.on("-v", "--variable VARIABLE", "what variable to be used in the equations e.g. x,y,z") do |variable|
+    parameters[:variable] = variable
+  end
+
+  opt.on("-s", "--steps STEPS", "number of steps for question solving") do |steps|
+    parameters[:number_of_steps] = steps
+  end
+
+  opt.on("-sm", "--solutionmax SOLUTIONMAX", "max range for solution") do |solution_max|
+    parameters[:solution_max] = solution_max
+  end
+
+  opt.on("-m", "--multiplediv MULTIPLEDIV", "multiple devision allowed false") do |multi_div|
+    parameters[:multiple_division] = multi_div
+  end
+
+  opt.on("-e", "--experience EXPERIENCE", "amount of EXP per question") do |exp|
+    parameters[:exp] = exp
+  end
+
+  opt.on("-o", "--order ORDER", "question order property") do |order|
+    parameters[:order] = order
+  end
+
+  opt.on("-l", "--level LEVEL", "question diffivulty level") do |level|
+    parameters[:level] = level
+  end
+
+  opt.on("-z", "--hint HINT", "question hint") do |hint|
+    parameters[:hint] = hint
+  end
+
+  opt.on("-h", "--help", "help") do
+    puts opt_parser
+  end
+end
+
+opt_parser.parse!
+options[:topic] ||= :linear_equation
+options[:number_of_questions] ||= 2
+
+case ARGV[0]
+when "rails_sheet"
+  parameters[:rails] = true
+  printer = LatexPrinter.rails_sheet(options[:topic],options[:number_of_questions], parameters)
+
+  file_name = Time.now.to_s + options[:topic].to_s + '.tex'
+  output = File.open(file_name, 'w')
+  output << printer
+  output.close
+else
+  puts opt_parser
+end
+
+
+
+
+
+
+# rails_sheet(topic, number_of_questions, parameters = {})
+# worksheet(topic, sheet_number, student, number_of_questions, parameters = {}, layout_format = {})
+# paper(contents, paper_number, student, layout = {})

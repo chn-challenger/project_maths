@@ -117,6 +117,7 @@ class LatexPrinter
     while current_question_number <= number_of_questions
       current_question = questions[current_question_number - 1]
       current_question_latex = topic_class.latex(current_question, parameters)
+      # p current_question_latex
       rails_question_latex = current_question_latex[:rails_question_latex]
       result_latex += rails_question_latex
       current_question_number += 1
@@ -129,12 +130,14 @@ class LatexPrinter
     number_of_questions = questions.length
     current_question_number = 1
     result_latex = { question_content: '', solution_content: '' }
+
     while current_question_number <= number_of_questions
       if current_question_number % layout[:questions_per_row] == 1 ||
          layout[:questions_per_row] == 1
         result_latex[:question_content] += "\n\\noindent\n"
         result_latex[:solution_content] += "\\vspace{1 mm}\n\n\\noindent\n"
       end
+
       current_question = questions[current_question_number - 1][:question]
       current_topic = questions[current_question_number - 1][:topic]
       work_space = questions[current_question_number - 1][:work_space]

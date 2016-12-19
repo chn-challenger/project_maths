@@ -66,7 +66,7 @@ class LinearEquation < Equation
 
     if parameters[:rails] == true
       rails_format_question(question_latex, solution_latex) do |r|
-        r += format_answer(generated_question)
+        r.insert(-1, format_answer(generated_question))
       end
     else
       { question_latex: question_latex, solution_latex: solution_latex }
@@ -84,6 +84,7 @@ class LinearEquation < Equation
                   question_exp + question_order + question_lvl
 
     yield(rails_latex)
+    p rails_latex
     { rails_question_latex: rails_latex }
   end
 
