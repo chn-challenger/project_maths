@@ -86,7 +86,9 @@ class LatexPrinter
         result_latex[:solution_content] += "\\noindent\n"
       end
       current_question = questions[current_question_number-1]
+      # p current_question
       current_question_latex = topic_class.latex(current_question)
+      p current_question_latex
       question_number = current_question_number.to_s + ".\\hspace{30pt}" + "\n"
       insert_index = topics[topic][:text_start]? 11 : 0
       question_latex = current_question_latex[:question_latex].
