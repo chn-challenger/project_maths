@@ -20,7 +20,10 @@
 require './models/simultaneous_equation'
 
 eq = SimultaneousEquation.new
-
 p "==========================="
-p eq.generate_question[:question].equation_2.latex
+eq._generate_question()
+
+
+# p eq.equation_1.latex
+# p eq.equation_2.latex
 p "==========================="

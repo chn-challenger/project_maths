@@ -102,4 +102,10 @@ class Equation
     right_side.standardise_linear_exp if right_side.steps.length > 1
     self
   end
+
+  def same_change(step)
+    left_side.steps << step
+    right_side.steps << step
+  end
+
 end
