@@ -5,6 +5,7 @@ require 'optparse'
 
 options = {}
 parameters = {}
+layout = {}
 
 opt_parser = OptionParser.new do |opt|
   opt.banner = "Usage: opt_parser COMMAND [OPTIONS]"
@@ -32,7 +33,7 @@ opt_parser = OptionParser.new do |opt|
     parameters[:number_of_steps] = steps
   end
 
-  opt.on("-sm", "--solutionmax SOLUTIONMAX", "max range for solution") do |solution_max|
+  opt.on("-x", "--solutionmax SOLUTIONMAX", "max range for solution") do |solution_max|
     parameters[:solution_max] = solution_max
   end
 
@@ -56,6 +57,18 @@ opt_parser = OptionParser.new do |opt|
     parameters[:hint] = hint
   end
 
+  opt.on("-f", "--layout LAYOUT", "questions per row") do |layout|
+    layout[:questions_per_row] = layout
+  end
+
+  opt.on("-e", "--sheetnum SHEETNUM", "sheet number") do |num|
+    options[:sheet_number] = num
+  end
+
+  opt.on("-u", "--student STUDENT", "student name for which the sheet is intended") do |student|
+    options[:student] = student
+  end
+
   opt.on("-h", "--help", "help") do
     puts opt_parser
   end
@@ -70,17 +83,19 @@ when "rails_sheet"
   parameters[:rails] = true
   printer = LatexPrinter.rails_sheet(options[:topic],options[:number_of_questions], parameters)
 
-  file_name = Time.now.to_s + options[:topic].to_s + '.tex'
+  file_name = Time.now.strftime("%d_%m_%Y") + "_" + options[:topic].to_s + "_questions_sheet" + '.tex'
   output = File.open(file_name, 'w')
   output << printer
   output.close
+
+when "worksheet"
+  printer = LatexPrinter.worksheet(options[:topic], options[:sheet_number], options[:student], options[:number_of_questions], parameters, layout)
+
+  LatexPrinter.save_sheet(printer)
+  LatexPrinter.save_sheet(:solutions_sheet, printer)
 else
   puts opt_parser
 end
-
-
-
-
 
 
 # rails_sheet(topic, number_of_questions, parameters = {})

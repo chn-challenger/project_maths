@@ -208,6 +208,13 @@ class LatexPrinter
     rails
   end
 
+  def self.save_sheet(type=:questions_sheet, topic=:linear_equation, input)
+    file_name = Time.now.strftime("%d_%m_%Y") + "_" + topics[topic][:class_name].name + "_"+ type.to_s + "_sheet" + '.tex'
+    worksheet_sheet = File.open(file_name, 'w')
+    worksheet_sheet << input[type]
+    worksheet_sheet.close
+  end
+
   def self.paper(contents, paper_number, student, layout = {})
     questions = generate_paper_questions(contents)
     content_latex = paper_content_latex(questions, layout)
