@@ -49,6 +49,31 @@ describe LatexPrinter do
     end
   end
 
+  context 'generate rails sheet to be parsed' do
+    let(:rails_sheet) do
+      described_class.rails_sheet(:linear_equation, 2)
+    end
+
+    let!(:question) { '4\\left(6\\left(x-2\\right)+76\\right)&=496' }
+    let!(:solution) { '5\frac{1}{2}\times2\frac{3}{4}=15\frac{1}{8}' }
+
+    before do
+      Timecop.freeze
+      allow_any_instance_of(ContentGenerator).to receive(:generate_worksheet_questions).and_return([{ question: 'Q1', solution: 'S1' }, { question: 'Q1', solution: 'S1' }])
+
+      allow(LinearEquation).to receive(:latex).and_return({rails_question_latex: question + solution})
+    end
+
+    after do
+      Timecop.return
+    end
+
+    it 'generates non standard linear equation questions sheet' do
+      expect(rails_sheet).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{#{Time.now}-Q\\quad \\text copyright\\,\n    Joe Zhou, 2016}\n\n \\begin{document}\n\n #{question}#{solution}#{question}#{solution}\\end{document}"
+    end
+  end
+
+
   context 'generate non-standard worksheet for linear equation class' do
     let(:worksheet) do
       described_class.worksheet(:linear_equation, 5,
