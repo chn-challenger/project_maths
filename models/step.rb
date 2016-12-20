@@ -25,6 +25,10 @@ class Step
     self.class.new(ops, copy_val, dir)
   end
 
+  def is_div?
+    @ops == :div
+  end
+
   def is_elementary?
     val.is_a?(String) || val.is_a?(Integer) || val.is_a?(Fraction)
   end

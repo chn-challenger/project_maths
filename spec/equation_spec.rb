@@ -90,16 +90,16 @@ describe Equation do
   describe '#collect_like_terms' do
     it 'collects one set of like terms (similar m-forms) from left to right side' do
       left_side = Expression.new([Step.new(nil, 2), Step.new(:add, Expression.new([
-                                                                                    Step.new(nil, 3), Step.new(:mtp, 'x')
-                                                                                  ]))])
+                                                    Step.new(nil, 3), Step.new(:mtp, 'x')
+                                                    ]))])
       right_side = Expression.new([Step.new(nil, 2), Step.new(:add, Expression.new([
-                                                                                     Step.new(nil, 4), Step.new(:mtp, 'x')
-                                                                                   ]))])
+                                                     Step.new(nil, 4), Step.new(:mtp, 'x')
+                                                     ]))])
       equation = Equation.new(left_side, right_side)
       expected_left_side = Expression.new([Step.new(nil, 2)])
       expected_right_side = Expression.new([Step.new(nil, 2), Step.new(:add,
-                                                                       Expression.new([Step.new(nil, 4), Step.new(:mtp, 'x')])), Step.new(:sbt,
-                                                                                                                                          Expression.new([Step.new(nil, 3), Step.new(:mtp, 'x')]))])
+                                            Expression.new([Step.new(nil, 4), Step.new(:mtp, 'x')])), Step.new(:sbt, Expression.new([Step.new(nil, 3), Step.new(:mtp, 'x')
+                                            ]))])
       expected_equation = Equation.new(expected_left_side, expected_right_side)
       expect(equation.collect_like_terms).to eq expected_equation
     end

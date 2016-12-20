@@ -84,7 +84,6 @@ class LinearEquation < Equation
                   question_exp + question_order + question_lvl
 
     yield(rails_latex)
-    p rails_latex
     { rails_question_latex: rails_latex }
   end
 

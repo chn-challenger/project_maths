@@ -9,9 +9,11 @@ module Evaluate
 
   def evaluate(steps)
     result = steps.first.val
+
     for i in 1..steps.length - 1
       result = _evaluate_one_step(result, steps[i])
     end
+
     result
   end
 
