@@ -7,7 +7,7 @@ include Topics
 module ContentGenerator
   def generate_worksheet_questions(number_of_questions = 10, klass = Fraction, parameters = {})
     questions = []
-    number_of_questions.times { questions << klass.generate_question(parameters) }
+    number_of_questions.times { questions << klass.generate_question_with_latex(parameters) }
     questions
   end
 

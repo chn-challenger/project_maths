@@ -319,6 +319,10 @@ class AgeProblem
       gen2: [['grandson', :m, :rel], ['granddaughter', :f, :rel]] }
   end
 
+  def self.generate_question_with_latex(parameters = {})
+    latex(generate_question(parameters))
+  end
+
   def self.generate_question(_parameters = {})
     if rand(0..1) == 0
       generate_mtp_type_question(named_persons, younger_rels, older_rels)

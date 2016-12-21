@@ -32,6 +32,7 @@ class LatexPrinter
     "\\usepackage{fancyhdr}\n"\
     "\\renewcommand{\\headrulewidth}{0pt}\n"\
     "\\pagestyle{fancy}\n".freeze
+    
   SOLUTION_HEADERS = "\\documentclass{article}\n"\
     "\\usepackage[math]{iwona}\n"\
     "\\usepackage[fleqn]{amsmath}\n"\
@@ -70,11 +71,10 @@ class LatexPrinter
 
   def self.worksheet_content_latex(questions, topic, layout = {})
     layout[:questions_per_row] ||= 2
-    topic_class = topics[topic][:class_name]
-    number_of_questions = questions.length
     current_question_number = 1
-    result_latex = { question_content: '', solution_content: '', rails_content: '' }
-    while current_question_number <= number_of_questions
+    result_latex = { question_content: '', solution_content: '' }
+
+    questions.each do |question|
       if current_question_number % layout[:questions_per_row] == 1 ||
          layout[:questions_per_row] == 1
         if current_question_number != 1
@@ -84,28 +84,30 @@ class LatexPrinter
         result_latex[:question_content] += "\\noindent\n"
         result_latex[:solution_content] += "\\noindent\n"
       end
-      current_question = questions[current_question_number - 1]
-      current_question_latex = topic_class.latex(current_question)
-      question_number = current_question_number.to_s + '.\\hspace{30pt}' + "\n"
-      insert_index = topics[topic][:text_start] ? 11 : 0
 
-      question_latex = current_question_latex[:question_latex].dup
-                                                              .insert(insert_index, question_number)
+      question_latex = insert_question_num(topic, current_question_number.to_s,
+                                           question[:question_latex])
+      solution_latex = insert_question_num(topic, current_question_number.to_s,
+                                           question[:solution_latex])
 
-      result_latex[:question_content] += _begin_minipage(layout) +
-                                         _begin_align + question_latex +
-                                         "\n" + _end_align + _end_minipage
-
-      solution_latex = current_question_latex[:solution_latex].dup
-                                                              .insert(insert_index, question_number)
-
-      result_latex[:solution_content] += _begin_minipage(layout) +
-                                         _begin_align + solution_latex +
-                                         "\n" + _end_align + _end_minipage
+      result_latex[:question_content] += page_formater(layout, question_latex)
+      result_latex[:solution_content] += page_formater(layout, solution_latex)
 
       current_question_number += 1
     end
+
     result_latex
+  end
+
+  def self.page_formater(layout, content_latex)
+    _begin_minipage(layout) + _begin_align + content_latex +
+    "\n" + _end_align + _end_minipage
+  end
+
+  def self.insert_question_num(topic, num, content_latex)
+    question_num_latex = num + '.\\hspace{30pt}' + "\n"
+    insert_index = topics[topic][:text_start] ? 11 : 0
+    content_latex.dup.insert(insert_index, question_num_latex)
   end
 
   def self.rails_sheet_latex(questions, topic, parameters = {})
@@ -117,7 +119,6 @@ class LatexPrinter
     while current_question_number <= number_of_questions
       current_question = questions[current_question_number - 1]
       current_question_latex = topic_class.latex(current_question, parameters)
-      # p current_question_latex
       rails_question_latex = current_question_latex[:rails_question_latex]
       result_latex += rails_question_latex
       current_question_number += 1
@@ -203,7 +204,7 @@ class LatexPrinter
     rails = { questions: {}, solutions: {} }
     rails[:questions][:start] = HEADERS
     rails[:questions][:start] += "\\lfoot{#{Time.now}-Q\\quad \\text copyright\\,
-    Joe Zhou, 2016}\n\n \\begin{document}\n\n"
+    Joe Zhou, #{Time.now.strftime("%Y")}}\n\n \\begin{document}\n\n"
     rails[:questions][:end] = '\\end{document}'
     rails
   end

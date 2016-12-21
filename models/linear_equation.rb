@@ -17,6 +17,10 @@ class LinearEquation < Equation
     parameters[:rails] ||= false
   end
 
+  def self.generate_question_with_latex(parameters = {})
+    latex(generate_question(parameters))
+  end
+
   def self.generate_question(parameters = {})
     question = _generate_question(parameters)
     solution = question._generate_solution

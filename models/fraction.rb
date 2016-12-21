@@ -88,6 +88,10 @@ class Fraction
     end
   end
 
+  def self.generate_question_with_latex(parameters = {})
+    latex(generate_question(parameters))
+  end
+
   def self.generate_question(parameters = {})
     _set_default(parameters)
     operation = parameters[:operations].sample

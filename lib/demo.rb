@@ -1,5 +1,5 @@
 # require './models/linear_equation'
-# require './models/latex_printer'
+require './models/latex_printer'
 #
 # # Initialize questions to be printed
 # @print = LatexPrinter.rails_sheet(:linear_equation, 4, rails: true)
@@ -27,3 +27,9 @@ eq._generate_question()
 # p eq.equation_1.latex
 # p eq.equation_2.latex
 p "==========================="
+
+# require './models/fraction'
+#
+# fraction = LatexPrinter.worksheet(:fraction, 21, 'Robert Hook', 2)
+#
+# p fraction
