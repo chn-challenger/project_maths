@@ -23,10 +23,12 @@ require './models/simultaneous_equation'
 eq = SimultaneousEquation.new
 p "==========================="
 # p eq.update_coefs([[2, 3], [4, 5]], [2, 3])
-Timeout::timeout(1, NoMethodError) {
-eq._generate_question()
-}
-# p eq.ops
+qs = nil
+# Timeout::timeout(4, NoMethodError) {
+qs = eq.generate_question_with_latex
+# }
+puts qs[:question_latex]
+puts qs[:solution_latex]
 
 
 # p eq.equation_1.latex

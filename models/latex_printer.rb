@@ -32,7 +32,7 @@ class LatexPrinter
     "\\usepackage{fancyhdr}\n"\
     "\\renewcommand{\\headrulewidth}{0pt}\n"\
     "\\pagestyle{fancy}\n".freeze
-    
+
   SOLUTION_HEADERS = "\\documentclass{article}\n"\
     "\\usepackage[math]{iwona}\n"\
     "\\usepackage[fleqn]{amsmath}\n"\
@@ -236,6 +236,7 @@ class LatexPrinter
     worksheet_ends = self.worksheet_ends(topic, sheet_number, student)
     questions_sheet = decorate_sheet(:questions, content_latex[:question_content], worksheet_ends)
     solutions_sheet = decorate_sheet(:solutions, content_latex[:solution_content], worksheet_ends)
+    puts questions_sheet
     { questions_sheet: questions_sheet, solutions_sheet: solutions_sheet }
   end
 

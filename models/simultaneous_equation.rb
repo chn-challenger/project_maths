@@ -27,9 +27,9 @@ class SimultaneousEquation < Equation
     @solution_latex = ""
   end
 
-  def generate_question_with_latex(parameters)
+  def generate_question_with_latex(parameters={})
     update_params(parameters)
-    latex(_generate_question)
+    _generate_question
   end
 
 
@@ -54,119 +54,31 @@ class SimultaneousEquation < Equation
 
     format_questions
 
-    # puts @equation_1.latex
-    # puts @equation_2.latex
-    p "==========================="
-    puts @question_latex
-    p "==========================="
     equation_2_copy = @equation_2.copy
-    # puts 'EQ 2 COEFS'
-    # p @eq_2_coefs
-    # puts 'EQ 1 COEFS'
-    # p @eq_1_coefs
     determine_multiplier([@eq_1_coefs, @eq_2_coefs])
 
-    # @equation_1.same_change(Step.new(:mtp,@eq_2_coefs[1].abs))
-    # @equation_2.same_change(Step.new(:mtp,@eq_1_coefs[1].abs))
-    #
-    # puts @equation_1.latex
-    # puts @equation_2.latex
-    #
-    # @equation_1.left_side.expand_n_simplify
-    # @equation_1.right_side.expand_n_simplify
-    # @equation_2.left_side.expand_n_simplify
-    # @equation_2.right_side.expand_n_simplify
-
-    # puts @equation_1.latex
-    # puts @equation_2.latex
-    #
-    # @equation_1.left_side.steps << step_factory.build([:sbt,@equation_2.left_side])
-    # @equation_1.right_side.steps << step_factory.build([:sbt,@equation_2.right_side])
-    #
-    # puts @equation_1.latex
-
-    # @equation_1.left_side.expand_n_simplify
-    # @equation_1.right_side.expand_n_simplify
-
-    # puts @equation_1.latex
-
-    # @equation_1.standardise_linear_equation
-    #
-    # @equation_1 = linear_equation.new(@equation_1.left_side,@equation_1.right_side)
-    # # l_eqn = linear_equation.new(step_4.left_side, step_4.right_side)
-    # solutions_1 = @equation_1._generate_solution
-
-    # puts linear_equation._solution_latex(solutions_1)
-
-    latex
-
-    puts "================== EQUATION 2 SOLUTION =================="
-    puts equation_2_copy.latex
-
-
-    equation_2_copy.left_side.steps[0].val.steps[1].val = @eq_vars[0]
-    #
-    puts equation_2_copy.latex
-    #
-    equation_2_copy.left_side.expand_n_simplify
-    #
-    puts equation_2_copy.latex
-    #
-    equation_2_copy.standardise_linear_equation
-    #
-    equation_2_copy = linear_equation.new(equation_2_copy.left_side,equation_2_copy.right_side)
-    #
-    solutions_2 = equation_2_copy._generate_solution
-    #
-    puts linear_equation._solution_latex(solutions_2)
-
+    latex(equation_2_copy)
   rescue NoMethodError
       _generate_question
 
     # { question: question, solution: solution }
   end
 
-  def latex
+  def latex(equation_2_copy)
     puts "============== LATEX METHOD IN WORK ====================="
-    if @ops[:multiplier].nil?
+    p @ops[:multiplier]
+    if @ops[:multiplier].nil? || @ops[:multiplier] == 0
       puts @equation_1.latex
-
-      normalize(@equation_1)
-
-      puts @equation_1.latex
-
+      _solution_latex(equation_2_copy)
     elsif @ops[:multiplier].is_a?(Array)
 
-      q_1 = @equation_1.copy
-      q_1.left_side.steps.pop
-      q_1.right_side.steps.pop
+      _solution_latex_with_mtp(equation_2_copy)
+    elsif @ops[:multiplier].is_a?(Integer)
 
-      puts @equation_1.latex
-      puts q_1.latex
-      puts @equation_2.latex
-
-      sanitize
-
-      puts @equation_1.latex
-      puts @equation_2.latex
-
-      # puts @equation_1.latex
-
-      normalize(@equation_1)
-
-      puts @equation_1.latex
-
-    else
-
+      _solution_latex_with_single_mtp(equation_2_copy)
     end
 
-    @equation_1.standardise_linear_equation
-
-    @equation_1 = linear_equation.new(@equation_1.left_side,@equation_1.right_side)
-    # l_eqn = linear_equation.new(step_4.left_side, step_4.right_side)
-    solutions_1 = @equation_1._generate_solution
-
-    puts linear_equation._solution_latex(solutions_1)
+    @solution_latex << "&x=#{@eq_vars[0]} \\text{and} y=#{@eq_vars[1]}& && &&"
 
     puts "====================== DONE ============================="
     { question_latex: @question_latex, solution_latex: @solution_latex }
@@ -205,30 +117,21 @@ class SimultaneousEquation < Equation
 
     coefs[num].each_with_index do |coef, i|
       if coef.abs == coefs[num-1][i].abs
-        # puts coef.to_s + "+" + coefs[num-1][i].to_s
         if coef + coefs[num-1][i] == 0
           @ops[:operation] = :add
           @ops[:equation]  = eqs[num]
+          normalize(eqs[num])
+          normalize(eqs[num-1])
           eqs[num].left_side.steps << step_factory.build([:add,eqs[num-1].left_side])
           eqs[num].right_side.steps << step_factory.build([:add,eqs[num-1].right_side])
-
-          # puts eqs[num].latex
-          #
-          # normalize(eqs[num])
-          #
-          # puts eqs[num].latex
 
         else
           @ops[:operation] = :sbt
           @ops[:equation]  = eqs[num]
+          normalize(eqs[num])
+          normalize(eqs[num-1])
           eqs[num].left_side.steps << step_factory.build([:sbt,eqs[num-1].left_side])
           eqs[num].right_side.steps << step_factory.build([:sbt,eqs[num-1].right_side])
-
-          # puts eqs[num].latex
-          #
-          # normalize(eqs[num])
-          #
-          # puts eqs[num].latex
 
         end
         return
@@ -293,21 +196,6 @@ class SimultaneousEquation < Equation
     eq_1_rhs = @eq_1_coefs[0] * var_1 + @eq_1_coefs[1] * var_2 # b_1
     eq_2_rhs = @eq_2_coefs[0] * var_1 + @eq_2_coefs[1] * var_2 # b_2
 
-    # @eq_rhs  = [eq_1_rhs, eq_2_rhs]
-
-    puts '====================='
-    puts 'EQ 1 Y-INTER'
-    p @eq_1_coefs[0].to_s + "*" + var_1.to_s
-    p @eq_1_coefs[1].to_s + "*" + var_2.to_s
-    puts 'EQ 1 Y_INTER'
-    p eq_1_rhs
-    puts 'EQ 2 Y-INTER'
-    p @eq_2_coefs[0].to_s + "*" + var_1.to_s
-    p @eq_2_coefs[1].to_s + "*" + var_2.to_s
-    puts 'EQ 2 Y_INTER'
-    p eq_2_rhs
-    puts '====================='
-
 
     if no_solutions?(eq_1_rhs, eq_2_rhs)
       set_coefficients
@@ -333,29 +221,123 @@ class SimultaneousEquation < Equation
     eq_1_rhs.abs != eq_2_rhs.abs
   end
 
-  def multiply_eq(num = 0)
-
-    coefs = [@eq_1_coefs.dup, @eq_2_coefs.dup]
-
-    coefs[num].each_with_index do |coef, i|
-      case coef
-      when @eq_2_coefs[i]
-        if (coef == @eq_2_coefs[i])
-
-        elsif (coef - @eq_2_coefs[i] == 0)
-
-        else
-          multiply_eq(@eq_1_coefs[0], @eq_2_coefs)
-        end
-      end
-
-    end
-  end
-
   def format_questions
     q_arr = [@equation_1, @equation_2]
+    @question_latex.clear
     q_arr.each_with_index do |q, i|
-      @question_latex << '&&' + q.latex + "&(#{i+1})&\\\\[5pt]\n"
+      @question_latex << '&&' + q.latex + "& &(#{i+1})&\\\\[5pt]\n"
     end
   end
+
+  def _solution_latex_with_mtp(equation_2_copy)
+    eq_arr = [copy(@equation_1), @equation_2]
+
+    # sanitize
+    @solution_latex.clear
+    eq_arr.each_with_index do |eq, i|
+      @solution_latex << "&(#{i+1})\\times#{@ops[:multiplier][i].abs}& " + eq.latex + "& &(#{i+3})&\\\\[5pt]\n"
+    end
+
+    @solution_latex << "&(3)#{ operation_print }(4)&\\\n" + @equation_1.latex + "\\\n"
+
+    solutions = solve_eq_1
+
+    @solution_latex << solutions + "\\\\[5pt]\n"
+
+    @solution_latex << "&\\text{Sub} x \\text{into} (1)&\\\n"
+
+    solutions_2 = solve_eq_2(equation_2_copy)
+
+    @solution_latex << solutions_2 + "\\\\[5pt]\n"
+  end
+
+  def _solution_latex_with_single_mtp(equation_2_copy)
+    eq_arr = [copy(@equation_1), copy(@equation_2)]
+
+    # sanitize
+    @solution_latex.clear
+    eq_arr.each_with_index do |eq, i|
+      next if i == 1
+      @solution_latex << "&(#{i+1})\\times#{@ops[:multiplier].abs}& " + eq.latex + "& &(#{i+1})&\\\\[5pt]\n"
+    end
+
+    @solution_latex << "&(1)#{ operation_print }(2)&\\\n" + @equation_1.latex + "\\\n"
+
+    solutions = solve_eq_1
+
+    @solution_latex << solutions + "\\\\[5pt]\n"
+
+    @solution_latex << "&\\text{Sub} x \\text{into} (1)&\\\\n"
+
+    solutions_2 = solve_eq_2(equation_2_copy)
+
+    @solution_latex << solutions_2 + "\\\\[5pt]\n"
+  end
+
+
+  def solve_eq_1
+    @equation_1.left_side.expand_n_simplify
+    @equation_1.right_side.expand_n_simplify
+
+    @equation_1.standardise_linear_equation
+    @equation_1 = linear_equation.new(@equation_1.left_side,@equation_1.right_side)
+
+    return linear_equation._solution_latex(@equation_1._generate_solution)
+  end
+
+  def solve_eq_2(equation_2_copy)
+
+    equation_2_copy.left_side.steps[0].val.steps[1].val = @eq_vars[0]
+
+    @solution_latex << equation_2_copy.latex + "\\[5pt]\n"
+    #
+    equation_2_copy.left_side.expand_n_simplify
+    #
+    equation_2_copy.standardise_linear_equation
+    #
+    equation_2_copy = linear_equation.new(equation_2_copy.left_side,equation_2_copy.right_side)
+    #
+    solutions_2 = equation_2_copy._generate_solution
+    #
+    linear_equation._solution_latex(solutions_2)
+  end
+
+  def copy(equation)
+    eq = equation.copy
+    eq.left_side.steps.pop
+    eq.right_side.steps.pop
+    # normalize(eq)
+    eq
+  end
+
+  def _solution_latex(equation_2_copy)
+    begining = "&(1)" + operation_print + "(2)&\\\n"
+
+    @solution_latex << begining + @equation_1.latex + "\\\n"
+
+    @equation_1.left_side.expand_n_simplify
+    @equation_1.right_side.expand_n_simplify
+
+    @equation_1.standardise_linear_equation
+    @equation_1 = linear_equation.new(@equation_1.left_side,@equation_1.right_side)
+
+    solutions = solve_eq_1
+
+    @solution_latex << solutions + "\\[5pt]\n"
+
+    @solution_latex << "&\text{Sub} x \text{into} (1)&\\\n"
+
+    solutions_2 = solve_eq_2(equation_2_copy)
+
+    @solution_latex << solutions_2 + "\\[5pt]\n"
+  end
+
+  def operation_print
+    if @ops[:operaion] == :sbt
+      return "-"
+    else
+      return "+"
+    end
+  end
+
 end
