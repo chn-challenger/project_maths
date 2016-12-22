@@ -1,5 +1,6 @@
 # require './models/linear_equation'
 require './models/latex_printer'
+require 'timeout'
 #
 # # Initialize questions to be printed
 # @print = LatexPrinter.rails_sheet(:linear_equation, 4, rails: true)
@@ -21,7 +22,11 @@ require './models/simultaneous_equation'
 
 eq = SimultaneousEquation.new
 p "==========================="
+# p eq.update_coefs([[2, 3], [4, 5]], [2, 3])
+Timeout::timeout(1, NoMethodError) {
 eq._generate_question()
+}
+# p eq.ops
 
 
 # p eq.equation_1.latex
