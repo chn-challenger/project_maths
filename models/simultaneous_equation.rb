@@ -5,12 +5,14 @@ require './models/linear_equation'
 include Evaluate
 
 class SimultaneousEquation < Equation
-  attr_accessor :equation_1, :equation_2, :parameters
+  attr_reader :equation_1, :equation_2, :parameters, :eq_1_coefs, :eq_2_coefs,
+              :eq_rhs
 
   def initialize
     @parameters = { number_of_steps: 2,
                     variables: %w(x y),
                     solution_max: 9,
+                    difficulty: 1,
                     negative_allowed: false,
                     hint: 'Give integer solution.',
                     exp: 25, order: '', level: 1,
@@ -31,14 +33,10 @@ class SimultaneousEquation < Equation
     sim_eq = SimultaneousEquation.new
     sim_eq.update_params(parameters)
     sim_eq._generate_question
-    return sim_eq.rails_format_question if sim_eq.parameters[:rails]
   end
 
   def _generate_question
     set_coefficients
-
-    puts "x is #{@eq_vars[0]}"
-    puts "y is #{@eq_vars[1]}"
 
     equation_1_config = [[nil,[@eq_1_coefs[0],@parameters[:variables][0]]],
                          [:add,[@eq_1_coefs[1],@parameters[:variables][1]]]]
@@ -59,6 +57,7 @@ class SimultaneousEquation < Equation
     determine_multiplier([@eq_1_coefs, @eq_2_coefs])
 
     latex(equation_2_copy)
+
   rescue NoMethodError
       _generate_question
   end
@@ -93,22 +92,24 @@ class SimultaneousEquation < Equation
   end
 
   def latex(equation_2_copy)
-    puts "============== LATEX METHOD IN WORK ====================="
-    if @ops[:multiplier].nil? || @ops[:multiplier] == 0
-      puts @equation_1.latex
+    @ops[:multiplier] = nil if @parameters[:difficulty] == 1
+    if @parameters[:difficulty] == 1
       _solution_latex(equation_2_copy)
-    elsif @ops[:multiplier].is_a?(Array)
+    elsif @parameters[:difficulty] == 3
 
       _solution_latex_with_mtp(equation_2_copy)
-    elsif @ops[:multiplier].is_a?(Integer)
+    elsif @parameters[:difficulty] == 2
 
       _solution_latex_with_single_mtp(equation_2_copy)
     end
 
     @solution_latex << "&x=#{@eq_vars[0]}\\hspace{5pt} \\text{and}\\hspace{5pt} y=#{@eq_vars[1]}& && &&"
 
-    puts "====================== DONE ============================="
-    { question_latex: @question_latex, solution_latex: @solution_latex }
+    if @parameters[:rails]
+      rails_format_question
+    else
+      { question_latex: @question_latex, solution_latex: @solution_latex }
+    end
   end
 
   def update_params(params)
@@ -186,14 +187,6 @@ class SimultaneousEquation < Equation
 
         @ops[:multiplier] = [@eq_2_coefs[1], @eq_1_coefs[1]]
 
-        # puts @equation_1.latex
-        # puts @equation_2.latex
-        #
-        # sanitize
-        #
-        # puts @equation_1.latex
-        # puts @equation_2.latex
-
         determine_multiplier(update_coefs(coefs, [@eq_2_coefs[1], @eq_1_coefs[1]]), num, 0)
         return
       else
@@ -203,52 +196,94 @@ class SimultaneousEquation < Equation
     end
   end
 
+  def set_m_1(coef)
+    @eq_1_coefs << coef
+    select_coefficient
+  end
+
+  def set_m_2(coef)
+    return select_coefficient(coef * 1.5) if no_solutions?(@eq_1_coefs[0], coef)
+    @eq_2_coefs << coef.round
+    select_coefficient
+  end
+
+  def set_c_1(coef)
+    @eq_1_coefs << coef
+    select_coefficient
+  end
+
+  def set_c_2(coef)
+    level_1_coef(coef)
+    level_2_coef(coef)
+    level_3_coef(coef)
+  end
+
+  def select_coefficient(coef=nil)
+    coef_set = [*(-9..-1), *(1..9)].shuffle!
+    m_1 = @eq_1_coefs[0]
+    m_2 = @eq_2_coefs[0]
+    coef ||= coef_set.sample
+
+    return set_m_1(coef) if @eq_1_coefs.size < 1
+    return set_m_2(coef) if @eq_2_coefs.size < 1
+    return set_c_1(coef) if @eq_1_coefs.size < 2
+    return set_c_2(coef) if @eq_2_coefs.size < 2
+  end
+
+  def level_1_coef(coef)
+    return if @parameters[:difficulty] != 1
+    @eq_2_coefs << @eq_1_coefs[1]
+  end
+
+  def level_2_coef(coef)
+    return if @parameters[:difficulty] != 2
+    return select_coefficient if !factor?(@eq_1_coefs[1], coef)
+    choice = [@eq_1_coefs[1], coef]
+
+    @eq_1_coefs[1] = choice.shuffle!.pop
+    @eq_2_coefs[1] = choice[0]
+  end
+
+  def level_3_coef(coef)
+    return if @parameters[:difficulty] != 3
+    return select_coefficient(coef * 1.5) if factor?(@eq_1_coefs[1], coef)
+    @eq_2_coefs << coef.round
+  end
+
+  def factor?(num_1, num_2)
+    return true if num_1.abs % num_2.abs == 0
+    return true if num_2.abs % num_1.abs == 0
+    false
+  end
 
   def set_coefficients
     var_1 = rand(2..@parameters[:solution_max])
     var_2 = rand(2..@parameters[:solution_max])
 
-    coef_set = (-7..-1).to_a + (1..7).to_a
-
     @eq_1_coefs.clear
     @eq_2_coefs.clear
 
-    2.times{ @eq_1_coefs << coef_set.sample }
-    2.times{ @eq_2_coefs << coef_set.sample }
+    select_coefficient
 
     eq_1_rhs = @eq_1_coefs[0] * var_1 + @eq_1_coefs[1] * var_2 # b_1
     eq_2_rhs = @eq_2_coefs[0] * var_1 + @eq_2_coefs[1] * var_2 # b_2
 
-
-    if no_solutions?(eq_1_rhs, eq_2_rhs)
-      set_coefficients
-    elsif infinite_solutions?(eq_1_rhs, eq_2_rhs)
-      set_coefficients
-    else
-      @eq_vars = [var_1, var_2]
-      @eq_rhs  = [eq_1_rhs, eq_2_rhs]
-    end
+    @eq_vars = [var_1, var_2]
+    @eq_rhs  = [eq_1_rhs, eq_2_rhs]
   end
 
-  def no_solutions?(eq_1_rhs, eq_2_rhs)
-    (@eq_1_coefs[0].abs % @eq_2_coefs[0].abs == 0 ||
-    @eq_1_coefs[0].abs == @eq_2_coefs[0].abs ||
-    @eq_2_coefs[0].abs % @eq_1_coefs[0].abs == 0) &&
-    eq_1_rhs.abs == eq_2_rhs.abs
-  end
-
-  def infinite_solutions?(eq_1_rhs, eq_2_rhs)
-    (@eq_1_coefs[0].abs % @eq_2_coefs[0].abs == 0 ||
-    @eq_1_coefs[0].abs == @eq_2_coefs[0].abs ||
-    @eq_2_coefs[0].abs % @eq_1_coefs[0].abs == 0) &&
-    eq_1_rhs.abs != eq_2_rhs.abs
+  def no_solutions?(m_1, m_2)
+    return true if m_1.abs == m_2.abs
+    return true if m_1.abs % m_2.abs == 0
+    return true if m_2.abs % m_1.abs == 0
+    false
   end
 
   def format_questions
     q_arr = [@equation_1, @equation_2]
     @question_latex.clear
     q_arr.each_with_index do |q, i|
-    line_ending =  i == 1 ? "[15pt]" : ""
+    line_ending =  i == 1 ? "[15pt]\n" : "\n"
       @question_latex << '&&' + q.latex + "& &(#{i+1})&\\\\" + line_ending
     end
   end
