@@ -5,7 +5,7 @@ require './models/linear_equation'
 include Evaluate
 
 class SimultaneousEquation < Equation
-  attr_accessor :equation_1, :equation_2, :ops
+  attr_accessor :equation_1, :equation_2, :parameters
 
   def initialize
     @parameters = { number_of_steps: 2,
@@ -14,7 +14,7 @@ class SimultaneousEquation < Equation
                     negative_allowed: false,
                     hint: 'Give integer solution.',
                     exp: 25, order: '', level: 1,
-                    rails: true
+                    rails: false
                   }
     @equation_1 = Equation.new
     @equation_2 = Equation.new
@@ -27,11 +27,12 @@ class SimultaneousEquation < Equation
     @solution_latex = ""
   end
 
-  def generate_question_with_latex(parameters={})
-    update_params(parameters)
-    _generate_question
+  def self.generate_question_with_latex(parameters={})
+    sim_eq = SimultaneousEquation.new
+    sim_eq.update_params(parameters)
+    sim_eq._generate_question
+    return sim_eq.rails_format_question if sim_eq.parameters[:rails]
   end
-
 
   def _generate_question
     set_coefficients
@@ -60,13 +61,39 @@ class SimultaneousEquation < Equation
     latex(equation_2_copy)
   rescue NoMethodError
       _generate_question
+  end
 
-    # { question: question, solution: solution }
+  def rails_format_question
+    question_exp = 'question-experience$\\\$' + "\n" + @parameters[:exp].to_s + '$\\\$' + "\n\n"
+    question_order = 'question-order-group$\\\$' + "\n" + @parameters[:order].to_s + '$\\\$' + "\n\n"
+    question_lvl = 'question-level$\\\$' + "\n" + @parameters[:level].to_s + '$\\\$' + "\n\n"
+
+    rails_latex = rails_decorator('question-text', @question_latex) +
+                  rails_decorator('solution-text', @solution_latex) +
+                  question_exp + question_order + question_lvl +
+                  format_answers
+
+    { rails_question_latex: rails_latex }
+  end
+
+  def rails_decorator(sym_name, value)
+    value.prepend("#{sym_name}$\\\\$" + "\n" + '$\begin{align*}') << '\end{align*}$$\\\$' + "\n\n"
+  end
+
+  def format_answers
+    answers = ""
+
+    @parameters[:variables].each_with_index do |var, i|
+      answer_label = 'answer-label$\\\$' + "\n$" + var.to_s + '=$$\\\$' + "\n\n"
+      answer_value = 'answer-value$\\\$' + "\n" + @eq_vars[i].to_s + '$\\\$' + "\n\n"
+      answer_hint = 'answer-hint$\\\$' + "\n" + @parameters[:hint] + '$\\\$' + "\n\n"
+      answers <<  answer_label + answer_value + answer_hint
+    end
+    answers
   end
 
   def latex(equation_2_copy)
     puts "============== LATEX METHOD IN WORK ====================="
-    p @ops[:multiplier]
     if @ops[:multiplier].nil? || @ops[:multiplier] == 0
       puts @equation_1.latex
       _solution_latex(equation_2_copy)
@@ -78,7 +105,7 @@ class SimultaneousEquation < Equation
       _solution_latex_with_single_mtp(equation_2_copy)
     end
 
-    @solution_latex << "&x=#{@eq_vars[0]} \\text{and} y=#{@eq_vars[1]}& && &&"
+    @solution_latex << "&x=#{@eq_vars[0]}\\hspace{5pt} \\text{and}\\hspace{5pt} y=#{@eq_vars[1]}& && &&"
 
     puts "====================== DONE ============================="
     { question_latex: @question_latex, solution_latex: @solution_latex }
@@ -142,8 +169,6 @@ class SimultaneousEquation < Equation
 
         sanitize
 
-        puts eqs[num-1].latex
-
         determine_multiplier(update_coefs(coefs[num-1], @ops[:multiplier]), num, 0)
         return
       elsif coefs[num-1][i].abs % coef.abs == 0
@@ -152,8 +177,6 @@ class SimultaneousEquation < Equation
         eqs[num].same_change(Step.new(:mtp,@ops[:multiplier]))
 
         sanitize
-
-        puts eqs[num].latex
 
         determine_multiplier(update_coefs(coefs[num], @ops[:multiplier]), num, 0)
         return
@@ -225,7 +248,8 @@ class SimultaneousEquation < Equation
     q_arr = [@equation_1, @equation_2]
     @question_latex.clear
     q_arr.each_with_index do |q, i|
-      @question_latex << '&&' + q.latex + "& &(#{i+1})&\\\\[5pt]\n"
+    line_ending =  i == 1 ? "[15pt]" : ""
+      @question_latex << '&&' + q.latex + "& &(#{i+1})&\\\\" + line_ending
     end
   end
 
@@ -235,16 +259,17 @@ class SimultaneousEquation < Equation
     # sanitize
     @solution_latex.clear
     eq_arr.each_with_index do |eq, i|
-      @solution_latex << "&(#{i+1})\\times#{@ops[:multiplier][i].abs}& " + eq.latex + "& &(#{i+3})&\\\\[5pt]\n"
+      line_ending = i == 1 ? "[15pt]" : ""
+      @solution_latex << "&(#{i+1})\\times#{@ops[:multiplier][i].abs}& " + eq.latex + "& &(#{i+3})&\\\\" + line_ending + "\n"
     end
 
-    @solution_latex << "&(3)#{ operation_print }(4)&\\\n" + @equation_1.latex + "\\\n"
+    @solution_latex << "&(3)#{ operation_print }(4)& " + @equation_1.latex + "\\\\\n"
 
     solutions = solve_eq_1
 
-    @solution_latex << solutions + "\\\\[5pt]\n"
+    @solution_latex << solutions + "\\\\[15pt]\n"
 
-    @solution_latex << "&\\text{Sub} x \\text{into} (1)&\\\n"
+    @solution_latex << "&\\text{Sub}\\hspace{5pt} x\\hspace{5pt} \\text{into}\\hspace{5pt} (1)&\\\n"
 
     solutions_2 = solve_eq_2(equation_2_copy)
 
@@ -267,7 +292,7 @@ class SimultaneousEquation < Equation
 
     @solution_latex << solutions + "\\\\[5pt]\n"
 
-    @solution_latex << "&\\text{Sub} x \\text{into} (1)&\\\\n"
+    @solution_latex << "&\\text{Sub}\\hspace{5pt} x\\hspace{5pt} \\text{into}\\hspace{5pt} (1)& "
 
     solutions_2 = solve_eq_2(equation_2_copy)
 
@@ -282,14 +307,14 @@ class SimultaneousEquation < Equation
     @equation_1.standardise_linear_equation
     @equation_1 = linear_equation.new(@equation_1.left_side,@equation_1.right_side)
 
-    return linear_equation._solution_latex(@equation_1._generate_solution)
+    return linear_equation._solution_latex(@equation_1._generate_solution, true)
   end
 
   def solve_eq_2(equation_2_copy)
 
     equation_2_copy.left_side.steps[0].val.steps[1].val = @eq_vars[0]
 
-    @solution_latex << equation_2_copy.latex + "\\[5pt]\n"
+    @solution_latex << equation_2_copy.latex + "\\\\[5pt]\n"
     #
     equation_2_copy.left_side.expand_n_simplify
     #
@@ -299,7 +324,7 @@ class SimultaneousEquation < Equation
     #
     solutions_2 = equation_2_copy._generate_solution
     #
-    linear_equation._solution_latex(solutions_2)
+    linear_equation._solution_latex(solutions_2, true)
   end
 
   def copy(equation)
@@ -311,9 +336,9 @@ class SimultaneousEquation < Equation
   end
 
   def _solution_latex(equation_2_copy)
-    begining = "&(1)" + operation_print + "(2)&\\\n"
+    begining = "&(1)" + operation_print + "(2)&\\\\\n"
 
-    @solution_latex << begining + @equation_1.latex + "\\\n"
+    @solution_latex << begining + @equation_1.latex + "\\\\\n"
 
     @equation_1.left_side.expand_n_simplify
     @equation_1.right_side.expand_n_simplify
@@ -323,13 +348,13 @@ class SimultaneousEquation < Equation
 
     solutions = solve_eq_1
 
-    @solution_latex << solutions + "\\[5pt]\n"
+    @solution_latex << solutions + "\\\\[5pt]\n"
 
-    @solution_latex << "&\text{Sub} x \text{into} (1)&\\\n"
+    @solution_latex << "&\\text{Sub}\\hspace{5pt} x\\hspace{5pt} \\text{into}\\hspace{5pt} (1)&"
 
     solutions_2 = solve_eq_2(equation_2_copy)
 
-    @solution_latex << solutions_2 + "\\[5pt]\n"
+    @solution_latex << solutions_2 + "\\\\[5pt]\n"
   end
 
   def operation_print

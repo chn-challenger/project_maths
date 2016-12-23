@@ -5,6 +5,7 @@ require './models/age_problem'
 require './models/equation'
 require './models/question_generator'
 require './models/topics'
+require './models/simultaneous_equation'
 
 include SerialNumber
 include ContentGenerator
@@ -19,7 +20,9 @@ class LatexPrinter
     fraction: { work_sheet_title: 'Fraction', prefix: 'FRA',
                 class_name: Fraction },
     age_problem: { work_sheet_title: 'Age Problem', prefix: 'AGP',
-                   class_name: AgeProblem, skip_align: true, text_start: true }
+                   class_name: AgeProblem, skip_align: true, text_start: true },
+    simultaneous_equation: { work_sheet_title: 'Simultaneous Equation',
+                             prefix: 'SMQ', class_name: SimultaneousEquation }
   }.freeze
 
   HEADERS = "\\documentclass{article}\n"\
@@ -111,17 +114,10 @@ class LatexPrinter
   end
 
   def self.rails_sheet_latex(questions, topic, parameters = {})
-    topic_class = topics[topic][:class_name]
-    number_of_questions = questions.length
-    current_question_number = 1
     result_latex = ' '
 
-    while current_question_number <= number_of_questions
-      current_question = questions[current_question_number - 1]
-      current_question_latex = topic_class.latex(current_question, parameters)
-      rails_question_latex = current_question_latex[:rails_question_latex]
-      result_latex += rails_question_latex
-      current_question_number += 1
+    questions.each do |question|
+      result_latex << question[:rails_question_latex]
     end
     result_latex
   end
@@ -236,7 +232,6 @@ class LatexPrinter
     worksheet_ends = self.worksheet_ends(topic, sheet_number, student)
     questions_sheet = decorate_sheet(:questions, content_latex[:question_content], worksheet_ends)
     solutions_sheet = decorate_sheet(:solutions, content_latex[:solution_content], worksheet_ends)
-    puts questions_sheet
     { questions_sheet: questions_sheet, solutions_sheet: solutions_sheet }
   end
 

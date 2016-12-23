@@ -6,7 +6,9 @@ module Topics
       fraction: { work_sheet_title: 'Fraction', prefix: 'FRA',
                   class_name: Fraction },
       age_problem: { work_sheet_title: 'Age Problem', prefix: 'AGP',
-                     class_name: AgeProblem, skip_align: true, text_start: true }
+                     class_name: AgeProblem, skip_align: true, text_start: true },
+      simultaneous_equation: { work_sheet_title: 'Simultaneous Equation',
+                               prefix: 'SMQ', class_name: SimultaneousEquation }
     }
   end
 end

@@ -105,17 +105,29 @@ class LinearEquation < Equation
     answer_label + answer_value + answer_hint
   end
 
-  def self._solution_latex(solutions_array)
+  def self._solution_latex(solutions_array, sim_eq=false)
     result = ''
     solutions_array.each_with_index do |solution_equation, i|
+      line_ending = if i != solutions_array.size - 1 && sim_eq
+                      ""
+                    else
+                      sim_eq ? "[5pt]" : "[2pt]"
+                    end
+
+      line_begining = sim_eq ? "&& " : ""
+
       result += if i == solutions_array.size - 1
-                  solution_equation.latex
+                  line_begining + solution_equation.latex
                 else
-                  solution_equation.latex + '\\\[2pt]' + "\n"
+                  line_begining + solution_equation.latex + '\\\\' + line_ending + "\n"
                 end
     end
     # result.slice!(-1..-1)
     result
+  end
+
+  def line_ending_style(arr_size, sim_eq)
+
   end
 
   def _solution_next_equation
