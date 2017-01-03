@@ -24,7 +24,7 @@ class SimultaneousEquation < Equation
     @eq_2_coefs = []
     @eq_vars  = []
     @eq_rhs   = []
-    @ops      = { operaion: nil, multiplier: nil, equation: nil }
+    @ops      = { operation: nil, multiplier: nil, equation: nil }
     @question_latex = ""
     @solution_latex = ""
   end
@@ -220,8 +220,6 @@ class SimultaneousEquation < Equation
 
   def select_coefficient(coef=nil)
     coef_set = [*(-9..-1), *(1..9)].shuffle!
-    m_1 = @eq_1_coefs[0]
-    m_2 = @eq_2_coefs[0]
     coef ||= coef_set.sample
 
     return set_m_1(coef) if @eq_1_coefs.size < 1
@@ -371,7 +369,7 @@ class SimultaneousEquation < Equation
   end
 
   def _solution_latex(equation_2_copy)
-    begining = "&(1)" + operation_print + "(2)&\\\\\n"
+    begining = "&(1)" + operation_print + "(2)& "
 
     @solution_latex << begining + @equation_1.latex + "\\\\\n"
 
@@ -393,7 +391,7 @@ class SimultaneousEquation < Equation
   end
 
   def operation_print
-    if @ops[:operaion] == :sbt
+    if @ops[:operation] == :sbt
       return "-"
     else
       return "+"
