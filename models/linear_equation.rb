@@ -50,13 +50,12 @@ class LinearEquation < Equation
     equation = copy
     solution_equations = [equation]
     return solution_equations if equation.left_side.steps.count == 1 && equation.right_side.steps.count == 1
-    loop do
+    while equation.left_side.steps.count != 1 && equation.right_side.steps.count != 1 do
       equation = equation._solution_next_equation
       solution_equations << equation
       equation = equation.copy
       equation._evaluate_numericals
       solution_equations << equation
-      break if equation.left_side.steps.count == 1 && equation.right_side.steps.count == 1
     end
     solution_equations
   end

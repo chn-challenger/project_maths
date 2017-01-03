@@ -22,9 +22,14 @@ require 'timeout'
 # eq = SimultaneousEquation.new
 p "==========================="
 qs = nil
-Timeout::timeout(1, NoMethodError) {
+Timeout::timeout(2, NoMethodError) {
 qs = SimultaneousEquation.generate_question_with_latex
 }
+# ts = SimultaneousEquation.new
+# ts.set_gradients
+# ts.set_y_coefficients
+# p ts.eq_1_coefs
+# p ts.eq_2_coefs
 puts qs[:question_latex]
 puts qs[:solution_latex]
 
@@ -46,15 +51,55 @@ puts qs[:solution_latex]
 #
 # end
 
-
+# def set_gradients
+#   coefs = [sample_coef, sample_coef]
 #
-# def recur(num= 1)
-#   num += 1
-#   return tester(num) if num < 5
-#   p "My #{num} run"
+#   if no_solutions?(coefs[0], coefs[1])
+#     set_gradients
+#   else
+#     @eq_1_coefs << coefs.pop
+#     @eq_2_coefs << coefs.pop
+#   end
 # end
 #
-# recur
+# def set_y_coefficients
+#   @eq_1_coefs << sample_coef
+#   level_1_coef
+#   level_2_coef
+#   level_3_coef
+# end
+#
+# def sample_coef
+#   @coef_set.shuffle!.sample
+# end
+#
+# def select_coefficient
+#   set_gradients
+#   set_y_coefficients
+# end
+#
+# def level_1_coef
+#   return if @parameters[:difficulty] != 1
+#   @eq_2_coefs << @eq_1_coefs[1]
+# end
+#
+# def level_2_coef(i=1)
+#   return if @parameters[:difficulty] != 2
+#   coef = sample_coef
+#   return level_2_coef(i) if coef.abs == @eq_1_coefs[1].abs
+#   if !factor?(@eq_1_coefs[1], coef)
+#     level_2_coef(i)
+#   else
+#     @eq_2_coefs << coef
+#   end
+# end
+#
+# def level_3_coef
+#   return if @parameters[:difficulty] != 3
+#   return select_coefficient(coef * 1.5) if factor?(@eq_1_coefs[1], coef)
+#   @eq_2_coefs << coef.round
+# end
+
 
 
 

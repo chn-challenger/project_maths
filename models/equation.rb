@@ -1,4 +1,5 @@
 require './models/expression'
+require 'timeout'
 
 class Equation
   attr_accessor :left_side, :right_side, :solution
@@ -15,8 +16,8 @@ class Equation
   end
 
   def copy
-    new_left_side = left_side.copy
-    new_right_side = right_side.copy
+    new_left_side = Timeout.timeout(1, NoMethodError) { left_side.copy }
+    new_right_side = Timeout.timeout(1, NoMethodError) { right_side.copy }
     new_solution = solution.dup
     self.class.new(new_left_side, new_right_side, new_solution)
   end

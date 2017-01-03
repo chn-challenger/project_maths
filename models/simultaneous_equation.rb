@@ -1,6 +1,7 @@
 require './models/evaluate'
 require './models/equation'
 require './models/linear_equation'
+require 'timeout'
 
 include Evaluate
 
@@ -12,7 +13,7 @@ class SimultaneousEquation < Equation
     @parameters = { number_of_steps: 2,
                     variables: %w(x y),
                     solution_max: 9,
-                    difficulty: 1,
+                    difficulty: 3,
                     negative_allowed: false,
                     hint: 'Give integer solution.',
                     exp: 25, order: '', level: 1,
@@ -20,6 +21,7 @@ class SimultaneousEquation < Equation
                   }
     @equation_1 = Equation.new
     @equation_2 = Equation.new
+    @coef_set   = [*(-9..-1), *(1..9)]
     @eq_1_coefs = []
     @eq_2_coefs = []
     @eq_vars  = []
@@ -53,7 +55,9 @@ class SimultaneousEquation < Equation
 
     format_questions
 
-    equation_2_copy = @equation_2.copy
+    equation_2_copy = Timeout.timeout(1, NoMethodError) {
+      @equation_2.copy
+    }
     determine_multiplier([@eq_1_coefs, @eq_2_coefs])
 
     latex(equation_2_copy)
@@ -142,7 +146,6 @@ class SimultaneousEquation < Equation
 
   def determine_multiplier(coefs=[], num=0, count=0)
     eqs = [@equation_1, @equation_2]
-
     coefs[num].each_with_index do |coef, i|
       if coef.abs == coefs[num-1][i].abs
         if coef + coefs[num-1][i] == 0
@@ -170,7 +173,7 @@ class SimultaneousEquation < Equation
 
         sanitize
 
-        determine_multiplier(update_coefs(coefs[num-1], @ops[:multiplier]), num, 0)
+        determine_multiplier([coefs[num], update_coefs(coefs[num-1], @ops[:multiplier])], num, 0)
         return
       elsif coefs[num-1][i].abs % coef.abs == 0
         @ops[:multiplier] = coefs[num-1][-1] / coef
@@ -179,7 +182,7 @@ class SimultaneousEquation < Equation
 
         sanitize
 
-        determine_multiplier(update_coefs(coefs[num], @ops[:multiplier]), num, 0)
+        determine_multiplier([coefs[num-1], update_coefs(coefs[num], @ops[:multiplier])], num, 0)
         return
       elsif count == 8
         eqs[0].same_change(Step.new(:mtp,@eq_2_coefs[1].abs))
@@ -196,15 +199,16 @@ class SimultaneousEquation < Equation
     end
   end
 
-  def set_m_1(coef)
-    @eq_1_coefs << coef
-    select_coefficient
-  end
+  def set_gradients
+    coefs = [sample_coef, sample_coef]
 
-  def set_m_2(coef)
-    return select_coefficient(coef * 1.5) if no_solutions?(@eq_1_coefs[0], coef)
-    @eq_2_coefs << coef.round
-    select_coefficient
+    if no_solutions?(coefs[0], coefs[1])
+      set_gradients
+    else
+      @eq_1_coefs << coefs[0]
+      @eq_2_coefs << coefs[1]
+      select_coefficient
+    end
   end
 
   def set_c_1(coef)
@@ -218,33 +222,44 @@ class SimultaneousEquation < Equation
     level_3_coef(coef)
   end
 
-  def select_coefficient(coef=nil)
-    coef_set = [*(-9..-1), *(1..9)].shuffle!
-    coef ||= coef_set.sample
-
-    return set_m_1(coef) if @eq_1_coefs.size < 1
-    return set_m_2(coef) if @eq_2_coefs.size < 1
-    return set_c_1(coef) if @eq_1_coefs.size < 2
-    return set_c_2(coef) if @eq_2_coefs.size < 2
+  def set_c_coefs
+    @eq_1_coefs << sample_coef
+    level_1_coef
+    level_2_coef
+    level_3_coef
   end
 
-  def level_1_coef(coef)
+  def select_coefficient
+    return set_gradients if @eq_1_coefs.size == 0
+    return set_c_coefs
+  end
+
+  def sample_coef
+    @coef_set.shuffle!.sample
+  end
+
+  def level_1_coef
     return if @parameters[:difficulty] != 1
-    @eq_2_coefs << @eq_1_coefs[1]
+    choice = [@eq_1_coefs[1], @eq_1_coefs[1].abs]
+    @eq_2_coefs << choice.sample
   end
 
-  def level_2_coef(coef)
+  def level_2_coef(i=1)
     return if @parameters[:difficulty] != 2
-    return select_coefficient if !factor?(@eq_1_coefs[1], coef)
-    choice = [@eq_1_coefs[1], coef]
-
-    @eq_1_coefs[1] = choice.shuffle!.pop
-    @eq_2_coefs[1] = choice[0]
+    coef = sample_coef
+    coef = coef * sample_coef if coef.abs == @eq_1_coefs[1].abs || coef.abs == 1
+    @eq_2_coefs << coef
   end
 
-  def level_3_coef(coef)
+  def level_3_coef
     return if @parameters[:difficulty] != 3
-    return select_coefficient(coef * 1.5) if factor?(@eq_1_coefs[1], coef)
+    coef = sample_coef
+    if factor?(@eq_1_coefs[1], coef)
+      10.times {
+        coef = sample_coef * rand(1.0..5.00).round(1)
+        break if !factor?(@eq_1_coefs[1], coef.round)
+      }
+    end
     @eq_2_coefs << coef.round
   end
 
@@ -265,6 +280,8 @@ class SimultaneousEquation < Equation
 
     eq_1_rhs = @eq_1_coefs[0] * var_1 + @eq_1_coefs[1] * var_2 # b_1
     eq_2_rhs = @eq_2_coefs[0] * var_1 + @eq_2_coefs[1] * var_2 # b_2
+
+    return _generate_question if eq_1_rhs == 1 || eq_2_rhs == 1
 
     @eq_vars = [var_1, var_2]
     @eq_rhs  = [eq_1_rhs, eq_2_rhs]
@@ -319,9 +336,9 @@ class SimultaneousEquation < Equation
       @solution_latex << "&(#{i+1})\\times#{@ops[:multiplier].abs}& " + eq.latex + "& &(#{i+1})&\\\\[5pt]\n"
     end
 
-    @solution_latex << "&(1)#{ operation_print }(2)&\\\n" + @equation_1.latex + "\\\n"
+    @solution_latex << "&(1)#{ operation_print }(2)& " + @equation_1.latex + "\\\\\n"
 
-    solutions = solve_eq_1
+    solutions = Timeout.timeout(1, NoMethodError) { solve_eq_1 }
 
     @solution_latex << solutions + "\\\\[5pt]\n"
 
