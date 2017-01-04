@@ -14,7 +14,7 @@ class SimultaneousEquation < Equation
     @parameters = { number_of_steps: 2,
                     variables: %w(x y),
                     solution_max: 9,
-                    difficulty: 2,
+                    difficulty: 3,
                     negative_allowed: false,
                     hint: 'Give integer solution.',
                     exp: 25, order: '', level: 1,
@@ -31,6 +31,7 @@ class SimultaneousEquation < Equation
     @ops      = { operation: nil, multiplier: nil, equation: nil }
     @question_latex = ""
     @solution_latex = ""
+    @questions_solution = ""
   end
 
   def self.generate_question_with_latex(parameters={})
@@ -68,62 +69,6 @@ class SimultaneousEquation < Equation
 
   rescue NoMethodError
       _generate_question
-  end
-
-  def rails_format_question
-    question_exp = 'question-experience$\\\$' + "\n" + @parameters[:exp].to_s + '$\\\$' + "\n\n"
-    question_order = 'question-order-group$\\\$' + "\n" + @parameters[:order].to_s + '$\\\$' + "\n\n"
-    question_lvl = 'question-level$\\\$' + "\n" + @parameters[:level].to_s + '$\\\$' + "\n\n"
-
-    rails_latex = rails_decorator('question-text', @question_latex) +
-                  rails_decorator('solution-text', @solution_latex) +
-                  question_exp + question_order + question_lvl +
-                  format_answers
-
-    { rails_question_latex: rails_latex }
-  end
-
-  def rails_decorator(sym_name, value)
-    value.prepend("#{sym_name}$\\\\$" + "\n" + '$\begin{align*}') << '\end{align*}$$\\\$' + "\n\n"
-  end
-
-  def format_answers
-    answers = ""
-
-    @parameters[:variables].each_with_index do |var, i|
-      answer_label = 'answer-label$\\\$' + "\n$" + var.to_s + '=$$\\\$' + "\n\n"
-      answer_value = 'answer-value$\\\$' + "\n" + @eq_vars[i].to_s + '$\\\$' + "\n\n"
-      answer_hint = 'answer-hint$\\\$' + "\n" + @parameters[:hint] + '$\\\$' + "\n\n"
-      answers <<  answer_label + answer_value + answer_hint
-    end
-    answers
-  end
-
-  def latex(equation_2_copy)
-    @ops[:multiplier] = nil if @parameters[:difficulty] == 1
-    if @parameters[:difficulty] == 1
-      _solution_latex(equation_2_copy)
-    elsif @parameters[:difficulty] == 3
-
-      _solution_latex_with_mtp(equation_2_copy)
-    elsif @parameters[:difficulty] == 2
-
-      _solution_latex_with_single_mtp(equation_2_copy)
-    end
-
-    @solution_latex << "&x=#{@eq_vars[0]}\\hspace{5pt} \\text{and}\\hspace{5pt} y=#{@eq_vars[1]}& && &&"
-
-    if @parameters[:rails]
-      rails_format_question
-    else
-      { question_latex: @question_latex, solution_latex: @solution_latex }
-    end
-  end
-
-  def update_params(params)
-    @parameters.each do |k,v|
-      @parameters[k] = params[k] unless params[k].nil?
-    end
   end
 
   def sanitize
@@ -305,11 +250,14 @@ class SimultaneousEquation < Equation
   end
 
   def format_questions
-    q_arr = [@equation_1, @equation_2]
+    question_arr = [@equation_1, @equation_2]
     @question_latex.clear
-    q_arr.each_with_index do |q, i|
+    @questions_solution.clear
+
+    question_arr.each_with_index do |q, i|
     line_ending =  i == 1 ? "[15pt]\n" : "\n"
-      @question_latex << '&&' + q.latex + "& &(#{i+1})&\\\\" + line_ending
+      @question_latex << '&&' + q.latex + "& &&\\\\" + line_ending
+      @questions_solution << '&&' + q.latex + "& &(#{i+1})&\\\\" + line_ending
     end
   end
 
@@ -343,10 +291,10 @@ class SimultaneousEquation < Equation
     @solution_latex.clear
     eq_arr.each_with_index do |eq, i|
       next if i == 1
-      @solution_latex << "&(#{i+1})\\times#{@ops[:multiplier].abs}& " + eq.latex + "& &(#{i+1})&\\\\[5pt]\n"
+      @solution_latex << "&(#{i+1})\\times#{@ops[:multiplier].abs}& " + eq.latex + "& &(#{i+3})&\\\\[5pt]\n"
     end
 
-    @solution_latex << "&(1)#{ operation_print }(2)& " + @equation_1.latex + "\\\\\n"
+    @solution_latex << "&(1)#{ operation_print }(3)& " + @equation_1.latex + "\\\\\n"
 
     solutions = Timeout.timeout(1, NoMethodError) { solve_eq_1 }
 
@@ -359,44 +307,70 @@ class SimultaneousEquation < Equation
     @solution_latex << solutions_2 + "\\\\[5pt]\n"
   end
 
+  def rails_format_question
+    question_exp = 'question-experience$\\\$' + "\n" + @parameters[:exp].to_s + '$\\\$' + "\n\n"
+    question_order = 'question-order-group$\\\$' + "\n" + @parameters[:order].to_s + '$\\\$' + "\n\n"
+    question_lvl = 'question-level$\\\$' + "\n" + @parameters[:level].to_s + '$\\\$' + "\n\n"
 
-  def solve_eq_1
-    @equation_1.left_side.expand_n_simplify
-    @equation_1.right_side.expand_n_simplify
+    rails_latex = rails_decorator('question-text', @question_latex) +
+                  rails_decorator('solution-text', @solution_latex) +
+                  question_exp + question_order + question_lvl +
+                  format_answers
 
-    @equation_1.standardise_linear_equation
-    @equation_1 = linear_equation.new(@equation_1.left_side,@equation_1.right_side)
-
-    return linear_equation._solution_latex(@equation_1._generate_solution, true)
+    { rails_question_latex: rails_latex }
   end
 
-  def solve_eq_2(equation_2_copy)
-    p @lcm
-    if @lcm == :ms
-      equation_2_copy.left_side.steps[1].val.steps[1].val = @eq_vars[1]
+  def rails_decorator(sym_name, value)
+
+    if sym_name =~ /question/
+      question_text = "Solve the simultaneous equations:"
+      hspace = '\hspace{140pt}'
     else
-      equation_2_copy.left_side.steps[0].val.steps[1].val = @eq_vars[0]
+      question_text = ""
+      hspace = ""
     end
 
-    @solution_latex << equation_2_copy.latex + "\\\\[5pt]\n"
-    #
-    equation_2_copy.left_side.expand_n_simplify
-    #
-    equation_2_copy.standardise_linear_equation
-    #
-    equation_2_copy = linear_equation.new(equation_2_copy.left_side,equation_2_copy.right_side)
-    #
-    solutions_2 = equation_2_copy._generate_solution
-    #
-    linear_equation._solution_latex(solutions_2, true)
+    solution_text = sym_name =~ /solution/ ? "$x=#{@eq_vars[0]}\\hspace{5pt}$  and $\\hspace{5pt} y=#{@eq_vars[1]}$" :  ""
+
+    value.prepend("#{sym_name}$\\\\$" + "\n" + question_text + "$\\\\#{hspace}\\begin{align*}") << '\end{align*}\\\$' + solution_text + '$\\\$' + "\n\n"
   end
 
-  def copy(equation)
-    eq = equation.copy
-    eq.left_side.steps.pop
-    eq.right_side.steps.pop
-    # normalize(eq)
-    eq
+  def format_answers
+    answers = ""
+
+    @parameters[:variables].each_with_index do |var, i|
+      answer_label = 'answer-label$\\\$' + "\n$" + var.to_s + '=$$\\\$' + "\n\n"
+      answer_value = 'answer-value$\\\$' + "\n" + @eq_vars[i].to_s + '$\\\$' + "\n\n"
+      answer_hint = 'answer-hint$\\\$' + "\n" + @parameters[:hint] + '$\\\$' + "\n\n"
+      answers <<  answer_label + answer_value + answer_hint
+    end
+    answers
+  end
+
+  def latex(equation_2_copy)
+    @ops[:multiplier] = nil if @parameters[:difficulty] == 1
+    if @parameters[:difficulty] == 1
+
+      _solution_latex(equation_2_copy)
+    elsif @parameters[:difficulty] == 3
+
+      _solution_latex_with_mtp(equation_2_copy)
+    elsif @parameters[:difficulty] == 2
+
+      _solution_latex_with_single_mtp(equation_2_copy)
+    end
+
+    @solution_latex.prepend(@questions_solution)
+
+    unless @parameters[:rails]
+      @solution_latex << "&x=#{@eq_vars[0]}\\hspace{5pt} \\text{and}\\hspace{5pt} y=#{@eq_vars[1]}& && &&"
+    end
+
+    if @parameters[:rails]
+      rails_format_question
+    else
+      { question_latex: @question_latex, solution_latex: @solution_latex }
+    end
   end
 
   def _solution_latex(equation_2_copy)
@@ -421,12 +395,58 @@ class SimultaneousEquation < Equation
     @solution_latex << solutions_2 + "\\\\[5pt]\n"
   end
 
-  def operation_print
-    if @ops[:operation] == :sbt
-      return "-"
+  def solve_eq_1
+    @equation_1.left_side.expand_n_simplify
+    @equation_1.right_side.expand_n_simplify
+
+    @equation_1.standardise_linear_equation
+    @equation_1 = linear_equation.new(@equation_1.left_side,@equation_1.right_side)
+
+    return linear_equation._solution_latex(@equation_1._generate_solution, true)
+  end
+
+  def solve_eq_2(equation_2_copy)
+    if @lcm == :ms
+      equation_2_copy.left_side.steps[1].val.steps[1].val = @eq_vars[1]
     else
-      return "+"
+      equation_2_copy.left_side.steps[0].val.steps[1].val = @eq_vars[0]
+    end
+
+    @solution_latex << equation_2_copy.latex + "\\\\[5pt]\n"
+    #
+    equation_2_copy.left_side.expand_n_simplify
+    #
+    equation_2_copy.standardise_linear_equation
+    #
+    equation_2_copy = linear_equation.new(equation_2_copy.left_side,equation_2_copy.right_side)
+    #
+    solutions_2 = equation_2_copy._generate_solution
+    #
+    linear_equation._solution_latex(solutions_2, true)
+  end
+
+  def update_params(params)
+    @parameters.each do |k,v|
+      @parameters[k] = params[k] unless params[k].nil?
     end
   end
+
+  private
+
+    def copy(equation)
+      eq = equation.copy
+      eq.left_side.steps.pop
+      eq.right_side.steps.pop
+      # normalize(eq)
+      eq
+    end
+
+    def operation_print
+      if @ops[:operation] == :sbt
+        return "-"
+      else
+        return "+"
+      end
+    end
 
 end

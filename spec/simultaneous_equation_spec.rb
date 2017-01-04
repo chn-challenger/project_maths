@@ -21,8 +21,8 @@ describe SimultaneousEquation do
   describe '#update_coefs' do
 
     it "when passed [2, 3] and multiplier of 2 returns [4, 6]" do
-      input = %w(2 3)
-      response = %w(4 6)
+      input = [2, 3]
+      response = [4, 6]
       mtp = 2
       expect(sim_eq.update_coefs(input, mtp)).to eq response
     end
@@ -43,14 +43,15 @@ describe SimultaneousEquation do
       end
 
       it "generates a standard fully formatted question" do
-        response = "&&-4x-7y&=-74& &(1)&\\\\&&-3x+5y&=6& &(2)&\\\\[15pt]"
+        response = "&&4x-7y&=-13& &&\\\\\n&&-5x-8y&=-34& &&\\\\[15pt]\n"
 
         question = described_class.generate_question_with_latex
         expect(question[:question_latex]).to eq response
       end
 
       it "generates a standard fully formatted solution" do
-        response = "&(1)\\times6& -5x+2y&=-14& &(1)&\\\\[5pt]\n&(1)+(2)&\\\n-5x+2y-\\left(7x+2y\\right)&=-14-58\\\n&& -12x&=-72\\\\\n&& x&=\\frac{-72}{-12}\\\\\n&& x&=6\\\\[5pt]\n&\\text{Sub}\\hspace{5pt} x\\hspace{5pt} \\text{into}\\hspace{5pt} (1)& 7\\times6+2y&=58\\\\[5pt]\n&& 42+2y&=58\\\\\n&& 2y&=58-42\\\\\n&& 2y&=16\\\\\n&& y&=\\frac{16}{2}\\\\\n&& y&=8\\\\[5pt]\n&x=6\\hspace{5pt} \\text{and}\\hspace{5pt} y=8& && &&"
+        response = "&&-5x-3y&=-41& &(1)&\\\\\n&&7x-2y&=45& &(2)&\\\\[15pt]\n&(1)\\times2& -10x-6y&=-82& &(3)&\\\\\n&(2)\\times3& 21x-6y&=135& &(4)&\\\\[15pt]\n&(3)-(4)& -10x-6y-\\left(21x-6y\\right)&=-82-135\\\\\n&& -31x&=-217\\\\\n&& x&=\\frac{-217}{-31}\\\\\n&& x&=7\\\\[15pt]\n&\\text{Sub}\\hspace{5pt} x\\hspace{5pt} \\text{into}\\hspace{5pt} (1)&\\\n7\\times7-2y&=45\\\\[5pt]\n&& 49-2y&=45\\\\\n&& 49-45&=2y\\\\\n&& 4&=2y\\\\\n&& \\frac{4}{2}&=y\\\\\n&& 2&=y\\\\[5pt]\n&x=7\\hspace{5pt} \\text{and}\\hspace{5pt} y=2& && &&"
+
 
         question = described_class.generate_question_with_latex
         expect(question[:solution_latex]).to eq response
@@ -65,7 +66,7 @@ describe SimultaneousEquation do
       end
 
       it "generates a question in a rails compatible formatting" do
-        response = "question-text$\\\\$\n$\\begin{align*}&&7x+3y&=63& &(1)&\\\\&&-5x+5y&=5& &(2)&\\\\[15pt]\\end{align*}$$\\\\$\n\nsolution-text$\\\\$\n$\\begin{align*}&(1)\\times5& 35x+15y&=315& &(3)&\\\\\n&(2)\\times3& -15x+15y&=15& &(4)&\\\\[15pt]\n&(3)+(4)& 35x+15y-\\left(-15x+15y\\right)&=315-15\\\\\n&& 50x&=300\\\\\n&& x&=\\frac{300}{50}\\\\\n&& x&=6\\\\[15pt]\n&\\text{Sub}\\hspace{5pt} x\\hspace{5pt} \\text{into}\\hspace{5pt} (1)&\\\n-5\\times6+5y&=5\\\\[5pt]\n&& -30+5y&=5\\\\\n&& 5y&=5--30\\\\\n&& 5y&=35\\\\\n&& y&=\\frac{35}{5}\\\\\n&& y&=7\\\\[5pt]\n&x=6\\hspace{5pt} \\text{and}\\hspace{5pt} y=7& && &&\\end{align*}$$\\\\$\n\nquestion-experience$\\\\$\n25$\\\\$\n\nquestion-order-group$\\\\$\n$\\\\$\n\nquestion-level$\\\\$\n1$\\\\$\n\nanswer-label$\\\\$\n$x=$$\\\\$\n\nanswer-value$\\\\$\n6$\\\\$\n\nanswer-hint$\\\\$\nGive integer solution.$\\\\$\n\nanswer-label$\\\\$\n$y=$$\\\\$\n\nanswer-value$\\\\$\n7$\\\\$\n\nanswer-hint$\\\\$\nGive integer solution.$\\\\$\n\n"
+        response = "question-text$\\\\$\nSolve the simultaneous equations:$\\\\\\hspace{140pt}\\begin{align*}&&-7x-9y&=-80& &&\\\\\n&&3x-4y&=-5& &&\\\\[15pt]\n\\end{align*}\\\\$$\\\\$\n\nsolution-text$\\\\$\n$\\\\\\begin{align*}&&-7x-9y&=-80& &(1)&\\\\\n&&3x-4y&=-5& &(2)&\\\\[15pt]\n&(1)\\times3& -21x-27y&=-240& &(3)&\\\\\n&(2)\\times7& 21x-28y&=-35& &(4)&\\\\[15pt]\n&(3)+(4)& -21x-27y+\\left(21x-28y\\right)&=-240+-35\\\\\n&& -55y&=-275\\\\\n&& y&=\\frac{-275}{-55}\\\\\n&& y&=5\\\\[15pt]\n&\\text{Sub}\\hspace{5pt} x\\hspace{5pt} \\text{into}\\hspace{5pt} (1)&\\\n3x-4\\times5&=-5\\\\[5pt]\n&& 3x-20&=-5\\\\\n&& 3x&=-5+20\\\\\n&& 3x&=15\\\\\n&& x&=\\frac{15}{3}\\\\\n&& x&=5\\\\[5pt]\n\\end{align*}\\\\$$x=5\\hspace{5pt}$  and $\\hspace{5pt} y=5$$\\\\$\n\nquestion-experience$\\\\$\n25$\\\\$\n\nquestion-order-group$\\\\$\n$\\\\$\n\nquestion-level$\\\\$\n1$\\\\$\n\nanswer-label$\\\\$\n$x=$$\\\\$\n\nanswer-value$\\\\$\n5$\\\\$\n\nanswer-hint$\\\\$\nGive integer solution.$\\\\$\n\nanswer-label$\\\\$\n$y=$$\\\\$\n\nanswer-value$\\\\$\n5$\\\\$\n\nanswer-hint$\\\\$\nGive integer solution.$\\\\$\n\n"
 
         question = described_class.generate_question_with_latex(rails: true)
         expect(question[:rails_question_latex]).to eq response

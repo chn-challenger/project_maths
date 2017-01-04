@@ -50,21 +50,14 @@ class LinearEquation < Equation
     equation = copy
     solution_equations = [equation]
     return solution_equations if equation.left_side.steps.count == 1 && equation.right_side.steps.count == 1
-
-    left_count = equation.left_side.steps.count + 1
-    right_count = equation.right_side.steps.count + 1
-
-    while left_count != 1 && right_count != 1
+    loop do
       equation = equation._solution_next_equation
       solution_equations << equation
       equation = equation.copy
       equation._evaluate_numericals
       solution_equations << equation
-      redo if left_count == 2
-      left_count -= 1
-      right_count -= 1
+      break if equation.left_side.steps.count == 1 && equation.right_side.steps.count == 1
     end
-
     solution_equations
   end
 
@@ -131,10 +124,6 @@ class LinearEquation < Equation
     end
     # result.slice!(-1..-1)
     result
-  end
-
-  def line_ending_style(arr_size, sim_eq)
-
   end
 
   def _solution_next_equation

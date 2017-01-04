@@ -69,11 +69,11 @@ describe LatexPrinter do
     end
 
     it 'generates standard linear equations rails sheet' do
-      expect(rails_sheet).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{#{Time.now}-Q\\quad \\text copyright\\,\n    Joe Zhou, 2016}\n\n \\begin{document}\n\n #{question}#{solution}#{question}#{solution}\\end{document}"
+      expect(rails_sheet).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{#{Time.now}-Q\\quad \\text copyright\\,\n    Joe Zhou, 2017}\n\n \\begin{document}\n\n #{question}#{solution}#{question}#{solution}\\end{document}"
     end
 
     it 'generates standard simultaneous equations rails sheet' do
-      expect(rails_sheet).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{#{Time.now}-Q\\quad \\text copyright\\,\n    Joe Zhou, 2016}\n\n \\begin{document}\n\n #{question}#{solution}#{question}#{solution}\\end{document}"
+      expect(rails_sheet).to eq "\\documentclass{article}\n\\usepackage[math]{iwona}\n\\usepackage[fleqn]{amsmath}\n\\usepackage{scrextend}\n\\changefontsizes[20pt]{14pt}\n\\usepackage[a4paper, left=0.7in,right=0.7in,top=1in,bottom=1in]{geometry}\n\\pagenumbering{gobble}\n\\usepackage{fancyhdr}\n\\renewcommand{\\headrulewidth}{0pt}\n\\pagestyle{fancy}\n\\lfoot{#{Time.now}-Q\\quad \\text copyright\\,\n    Joe Zhou, 2017}\n\n \\begin{document}\n\n #{question}#{solution}#{question}#{solution}\\end{document}"
     end
 
   end

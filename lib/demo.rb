@@ -1,15 +1,15 @@
 # require './models/linear_equation'
-# require './models/latex_printer'
+require './models/latex_printer'
 require './models/simultaneous_equation'
 require 'timeout'
 #
 # Initialize questions to be printed
-# @print = LatexPrinter.rails_sheet(:simultaneous_equation, 4, rails: true)
-# #
-# # Write Questions to File
-# File.open('output.tex', 'w') do |f|
-#   f.puts @print
-# end
+@print = LatexPrinter.rails_sheet(:simultaneous_equation, 4, {rails: true, difficulty: 3})
+#
+# Write Questions to File
+File.open('output.tex', 'w') do |f|
+  f.puts @print
+end
 
 # def test(name)
 #   hash = {name.to_sym => 'Yep'}
@@ -20,24 +20,24 @@ require 'timeout'
 # p test('Rails') { |hash| hash[:Rails] << ' Hey'}
 
 # eq = SimultaneousEquation.new
-p "==========================="
+# p "==========================="
 qs = nil
-Timeout::timeout(2, NoMethodError) {
-qs = SimultaneousEquation.generate_question_with_latex
-}
+# Timeout::timeout(2, NoMethodError) {
+qs = SimultaneousEquation.generate_question_with_latex(difficulty: 2)
+# }
 # ts = SimultaneousEquation.new
 # ts.set_gradients
 # ts.set_y_coefficients
 # p ts.eq_1_coefs
 # p ts.eq_2_coefs
 # puts qs[:question_latex]
-# puts qs[:solution_latex]
+puts qs[:solution_latex]
 # srand(23)
-ds = SimultaneousEquation.new
-ds._generate_question
+# ds = SimultaneousEquation.new
+# ds._generate_question
 # puts ds.ops
-puts ds.question_latex
-puts ds.solution_latex
+# puts ds.question_latex
+# puts ds.solution_latex
 # def tester(num=1)
 #   return recur(num) if num < 5
 #   # return if num < 5
@@ -118,3 +118,18 @@ p "==========================="
 # #
 # p sim_eq[:questions_sheet]
 # puts sim_eq[:solutions_sheet]
+
+# Solve STACKERROR in Linear EQ #_generate_solution
+# left_count = equation.left_side.steps.count + 1
+# right_count = equation.right_side.steps.count + 1
+#
+# while left_count != 1 && right_count != 1
+#   equation = equation._solution_next_equation
+#   solution_equations << equation
+#   equation = equation.copy
+#   equation._evaluate_numericals
+#   solution_equations << equation
+#   redo if left_count == 2
+#   left_count -= 1
+#   right_count -= 1
+# end
