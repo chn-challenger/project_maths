@@ -236,6 +236,7 @@ class SimultaneousEquation < Equation
     eq_2_rhs = @eq_2_coefs[0] * var_1 + @eq_2_coefs[1] * var_2 # b_2
 
     return _generate_question if eq_1_rhs == 1 || eq_2_rhs == 1
+    return _generate_question if eq_1_rhs.abs == eq_2_rhs.abs
 
     @eq_vars = [var_1, var_2]
     @eq_rhs  = [eq_1_rhs, eq_2_rhs]

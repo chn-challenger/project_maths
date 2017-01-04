@@ -17,6 +17,43 @@ describe SimultaneousEquation do
     end
   end
 
+  describe '#factor?' do
+
+    it "when passed 2 and 6 returns true" do
+      input = [2, 6]
+      expect(sim_eq.factor?(input[0], input[1])).to be true
+    end
+
+    it "when passed 2 and 7 returns false" do
+      input = [2, 7]
+      expect(sim_eq.factor?(input[0], input[1])).to be false
+    end
+
+  end
+
+  describe '#no_solutions?' do
+
+    it "when passed 2 and 6 returns true" do
+      input = [2, 6]
+      expect(sim_eq.no_solutions?(input[0], input[1])).to be true
+    end
+
+    it "when passed 2 and 7 returns false" do
+      input = [2, 7]
+      expect(sim_eq.no_solutions?(input[0], input[1])).to be false
+    end
+
+    it "when passed 2 and 2 returns true" do
+      input = [2, 2]
+      expect(sim_eq.no_solutions?(input[0], input[1])).to be true
+    end
+
+    it "when passed 6 and 8 returns true" do
+      input = [6, 8]
+      expect(sim_eq.no_solutions?(input[0], input[1])).to be true
+    end
+
+  end
 
   describe '#update_coefs' do
 
@@ -51,7 +88,6 @@ describe SimultaneousEquation do
 
       it "generates a standard fully formatted solution" do
         response = "&&-5x-3y&=-41& &(1)&\\\\\n&&7x-2y&=45& &(2)&\\\\[15pt]\n&(1)\\times2& -10x-6y&=-82& &(3)&\\\\\n&(2)\\times3& 21x-6y&=135& &(4)&\\\\[15pt]\n&(3)-(4)& -10x-6y-\\left(21x-6y\\right)&=-82-135\\\\\n&& -31x&=-217\\\\\n&& x&=\\frac{-217}{-31}\\\\\n&& x&=7\\\\[15pt]\n&\\text{Sub}\\hspace{5pt} x\\hspace{5pt} \\text{into}\\hspace{5pt} (1)&\\\n7\\times7-2y&=45\\\\[5pt]\n&& 49-2y&=45\\\\\n&& 49-45&=2y\\\\\n&& 4&=2y\\\\\n&& \\frac{4}{2}&=y\\\\\n&& 2&=y\\\\[5pt]\n&x=7\\hspace{5pt} \\text{and}\\hspace{5pt} y=2& && &&"
-
 
         question = described_class.generate_question_with_latex
         expect(question[:solution_latex]).to eq response
