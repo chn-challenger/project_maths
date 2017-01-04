@@ -1,6 +1,7 @@
 require './models/expression'
 require './models/fraction'
 require './models/factory'
+require 'timeout'
 
 class Step
   attr_accessor :ops, :val, :dir
@@ -21,8 +22,10 @@ class Step
   def copy
     copy_val = val.dup if val.is_a?(String)
     copy_val = val if val.is_a?(Integer)
-    copy_val = val.copy if val.is_a?(Expression)
-    self.class.new(ops, copy_val, dir)
+    Timeout.timeout(0.1, NoMethodError) { copy_val = val.copy } if val.is_a?(Expression)
+    Timeout.timeout(0.1, NoMethodError) {
+      self.class.new(ops, copy_val, dir)
+    }
   end
 
   def is_div?

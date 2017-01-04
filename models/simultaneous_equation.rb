@@ -2,18 +2,19 @@ require './models/evaluate'
 require './models/equation'
 require './models/linear_equation'
 require 'timeout'
+require 'prime'
 
 include Evaluate
 
 class SimultaneousEquation < Equation
   attr_reader :equation_1, :equation_2, :parameters, :eq_1_coefs, :eq_2_coefs,
-              :eq_rhs
+              :eq_rhs, :ops, :question_latex, :solution_latex
 
   def initialize
     @parameters = { number_of_steps: 2,
                     variables: %w(x y),
                     solution_max: 9,
-                    difficulty: 3,
+                    difficulty: 2,
                     negative_allowed: false,
                     hint: 'Give integer solution.',
                     exp: 25, order: '', level: 1,
@@ -24,6 +25,7 @@ class SimultaneousEquation < Equation
     @coef_set   = [*(-9..-1), *(1..9)]
     @eq_1_coefs = []
     @eq_2_coefs = []
+    @lcm      = ""
     @eq_vars  = []
     @eq_rhs   = []
     @ops      = { operation: nil, multiplier: nil, equation: nil }
@@ -59,6 +61,8 @@ class SimultaneousEquation < Equation
       @equation_2.copy
     }
     determine_multiplier([@eq_1_coefs, @eq_2_coefs])
+
+    @solution_latex.clear
 
     latex(equation_2_copy)
 
@@ -167,7 +171,7 @@ class SimultaneousEquation < Equation
         end
         return
       elsif coef.abs % coefs[num-1][i].abs == 0
-        @ops[:multiplier] = coef[-1] / coefs[num-1][-1]
+        @ops[:multiplier] = (coef[-1] / coefs[num-1][-1]).abs
 
         eqs[num-1].same_change(Step.new(:mtp,@ops[:multiplier]))
 
@@ -176,7 +180,7 @@ class SimultaneousEquation < Equation
         determine_multiplier([coefs[num], update_coefs(coefs[num-1], @ops[:multiplier])], num, 0)
         return
       elsif coefs[num-1][i].abs % coef.abs == 0
-        @ops[:multiplier] = coefs[num-1][-1] / coef
+        @ops[:multiplier] = (coefs[num-1][-1] / coef).abs
 
         eqs[num].same_change(Step.new(:mtp,@ops[:multiplier]))
 
@@ -185,12 +189,28 @@ class SimultaneousEquation < Equation
         determine_multiplier([coefs[num-1], update_coefs(coefs[num], @ops[:multiplier])], num, 0)
         return
       elsif count == 8
-        eqs[0].same_change(Step.new(:mtp,@eq_2_coefs[1].abs))
-        eqs[1].same_change(Step.new(:mtp,@eq_1_coefs[1].abs))
+        eq_1_coef = @eq_1_coefs[1].abs
+        eq_2_coef = @eq_2_coefs[1].abs
 
-        @ops[:multiplier] = [@eq_2_coefs[1], @eq_1_coefs[1]]
+        lcm_cs = eq_1_coef.lcm(eq_2_coef)
+        lcm_ms = @eq_1_coefs[0].abs.lcm(@eq_2_coefs[0])
 
-        determine_multiplier(update_coefs(coefs, [@eq_2_coefs[1], @eq_1_coefs[1]]), num, 0)
+        if lcm_ms > lcm_cs || @parameters[:difficulty] == 2
+          @lcm = :cs
+          multipliers = [lcm_cs / eq_1_coef, lcm_cs / eq_2_coef]
+        else
+          @lcm = :ms
+          multipliers = [lcm_ms / @eq_1_coefs[0], lcm_ms / @eq_2_coefs[0]]
+        end
+
+        format_questions
+
+        eqs[0].same_change(Step.new(:mtp,multipliers[0].abs))
+        eqs[1].same_change(Step.new(:mtp,multipliers[1].abs))
+
+        @ops[:multiplier] = [multipliers[0], multipliers[1]]
+
+        determine_multiplier(update_coefs(coefs, [multipliers[0], multipliers[1]]), num, 0)
         return
       else
         int = num == 0 ? 1 : 0
@@ -209,17 +229,6 @@ class SimultaneousEquation < Equation
       @eq_2_coefs << coefs[1]
       select_coefficient
     end
-  end
-
-  def set_c_1(coef)
-    @eq_1_coefs << coef
-    select_coefficient
-  end
-
-  def set_c_2(coef)
-    level_1_coef(coef)
-    level_2_coef(coef)
-    level_3_coef(coef)
   end
 
   def set_c_coefs
@@ -291,6 +300,7 @@ class SimultaneousEquation < Equation
     return true if m_1.abs == m_2.abs
     return true if m_1.abs % m_2.abs == 0
     return true if m_2.abs % m_1.abs == 0
+    return true if m_1.gcd(m_2) == 2
     false
   end
 
@@ -361,8 +371,12 @@ class SimultaneousEquation < Equation
   end
 
   def solve_eq_2(equation_2_copy)
-
-    equation_2_copy.left_side.steps[0].val.steps[1].val = @eq_vars[0]
+    p @lcm
+    if @lcm == :ms
+      equation_2_copy.left_side.steps[1].val.steps[1].val = @eq_vars[1]
+    else
+      equation_2_copy.left_side.steps[0].val.steps[1].val = @eq_vars[0]
+    end
 
     @solution_latex << equation_2_copy.latex + "\\\\[5pt]\n"
     #

@@ -30,9 +30,14 @@ qs = SimultaneousEquation.generate_question_with_latex
 # ts.set_y_coefficients
 # p ts.eq_1_coefs
 # p ts.eq_2_coefs
-puts qs[:question_latex]
-puts qs[:solution_latex]
-
+# puts qs[:question_latex]
+# puts qs[:solution_latex]
+# srand(23)
+ds = SimultaneousEquation.new
+ds._generate_question
+# puts ds.ops
+puts ds.question_latex
+puts ds.solution_latex
 # def tester(num=1)
 #   return recur(num) if num < 5
 #   # return if num < 5
