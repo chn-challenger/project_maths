@@ -147,8 +147,4 @@ class Step
     self.val = expression_factory.build([[nil,[[nil,val]]]])
     self
   end
-
-
-
-
 end

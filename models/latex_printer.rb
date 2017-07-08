@@ -12,7 +12,9 @@ include Topics
 
 class LatexPrinter
 
-  FUTURE_NOTES = "\\usepackage{lastpage}\\pagestyle{fancy}  and get rid of \\pagenumbering{gobble}  also add  \\cfoot{\\thepage\ of \\pageref{LastPage}}  to get page numbers"
+  FUTURE_NOTES = "\\usepackage{lastpage}\\pagestyle{fancy}  and get rid of \\p"\
+    "agenumbering{gobble}  also add  \\cfoot{\\thepage\ of \\pageref{LastPage}"\
+    "}  to get page numbers"
 
   TOPICS = {
     linear_equation:{work_sheet_title:'Linear Equation',prefix:'LEQ',
